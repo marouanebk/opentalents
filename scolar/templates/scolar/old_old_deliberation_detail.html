@@ -1,0 +1,266 @@
+
+	<h2>Procès Verbal de délibération de la formation {{ formation }}:</h2>
+	{% if formation.archive %}
+				<strong>Archivé</strong> <input id="archived" type="checkbox" data-toggle="toggle" checked onclick="formation_archive_toggle()">
+	{% else %} 
+				<strong>Non Archivé</strong> <input id="archived" type="checkbox" data-toggle="toggle" onclick="formation_archive_toggle()">
+	{% endif %}
+	<a href="{% url "deliberation_pdf" formation_pk=formation.id photo=photo periode_pk=periode_pk sort=sort %}">Télécharger {% icon 'file-pdf'%}</a>
+	{% if detailed %}
+	<a href="{% url "deliberation_detail" formation_pk=formation.id detailed=0 photo=photo periode_pk=periode_pk sort=sort %}">PV Résumé</a>
+	<table class="table table-bordered table-sm">
+		<thead class="thead-dark">
+				<tr>
+					<th>
+					</th>
+					<th>
+					</th>
+					<th>
+					</th>
+					{% for id, periode in periode_list.items %}
+						{% for ue in periode.ues %}
+							<th colspan="{{ue.matieres.all.count|add:1}}">
+								{{ ue.code }}
+							</th>
+						{% endfor %}
+						<th></th>
+						<th></th>
+						<th></th>						
+					{% endfor %}
+					{% if periode_pk == 0 %}
+						<th>
+						</th>
+						<th>
+						</th>
+						<th>
+						</th>
+						<th>
+						</th>
+					{% endif %}
+					{% if photo == 1 %}
+						<th></th>
+					{% endif %}
+				</tr>
+			<tr>
+				<th>Matricule</th>
+				<th>Nom & Prénom</th>
+				<th>Groupe</th>
+				{% for id, periode in periode_list.items %}
+						{% for ue in periode.ues %}
+							{% for matiere in ue.matieres.all %}
+								<th>
+									{{ matiere.code }}
+								</th>
+							{% endfor %}
+							<th>
+								Moy
+							</th>
+						{% endfor %}
+
+					<th>
+						<strong>Moy {{ periode.periode.periode.code }}</strong>
+					</th>
+					<th>
+						<strong>Ne {{ periode.periode.periode.code }}</strong>
+					</th>
+					<th>
+						<strong>Rang {{ periode.periode.periode.code }}</strong>
+					</th>
+
+				{% endfor %}
+				{% if periode_pk == 0 %}
+					<th>
+						Moy
+					</th>
+					<th>
+						Rang
+					</th>
+					<th>
+						<strong>Decision</strong>
+					</th>
+					<th>
+						<strong>Rachat</strong>
+					</th>
+				{% endif %}
+				{% if photo == 1 %}
+					<th>
+						Photo
+					</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+		{% for inscription in inscription_list %}
+			<tr>
+			<td>
+				<a href="{% url "etudiant_detail" pk=inscription.etudiant.matricule %}">{{ inscription.etudiant.matricule }}</a>
+			</td>
+			<td>
+				{{ inscription.etudiant.nom|addstr:' '|addstr:inscription.etudiant.prenom }}
+			</td>
+			<td>{{inscription.groupe.code}}</td>
+			{% for id, periode in periode_list.items %}
+					{% for ue in periode.ues %}
+						{% for matiere in ue.matieres.all %}
+							{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.periode.code|addstr:'_'|addstr:ue.id|addstr:'_'|addstr:matiere.code as key %}
+								{% with resultat_list|get_value_from_dict:key as resultat %}
+									{% if resultat %}
+										{% if resultat.moy_post_delib < resultat.module.note_eliminatoire %}
+											<td class="table-danger">{{ resultat.module.matiere.code }}: {{ resultat.moy_post_delib }} < {{ resultat.module.note_eliminatoire }}</td>
+										{% elif resultat.moy < resultat.module.note_eliminatoire %}
+											<td class="table-warning">{{ resultat.moy }} {% icon 'arrow-right' %} {{ resultat.moy_post_delib }} </td>
+										{% else %}
+											<td>{{ resultat.moy }}</td>
+										{% endif %}
+									{% else %}
+										<td class="table-active"> </td>
+									{% endif %}
+								{% endwith %}
+							{% endwith%}
+						{% endfor %}
+						{% with inscription.etudiant.matricule|addstr:'_'|addstr:ue.id|addstr:'_moy' as key %}
+							{% with resultat_list|get_value_from_dict:key as note %}
+								{% if note %}
+									<td>{{ note }}</td>
+								{% else %}
+									<td class="table-active"></td>
+								{% endif %}
+							{% endwith %}
+						{% endwith%}
+					{% endfor %}
+				{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.periode.code|addstr:'_moy' as key %}
+					{% with resultat_list|get_value_from_dict:key as note %}
+						<td class="table-info">{{ note }}</td>
+					{% endwith %}
+				{% endwith%}
+				{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.periode.code|addstr:'_ne' as key %}
+					{% with resultat_list|get_value_from_dict:key as nb %}
+						{% if nb > 0 %}
+							<td class="table-danger">{{ nb }}</td>
+						{% else %}
+							<td class="table-info">{{ nb }}</td>
+						{% endif %}
+					{% endwith %}
+				{% endwith%}
+				{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.periode.code|addstr:'_rang' as key %}
+					{% with resultat_list|get_value_from_dict:key as rang %}
+						<td class="table-info">{{ rang }}</td>
+					{% endwith %}
+				{% endwith%}
+
+			{% endfor %}
+			{% if periode_pk == 0 %}
+			<td>{{ inscription.moy }}</td>
+				<td>
+					{{ inscription.rang }}
+				</td>			
+				<td>
+					{{ decisions_jury|get_value_from_dict:inscription.decision_jury }}
+				</td>
+				<td>
+					{% if request.user|has_group:"direction" %}
+						<a href="{% url "releve_notes_update" inscription_pk=inscription.id %}" >{% icon 'pencil-alt' %}</a>
+					{% endif %}
+				</td>
+			{% endif %}
+			{% if photo == 1 %}
+				<td>
+					{% if inscription.etudiant.photo %}
+						<img src="{{inscription.etudiant.photo.url}}" width="80">
+					{% endif %}
+				</td>
+			{% endif %}
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+	<a href="{% url "deliberation_detail" formation_pk=formation.id detailed=1 photo=photo periode_pk=periode_pk sort=sort %}">PV Détaillé</a>
+	<table class="table table-bordered table-sm">
+		<thead class="thead-dark">
+			<tr>
+				<th>Matricule</th>
+				<th>Nom & Prénom</th>
+				<th>Groupe</th>
+				{% for id, periode in periode_list.items %}
+					<th>
+						<strong>Moy {{ periode.periode.periode.code }}</strong>
+					</th>
+					<th>
+						<strong>Ne {{ periode.periode.periode.code }}</strong>
+					</th>
+					<th>
+						<strong>Rang {{ periode.periode.periode.code }}</strong>
+					</th>
+				{% endfor %}
+				{% if periode_pk == 0 %}
+					<th>
+						Moy
+					</th>
+					<th>
+						Rang
+					</th>
+					<th>
+						<strong>Decision</strong>
+					</th>
+					<th>
+						<strong>Rachat</strong>
+					</th>
+				{% endif %}
+				{% if photo == 1 %}
+					<th>
+						Photo
+					</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+		{% for inscription in inscription_list %}
+			<tr>
+			<td>
+				<a href="{% url "etudiant_detail" pk=inscription.etudiant.matricule %}">{{ inscription.etudiant.matricule }}</a>
+			</td>
+			<td>
+				{{ inscription.etudiant.nom|addstr:' '|addstr:inscription.etudiant.prenom }}
+			</td>
+			<td>{{inscription.groupe.code}}</td>
+			{% for periode in inscription.inscription_periodes.all %}
+				{% for id, periode_ in periode_list.items %}
+					{% if periode.periode == periode_.periode.periode %}
+						<td class="table-info">{{ periode.moy }}</td>
+						{% if periode.ne > 0 %}
+							<td class="table-danger">{{ periode.ne }}</td>
+						{% else %}
+							<td class="table-info">{{ periode.ne }}</td>
+						{% endif %}
+						<td class="table-info">{{ periode.rang }}</td>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+			{% if periode_pk == 0 %}
+				<td>{{ inscription.moy }}</td>
+				<td>
+					{{ inscription.rang }}
+				</td>			
+				<td>
+					{{ decisions_jury|get_value_from_dict:inscription.decision_jury }}
+				</td>
+				<td>
+					{% if request.user|has_group:"direction" %}
+						<a href="{% url "releve_notes_update" inscription_pk=inscription.id %}" >{% icon 'pencil-alt' %}</a>
+					{% endif %}
+				</td>
+			{% endif %}
+			{% if photo == 1 %}
+				<td>
+					{% if inscription.etudiant.photo %}
+						<img src="{{inscription.etudiant.photo.url}}" width="80">
+					{% endif %}
+				</td>
+			{% endif %}
+			
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}

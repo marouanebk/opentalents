@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">	
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	
+	<!-- Chart.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+  </head>
+  <body>
+  {% load bootstrap4 icons jchart dictionary %}
+  	<div class="container-fluid">
+	
+
+
+	<div class="row">
+                    
+        <section class="offset-lg-1 col-lg-11 pull-right">
+          {% block content %}
+				<br>
+				<h1 id="top" class="text-center"><strong> Evaluation des enseignements par les étudiants: {{ periode_ }} {{annee_univ.annee_univ}}/{{annee_univ.annee_suivante.annee_univ}} </strong></h1>
+				<br>
+				<div class="row">
+					<div class="col-lg-3">
+						<h5><strong>Index</strong></h5>
+						<table class="table-bordered table-sm">
+							<thead>
+								<th>Formation</th>
+								<th>Modules</th>
+							</thead>
+							<tbody>
+							{% for programme_ in programme_list %}
+								<tr>
+									<td>
+									<a href="#{{ programme_.code }}" >{{ programme_.code }}</a><br><br>
+									</td>
+									<td>
+										{% for module_ in module_list%}
+											{% if module_.formation.programme == programme_ %}
+												<a href="#{{module_.id}}">{{ module_.matiere.code }}</a>
+											{% endif %}
+										{% endfor %}
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					<div class="col-lg-5">
+						<h5><strong>Introduction</strong></h5>
+						<p>
+						La direction des études œuvre a systématiser l’évaluation des enseignements par les étudiants chaque semestre. Il s’agit d’une pratique pédagogique universelle ayant pour objectif de faire un retour aux enseignants sur le déroulement de leurs enseignements durant le semestre.
+						Il s’agit donc d’analyser la perception du processus d’apprentissage durant tout un semestre par nos élèves. Nous croyons que ce retour ne peut être que positif et nous aidera tous à capitaliser sur les choses qui ont le mieux fonctionné, et d’améliorer les activités qui ont moins bien fonctionné.
+						
+						Chaque étudiant était invité à choisir une réponse parmi 4 pour chaque question :
+						<ul>
+							<li>++ Tout à fait d’accord</li>
+							<li>+    D’accord</li>
+							<li>-    Pas d’accord</li>
+							<li>- -  En total désaccord</li>
+						</ul>
+						Pour chaque question il était possible d’introduire un commentaire facultatif.
+						</p>
+						
+					</div>
+					<div class="col-lg-4">
+						<h5><strong>Taux de réponse </strong></h5>
+						<table class="table table-sm">
+							<thead>
+								<tr class="thead-dark">
+									<th>Année d'étude</th>
+									<th>Nombre de réponses</th>
+									<th>Nombre d'inscrits</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for pgm in programme_list %}
+									<tr>
+										<td><strong>{{pgm.code}}</strong>
+										{% with taux_reponse|get_value_from_dict:pgm.code as taux %}
+											<td>{{taux.0}}</td>
+											<td>{{taux.1}}</td>
+										{% endwith %}
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+			    	</div>
+				</div>
+				<br><br><br>
+			{% for programme_ in programme_list %}
+				<div class="row">
+				<h3 id="{{ programme_.code }}" class="text-center">Evaluation des modules de {{ programme_.code }} </h3>
+				{% for module_ in module_list%}
+					{% if module_.formation.programme == programme_ %}
+
+						<div class="row">
+							<div class="col-lg-6">
+								<h5 id="{{module_.id}}" class="text-center"><strong> Résultat de l'évaluation de {{ module_.matiere.code }} </strong></h5>
+									{% with chart_list|get_value_from_dict:module_.id as feedback_chart %}
+										{{ feedback_chart.as_html }}
+									{% endwith %}
+							</div>
+							<div class="col-lg-6">
+								<h5><strong> Légende </strong></h5>
+								<ul>
+									{% for question in question_list%}
+									<li> <strong>{{ question.code }}</strong> {{ question.intitule }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+								<h5><strong> Commentaires et propositions : </strong></h5>
+								{% with feedback_list|get_value_from_dict:module_.id as feedbacks %}
+									{% if feedbacks %}
+										
+										{{ feedbacks|safe }}
+									{% endif %}
+								{% endwith %}
+							</div>
+						
+						<div class="row">
+							<div class="col-lg-12">
+								<a href="#top"> Retour</a>
+							</div>
+						</div>
+						</div>
+						<br>
+					{% endif %}
+					
+				{% endfor %}
+				<br>
+				</div>
+			<br>
+			{% endfor %}
+          {% endblock %}
+        </section>
+	</div>
+    
+    <footer class="row">
+		<div class="col-md-12">
+          <address>
+          	  	<strong>{{ institution.nom }}</strong><br>
+            	{{ institution.adresse }}<br>
+          </address>
+        </div>
+	</footer>
+	
+	</div>
+
+  </body>
+</html>
+
+
+
+	

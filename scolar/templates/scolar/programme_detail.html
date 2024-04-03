@@ -1,0 +1,116 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 icons dictionary %}
+{% block content %}
+	<br><br>
+
+	<h5>Structure du programme de {{ object.code }} :</h5>
+    	<a href="{% url "programme_list" %}" class="btn btn-secondary">Retour</a>
+		<a href="{% url "matiere_detail_list_pdf" programme_pk=object.id %}">Télécharger {% icon 'file-pdf' %}</a>
+		{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+			<a href="{% url "periode_programme_create" programme_pk=object.id %}">{% icon 'plus' %} Periode</a>
+		{% endif %}
+		
+		<br><br>
+    	<table class="table table-bordered">
+    		<thead>
+    			<tr>
+					{% if object.activation_credits or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+	    				<th style="text-align:center;" colspan="3">Période</th>
+					{% else %}
+						<th style="text-align:center;" colspan="2">Période</th>
+					{% endif %}
+					{% if object.activation_ues or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+						{% if object.activation_credits or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}    				
+							<th style="text-align:center;" colspan="4">UE</th>
+						{% else %}
+							<th style="text-align:center;" colspan="3">UE</th>
+						{% endif %}
+					{% endif %}
+	    			<th style="text-align:center;" colspan="4">Matière</th>
+	    			
+    			</tr>
+    			<tr>
+    				<th>Code</th>
+    				<th>Session</th>
+					{% if object.activation_credits or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+    					<th>Crédits</th>
+					{% endif %}
+					{% if object.activation_ues or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+	    				<th>Type</th>
+	    				<th>Code</th>
+	    				<th>Coef</th>
+						{% if object.activation_credits or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+	    					<th>Crédits</th>
+						{% endif %}
+					{% endif %}
+
+    				<th>Code</th>
+    				<th>Intitulé</th>
+    				<th>Coef</th>
+					{% if object.activation_credits or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+    					<th>Crédits</th>
+					{% endif %}
+    			</tr>
+    		</thead>
+    		<tbody>
+    			{% for periode in object.periodes.all %}
+    				<tr>
+    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">
+    						<strong>{{ periode.code }} </strong>
+    						{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %} 
+    							<a href="{% url "periode_programme_update" pk=periode.id programme_pk=object.id %}"> {% icon 'pencil-alt' %}</a>
+    						{% endif %}
+    						{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %} 
+    							<a href="{% url "periode_programme_delete" pk=periode.id programme_pk=object.id %}"> {% icon 'trash' %}</a>
+    						{% endif %}
+							{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+    							<br><a href="{% url "ue_create" periode.id object.id %}"> {% icon 'plus' %}UE</a>
+    						{% endif %}
+
+    					</td>
+    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">
+    						{{ periode.periode.session }}
+    					</td>
+						{% if object.activation_credits or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+	    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">
+	    						{{ periode.credit }}
+	    					</td>
+						{% endif %}
+						
+						{% for ue in periode.ues.all %}
+							{% if object.activation_ues or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+	    						<td style="vertical-align:middle; text-align:left;" rowspan="{{ ue.matieres.count }}">
+	    							{{ categorie_ue|get_value_from_dict:ue.type }}
+	    						</td>
+	    						<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.matieres.count }}">
+	    							{{ue.code}}<br>
+									{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+										<a href="{% url "ue_update" ue.id periode.id object.id %}"> {% icon 'pencil-alt' %}</a>
+									{% endif %}
+									{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+										<a href="{% url "ue_delete" ue.id object.id %}"> {% icon 'trash' %} </a>
+									{% endif %}
+	    						</td>
+	    						<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.matieres.count }}">{{ue.coef|converson_reel_vers_entier_si_possible}}</td>
+	    						
+								{% if object.activation_credits or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.matieres.count }}">{{ue.credit}}</td>
+								{% endif %}
+							{% endif %}
+							{% for matiere in ue.matieres.all %}
+								<td><a href="{% url "matiere_detail" matiere.id %}"> {{ matiere.code }} </a></td>    							
+								<td>{{matiere.titre}}</td>
+    							<td>{{matiere.coef|converson_reel_vers_entier_si_possible}}</td>
+								{% if object.activation_credits or perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+    								<td>{{matiere.credit}}</td>
+								{% endif %}
+    							</tr><tr>
+							{% endfor %}
+							
+						{% endfor %}
+    				</tr>
+    			{% endfor %}
+    		</tbody>		
+  		</table>   
+  		<br><br>
+{% endblock %}

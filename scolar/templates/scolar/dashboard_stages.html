@@ -1,0 +1,167 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>Dashboard Stages</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#par_pays">Répartition par pays</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#par_organismes">Répartition par organismes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#par_etudiants">Répartition des étudiants</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+
+
+	    <div id="par_pays" class="container tab-pane active"><br>
+	    	
+			{% if pays_pfe_chart %}
+		    	<div class="row align-items-center" >
+		    		<h3>Répartition des PFE validés par pays</h3>
+		    		<div class="col-lg-4">
+				    	<p class="alert alert-info">
+				    		Les statistiques affichées sur ce graphique concernent le nombre de PFE validés par pays d'accueil
+				    	</p>
+				    </div>
+			    	<div class="col-lg-8">
+			    	{{ pays_pfe_chart.as_html }}
+			    	</div>
+			    </div>
+				<br><br>
+			{% endif %}
+			{% if pays_master_chart %}
+		    	<div class="row align-items-center" >
+		    		<h3>Répartition des Master validés par pays</h3>
+		    		<div class="col-lg-4">
+				    	<p class="alert alert-info">
+				    		Les statistiques affichées sur ce graphique concernent le nombre de Master validés par pays d'accueil
+				    	</p>
+				    </div>
+			    	<div class="col-lg-8">
+			    		{{ pays_master_chart.as_html }}
+			    	</div>
+			    </div>
+			{% endif %}
+	    </div>
+
+
+	    <div id="par_organismes" class="container tab-pane fade"><br>
+	    	<div class="row align-items-center" >
+	    		<h3>Répartition des stages par organismes</h3>
+				<br>
+		    	<div class="col-lg-12">
+					<table class="table table-bordered table-sm">
+    					<thead class="thead-dark">
+							<tr>
+								<th class="text-center">Organisme</th>
+								<th class="text-center">Pays</th>
+								<th class="text-center">Nombre total de sujets</th>
+								<th class="text-center">Nombre total des sujets de PFE</th>
+								<th class="text-center">Nombre total des sujets de Master</th>
+								<th class="text-center">Pourcentage des sujets réservés par rapport au nombre total des sujets</th>
+								<th class="text-center">Pourcentage avis favorables</th>
+								<th class="text-center">Pourcentage avis favorables avec réserves</th>
+								<th class="text-center">Pourcentage avis défavorables</th>
+								{% if perms.scolar.fonctionnalitenav_stages_visualisationstages %}
+									<th class="text-center">Liste des sujets</th>
+								{% endif %}
+							</tr>
+						</thead>
+						<tbody>
+				    		{% for organisme in stages_organismes %}
+									<tr>
+										<td>{{ organisme.nom }} <strong>({{organisme.sigle}})</strong></td>
+										<td>{{ organisme.pays }}</td>
+										<td style="text-align:center;"><strong>{{ organisme.nb_sujets }}</strong></td>
+										<td style="text-align:center;">{{ organisme.nb_pfe }}</td>
+										<td style="text-align:center;">{{ organisme.nb_master }}</td>
+										<td style="text-align:center;">{{ organisme.nb_sujets_reserves|as_percentage_of:organisme.nb_sujets }}%</td>
+										<td style="text-align:center; color:green;"><strong>{{ organisme.nb_avis_favorables|as_percentage_of:organisme.nb_avis_total }}%</strong></td>
+										<td style="text-align:center; color:#c29911;"><strong>{{ organisme.nb_avis_reserves|as_percentage_of:organisme.nb_avis_total }}%</strong></td>
+										<td style="text-align:center; color:red;"><strong>{{ organisme.nb_avis_defavorables|as_percentage_of:organisme.nb_avis_total }}%</strong></td>
+										{% if perms.scolar.fonctionnalitenav_stages_visualisationstages %}
+											<td style="text-align:center;"><a href="{% url "pfe_list" %}?organisme={{ organisme.sigle }}" > {% icon "eye" %} </a></td>
+										{% endif %}
+									</tr>
+							{% endfor %}
+						</tbody>	
+					</table>
+						
+		    	</div>
+		    </div>
+	    </div>
+
+
+
+
+	    <div id="par_etudiants" class="container tab-pane fade"><br>
+	    	<div class="row align-items-center" >
+	    		<h3>Répartition des étudiants</h3>
+				<br><br><br>
+		    	<div class="col-lg-12">
+					<table class="table table-bordered table-sm">
+    					<thead>
+							<tr>
+								<th></th>
+								<th colspan="2" style="text-align: center; background-color:rgb(128, 255, 128)">PFE</th>
+								<th colspan="2" style="text-align: center;background-color:rgb(128, 255, 255)">Master</th>
+							</tr>
+							<tr>
+								<th style="text-align: center">Année</th>
+								<th style="text-align: center">Sujets en monôme</th>
+								<th style="text-align: center">Sujets en binôme</th>
+								<th style="text-align: center">Sujets en monôme</th>
+								<th style="text-align: center">Sujets en binôme</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							{% for annee, stats in stats_par_annee.items %}
+								<tr>
+									<td style="text-align: center">{{ annee }}</td>
+									
+									{% with stats|get_value_from_dict:'nb_stages_pfe_total' as nb_stages_pfe_total_annee %}
+										{% with stats|get_value_from_dict:'nb_stages_pfe_monomes' as nb_stages_pfe_monomes_annee %}
+											<td style="text-align: center">{{ nb_stages_pfe_monomes_annee|as_percentage_of:nb_stages_pfe_total_annee }}%</td>
+										{% endwith %}
+										{% with stats|get_value_from_dict:'nb_stages_pfe_binomes' as nb_stages_pfe_binomes_annee %}
+											<td style="text-align: center">{{ nb_stages_pfe_binomes_annee|as_percentage_of:nb_stages_pfe_total_annee }}%</td>
+										{% endwith %}
+																		
+									{% endwith %}
+									
+									{% with stats|get_value_from_dict:'nb_stages_master_total' as nb_stages_master_total_annee %}
+										{% with stats|get_value_from_dict:'nb_stages_master_monomes' as nb_stages_master_monomes_annee %}
+											<td style="text-align: center">{{ nb_stages_master_monomes_annee|as_percentage_of:nb_stages_master_total_annee }}%</td>
+										{% endwith %}
+										{% with stats|get_value_from_dict:'nb_stages_master_binomes' as nb_stages_master_binomes_annee %}
+											<td style="text-align: center">{{ nb_stages_master_binomes_annee|as_percentage_of:nb_stages_master_total_annee }}%</td>
+										{% endwith %}
+																		
+									{% endwith %}
+							
+								</tr>
+							{% endfor %}
+
+						</tbody>	
+					</table>
+						
+		    	</div>
+		    </div>
+
+	    </div>
+
+  </div>
+
+
+{% endblock %}
+	
+

@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	<style>
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	</style>
+    
+  </head>
+  <body>
+  {% load dictionary icons bootstrap4 %}
+  
+  	<div class="container">
+	{% if institution.header %}
+		<img src="{{ institution.header.url }}" alt="Logo" width="100%">
+	{% endif %}
+	<table>
+				<tr> 
+					<td style =" text-align: left; margin-left: 0em;"> 
+					<p align="left">			Direction des études</p>
+					</td>
+					<td></td>
+					<td style =" text-align: right; margin-right: 0em;" > 
+					<p>مديرية الدراسات</p>
+					</td> 
+				</tr></table> 	
+	<br>
+	<h2 class="text-center"><strong>Notes de</strong> {{ formation.programme.titre }}</h2>
+	<h3 class="text-center"><strong>Spécialité: </strong>{{formation.programme.specialite.intitule}}</h3>
+	<h4 class="text-center"><strong>Année Universitaire:{{formation.annee_univ}}/{{formation.annee_univ.annee_suivante}}</strong></h4>
+	<h5 class="text-center"><strong>Le: {{date|date:'d/m/Y'}}</strong></h5>
+	<br><br>
+	<table class="table-sm">
+		<thead class="thead-dark">
+				<tr>
+					<th>
+					</th>
+					<th>
+					</th>
+					{% for id, periode in periode_list.items %}
+						{% for ue in periode.ues %}
+							<th colspan="{{ue.matieres.all.count|add:1}}">
+								{{ ue.code }}
+							</th>
+						{% endfor %}
+						<th></th>
+					{% endfor %}
+					{% if periode_pk == 0 %}
+						<th>
+						</th>
+						<th>
+						</th>
+						<th>
+						</th>
+					{% endif %}
+				</tr>
+			<tr>
+				<th>Matricule</th>
+				<th>Groupe</th>
+				{% for id, periode in periode_list.items %}
+						{% for ue in periode.ues %}
+							{% for matiere in ue.matieres.all %}
+								<th>
+									{{ matiere.code }}
+								</th>
+							{% endfor %}
+							<th>
+								Moy
+							</th>
+						{% endfor %}
+
+					<th>
+						<strong>Moy {{ periode.periode.periode.code }}</strong>
+					</th>
+
+				{% endfor %}
+				{% if periode_pk == 0 %}
+					<th>
+						Moy
+					</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+		{% for inscription in inscription_list %}
+			<tr>
+			<td>
+				{{ inscription.etudiant.matricule }}
+			</td>
+			<td>{{inscription.groupe.code}}</td>
+			{% for id, periode in periode_list.items %}
+					{% for ue in periode.ues %}
+						{% for matiere in ue.matieres.all %}
+							{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.periode.code|addstr:'_'|addstr:ue.id|addstr:'_'|addstr:matiere.code as key %}
+								{% with resultat_list|get_value_from_dict:key as resultat %}
+									{% if resultat %}
+										{% if resultat.moy_post_delib < resultat.module.note_eliminatoire %}
+											<td class="table-danger">{{resultat.module.matiere.code}}: {{ resultat.moy_post_delib }} < {{ resultat.module.note_eliminatoire }}</td>
+										{% elif resultat.moy < resultat.module.note_eliminatoire %}
+											<td class="table-warning">{{resultat.module.matiere.code}}: {{ resultat.moy }} {% icon 'arrow-right' %} {{ resultat.moy_post_delib }} </td>
+										{% else %}
+											<td>{{ resultat.moy }}</td>
+										{% endif %}
+									{% else %}
+										<td class="table-active"> </td>
+									{% endif %}
+								{% endwith %}
+							{% endwith%}
+						{% endfor %}
+						{% with inscription.etudiant.matricule|addstr:'_'|addstr:ue.id|addstr:'_moy' as key %}
+							{% with resultat_list|get_value_from_dict:key as note %}
+								{% if note %}
+									<td>{{ note }}</td>
+								{% else %}
+									<td class="table-active"></td>
+								{% endif %}
+							{% endwith %}
+						{% endwith%}
+					{% endfor %}
+				{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.periode.code|addstr:'_moy' as key %}
+					{% with resultat_list|get_value_from_dict:key as note %}
+						<td class="table-info">{{ note }}</td>
+					{% endwith %}
+				{% endwith%}
+
+			{% endfor %}
+			{% if periode_pk == 0 %}
+				<td>{{ inscription.moy }}</td>
+			{% endif %}
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	<br>
+	{% if institution.footer %}
+		<img src="{{ institution.footer.url }}" alt="Logo" width="100%"> 
+	{% endif %}
+	
+	</div>
+</body>
+</html>

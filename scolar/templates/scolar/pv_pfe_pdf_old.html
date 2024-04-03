@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-before: always;
+  			}
+		}
+    </style>
+
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+	
+  </head>
+  <body>
+	{% load dictionary %}
+	{% for inscrit in groupe.inscrits_periode.all %}
+  	<div class="container new-page">
+		<img src="{{ institution.header.url }}" alt="Logo ESI"  height="150" width="100%">
+		<br><br>
+		{% if module.formation.programme.ordre == 5 %}
+			<h3 align="center">
+				Procès Verbal de délibération en vue de l'obtention du diplôme de:<br>
+				{{module.formation.programme.diplome.intitule}}
+			</h3>
+		{% else %}
+			<h3 align="center">
+				Procès Verbal de la soutenance du mémoire de Master en informatique
+			</h3>
+		{% endif %}		
+		<br><br><br>
+		<table width="100%">
+			<tr>
+				<td colspan="2"><strong>Option</strong></td>
+				<td colspan="1">{{inscrit.inscription.formation.programme.specialite.intitule}}</td>
+				<td colspan="1"><strong>Promotion:</strong>  {{module.formation.annee_univ}}/{{module.formation.annee_univ.annee_suivante}}</td>
+			</tr>
+			<tr>
+				<td colspan="2"><strong>Matricule</strong></td>
+				<td colspan="2">{{inscrit.inscription.etudiant.matricule}}</td>
+			</tr>
+			<tr>
+				<td colspan="2"><strong>Nom et Prénom: </strong></td>
+				<td colspan="2">{{inscrit.inscription.etudiant.nom}} {{inscrit.inscription.etudiant.prenom}}</td>
+			</tr>
+			<tr>
+				<td colspan="4"><strong>Intitulé du mémoire: </strong></td>
+			</tr>
+			<tr>
+				<td colspan="4">{{groupe.pfe.intitule}}</td>
+			</tr>
+			<tr>
+				<td colspan="4"> &nbsp </td>
+			</tr>
+			<tr>
+				<td colspan="2"><strong>Date de soutenance: </strong></td>
+				<td colspan="2">{{groupe.soutenance.date|date:'d/m/Y'}}</td>
+			</tr>
+		</table>
+		<br><br>
+		<h4 align="center">Composition du jury</h4>
+		<table class="table table-bordered" width="100%">
+			<thead>
+				<tr>
+					<th>Qualité</th>
+					<th>Membre</th>
+					<th>Signature</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% if groupe.soutenance.president %}
+				<tr>
+					<td>Président</td>
+					<td>{{groupe.soutenance.president}}</td>
+					<td></td>
+				</tr>
+				{% endif %}
+				{% if groupe.soutenance.examinateur %}
+				<tr>
+					<td>Examinateur</td>
+					<td>{{groupe.soutenance.examinateur}}</td>
+					<td></td>
+				</tr>
+				{% endif %}
+				{% if groupe.soutenance.rapporteur %}
+				<tr>
+					<td>Rapporteur</td>
+					<td>{{groupe.soutenance.rapporteur}}</td>
+					<td></td>
+				</tr>
+				{% endif %}
+				{% if groupe.soutenance.assesseur1 %}
+				<tr>
+					<td>Assesseur 1</td>
+					<td>{{groupe.soutenance.assesseur1}}</td>
+					<td></td>
+				</tr>
+				{% endif %}
+				{% if groupe.soutenance.assesseur2 %}
+				<tr>
+					<td>Assesseur 2</td>
+					<td>{{groupe.soutenance.assesseur2}}</td>
+					<td></td>
+				</tr>
+				{% endif %}
+
+			</tbody>
+		</table>
+		<br><br> 
+		<h4 align="center">Résultats de la délibération</h4>
+		{% with resultat_list|get_value_from_dict:inscrit.inscription.etudiant.matricule as resultat %}
+		<table class="table table-bordered" width="100%">
+		<thead>
+			<tr>
+				<th>Evaluation</th>
+				<th>Pondération</th>
+				<th>Note</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for note in resultat.notes.all %}
+				<tr>
+					<td>{{note.evaluation.type}}</td>
+					<td>{{note.evaluation.ponderation|multiply:100 }}%</td>
+					<td>{{note.note}}</td>					
+				</tr>
+			{% endfor %}
+			<tr>
+				<td colspan="2"><strong>Moyenne</strong></td>
+				<td>{{resultat.moy}}</td>
+			</tr>
+		</tbody>
+		</table>
+		<br><br><br>
+		{% if module.formation.programme.ordre == 5 %}
+			Suite à la note finale obtenue <strong>{{resultat.moy}}</strong>. <br>
+			Le candidat a été <strong>{{decision_jury|get_value_from_dict:inscrit.inscription.decision_jury}}</strong> 
+			au diplôme de: <strong> {{inscrit.inscription.formation.programme.diplome.intitule}}</strong>,
+			{% if inscrit.inscription.mention and inscrit.inscription.mention != 'X' %}
+					avec la mention : <strong>{{mention|get_value_from_dict:inscrit.inscription.mention}}</strong><br>
+			{% endif %}
+		{% else %}
+			<strong>Note finale obtenue</strong> {{resultat.moy}}, <br>
+		{% endif %}
+		{% endwith %}
+		<br>
+		<strong>Document à remettre à la bibliothèque: </strong>
+		{{ options_depot|get_value_from_dict:groupe.soutenance.depot_biblio }}
+		<br>
+ 	 <img src="{{ institution.footer.url }}" alt="Logo ESI" width="100%">		
+	</div>	
+	{% endfor %}
+  </body>
+</html>

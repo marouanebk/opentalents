@@ -1,0 +1,7 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons %}
+{% block content %}
+	<h1>Mon EDT</h1>
+	
+    {{ edt|safe }}
+{% endblock %}

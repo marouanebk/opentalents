@@ -1,0 +1,119 @@
+{% extends 'scolar/index.html' %}
+{% load icons dictionary bootstrap4 usergroup %}
+
+
+{% block content %}
+
+
+	<br><br>
+	<h2>Notes du module {{ module.matiere.code }} ({{module.matiere.titre}})
+		{% if groupe %}
+			de {{ groupe }} 
+		{% endif %}
+	</h2>
+    <br><br>
+    {% if groupe %}
+	    {% if request.user|has_object:"enseignant" or perms.scolar.fonctionnalitenav_pedagogie_visualisationnotes or perms.scolar.fonctionnalitenav_stages_visualisationsoutenances %}
+	    	{% if module.matiere.pfe %}
+				{% if request.user|has_object:"enseignant" or perms.scolar.fonctionnalite_stages_modificationsoutenances %}
+	    			<a href="{% url "note_pfe_update" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-danger">Modifier</a>
+	    		{% endif %}
+				{% if perms.scolar.fonctionnalitenav_stages_visualisationsoutenances %}
+	    			<a href="{% url "pv_pfe_pdf" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-success">{% icon 'print' %} PV</a>
+	    			<a href="{% url "export_fiche_eval_pfe" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-info">{% icon 'file-excel' %} Fiche Evaluation</a>
+	    		{% endif %}
+	    	{% elif groupe.is_equipe %}
+				{% if request.user|has_object:"enseignant" or perms.scolar.fonctionnalite_stages_modificationsoutenances %}
+					<a href="{% url "note_pfe_update" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-danger">Modifier</a>
+				{% endif %}
+				<br><br><span style="font-size:20px; font-weight:bold;">Membres du jury :</span>
+					<br>Membre du jury 1 : <strong>{{ groupe.soutenance.assesseur1 }}</strong>
+					<br>Membre du jury 2 : <strong>{{ groupe.soutenance.assesseur2 }}</strong>					
+	    	{% elif request.user|has_object:"enseignant" or perms.scolar.fonctionnalite_pedagogie_modificationnotes %}
+				<a href="{% url "note_update" groupe_pk=groupe.id matiere_pk=module.matiere.id %}" class="btn btn-danger">Modifier</a>
+	    		<a href="{% url "export_notes" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-info">{% icon 'download' %} Export Excel</a>
+	    		<a href="{% url "notes_module_import" module_pk=module.id groupe_pk=groupe.id %}" class="btn btn-info">{% icon 'cloud-upload-alt' %} Import Excel</a>
+	    	{% endif %}
+	    {% endif %}
+    {% elif module.formation.activation_dettes %}
+		<a href="{% url "note_dette_update" module_pk=module.id %}" class="btn btn-danger">Modifier</a>
+	{% endif %}
+    
+    <br><br>
+    <div class="row">
+    <div class="col-lg-12">
+    	<table class="table table-bordered table-sm">
+    		<thead class="thead-dark">
+				<tr>
+					<th>Etudiant</th>
+					<th>Situation</th>
+					<th>Acquis</th>
+					{% if module.activation_rattrapage %}
+						<th>Entrée en rattrapage</th>
+					{% endif %}
+					{% for eval_ in evaluation_list  %}
+						<th class="text-center">{{ eval_.type }}x{{ eval_.ponderation.normalize }}
+						{% if module.activation_rattrapage %}
+							<br>R:{{ eval_.type }}x{{ eval_.ponderation_rattrapage.normalize }}
+						{% endif %}
+						</th>
+					{% endfor %}
+					<th>Moyenne</th>
+					{% if module.activation_rattrapage %}
+						<th>Moyenne Rattrapage</th>
+						
+					{% endif %}
+					<th>Moyenne Finale</th>
+					
+				</tr>
+			</thead>
+    		<tbody>
+				{% for inscrit_ in inscription_list  %}
+					<tr>
+						<td>
+							<strong>{{ inscrit_.etudiant }}</strong>
+						</td>
+						<td>{{ decisions_jury|get_value_from_dict:inscrit_.decision_jury }}</td>
+						{% with resultat_list|get_value_from_dict:inscrit_.etudiant.matricule as resultat_ %}
+							<td>{% if resultat_.acquis %}<strong>Oui</strong>{% else %}Non{% endif %}</td>
+						{% endwith %}
+						{% if module.activation_rattrapage %}
+							{% with resultat_list|get_value_from_dict:inscrit_.etudiant.matricule as resultat_ %}
+								<td>{% if resultat_.entree_rattrapage %}<strong>Oui</strong>{% else %}Non{% endif %}</td>
+							{% endwith %}
+						{% endif %}
+						{% for eval_ in evaluation_list  %}
+							
+								{% with inscrit_|addstr:" "|addstr:eval_ as key %}
+									{% with note_list|get_value_from_dict:key as note_ %}
+										{% if note_ %}
+											<td class="text-center">
+												{{ note_.note }}
+											</td>
+                						{% else %}
+                							<td class="text-center">
+                    						 	--
+                    						</td>
+
+										{% endif %}
+									{% endwith %}
+								{% endwith %}
+							
+						{% endfor %}
+						{% with resultat_list|get_value_from_dict:inscrit_.etudiant.matricule as resultat_ %}
+							<td><strong>{{ resultat_.moy }} </strong></td>
+							{% if module.activation_rattrapage %}
+								<td><strong>{{ resultat_.moy_rattrapage }} </strong></td>
+							{% endif %}
+							<td><strong>{{ resultat_.moy_post_delib }} </strong></td>
+						{% endwith %}
+
+					</tr>
+				{% endfor %}
+    		</tbody>
+		</table>    
+	</div>
+	</div>
+
+    
+{% endblock %}

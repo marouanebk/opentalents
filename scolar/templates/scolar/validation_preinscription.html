@@ -1,0 +1,240 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% block content %}
+ 	<br><br>
+	<h2>Anciennes Information Personnelles</h2>
+	<h3 class="text-center"> <strong>Matricule: </strong>{{ inscription.etudiant.matricule }} </h3>
+	<div class="row">
+		
+		<div class="col-lg-4 offset-lg-3">
+			<div class="col-lg-12">
+			<table class="table table-sm table-striped table-responsive">
+				<tr>
+					<td><strong> Nom :  </strong> {{ inscription.etudiant.nom }}  {{ inscription.etudiant.nom_a }}</td>
+					<td><strong> Prénom :  </strong> {{ inscription.etudiant.prenom }}  {{ inscription.etudiant.prenom_a|default_if_none:"" }}</td>
+				</tr>
+				<tr>
+					<td><strong> Né(e) le :  </strong> {{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</td>
+					<td><strong> à :  </strong> {{ inscription.etudiant.lieu_naissance }} {{ inscription.etudiant.lieu_naissance_a|default_if_none:"" }}</td>
+				</tr>
+					{% if inscription.etudiant.wilaya_residence %}
+					<tr>
+						<td colspan="2"><strong> Adresse :  </strong> {{ inscription.etudiant.addresse_principale|default_if_none:"" }}</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong> Wilaya  </strong> {{ inscription.etudiant.wilaya_residence|default_if_none:"" }}</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong> Commune  </strong> {{ inscription.etudiant.commune_residence|default_if_none:"" }}</td>
+					</tr>
+					{% endif %}
+				<tr>
+					<td><strong> Interne :  </strong> {% if inscription.etudiant.interne %} Oui {% else %} Non {% endif %} </td>
+					<td>
+					{% if inscription.etudiant.interne %}
+						<strong> Résidence U :  </strong> {{ inscription.etudiant.residence_univ|default_if_none:"" }}
+					{% endif %}
+					</td>
+				</tr>
+				<tr>
+					{% if inscription.etudiant.numero_securite_sociale %}
+						<td colspan="2"><strong> Numéro de Sécurité Sociale :  </strong> {{ inscription.etudiant.numero_securite_sociale }}</td>
+					{% endif %}	
+				</tr>
+				{% if inscription.etudiant.tel %}
+				<tr>
+						<td colspan="2"><strong> Tel :  </strong> {{ inscription.etudiant.tel }}</td>
+				</tr>
+				{% endif %}
+				{% if inscription.etudiant.tuteur %}
+					<tr>
+						<td colspan="2"><strong>Tuteur:</strong> {{ inscription.etudiant.tuteur }}</td>
+					</tr>
+				{% endif %}
+				<tr>
+					<td colspan="2"><strong>Email:</strong> {{ inscription.etudiant.user.email }}</td>
+				</tr>
+					{% if inscription.etudiant.github %}
+						<tr><td colspan="2"><strong>Github:</strong> <a href="{{ inscription.etudiant.github }}">{{ inscription.etudiant.github }}</a></td></tr>
+					{% endif %}
+					{% if inscription.etudiant.linkdin %}
+						<tr><td colspan="2"><strong>Linkedin:</strong><a href="{{ inscription.etudiant.linkdin }}">{{ inscription.etudiant.linkdin }}</a></td></tr>
+					{% endif %}
+					{% if inscription.etudiant.activite_extra %}
+						<tr><td colspan="2"><strong>Activités extra-scolaires: </strong> {{ inscription.etudiant.activite_extra }}</td></tr>
+					{% endif %}
+				</table>
+			</div>
+		</div>
+		{% if inscription.etudiant.photo.name %}
+		<div class="col-lg-2" alt"Photo">
+			<img src="{{ inscription.etudiant.photo.url }}" width="180" height="230">
+		</div>
+		{% endif %}
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h2 class="text-center"> <strong>Mise à jour demandée des informations personnelles</strong></h2>
+			<p class="alert alert-info">
+				Merci de vérifier la cohérence de ces nouvelles informations.
+			</p>
+			<p class="alert alert-warning">
+				<strong>Ne pas valider l'inscription dans les cas suivants:<br>
+					- Demande d'inscription incohérente avec la décision du jury de délibération de l'année précédente<br>
+					- Absence de la quittance de payement des frais d'inscription<br>
+					- Absence de photo d'identité dans les anciennes et nouvelles informations<br>
+					- Absence d'adresse ou téléphone dans les anciennes et nouvelles informations<br>
+	
+				</strong>
+			</p>
+			<br>
+				<table class="table table-hover" width="80%">
+				<tr>
+					<td>
+						Année précédente: 
+									{% if inscription_annee_precedente %}
+										{% if inscription_annee_precedente.decision_jury == 'A' or inscription_annee_precedente.decision_jury == 'AR' %}
+											<p class="alert alert-success"> 
+												{{ inscription_annee_precedente }}<br>
+												Décision du jury: <strong>{{ decision_jury|get_value_from_dict:inscription_annee_precedente.decision_jury }}</strong>
+											</p>
+										{% else %}
+											<p class="alert alert-danger"> 
+												{{ inscription_annee_precedente }}<br>
+												Décision du jury: <strong>{{ decision_jury|get_value_from_dict:inscription_annee_precedente.decision_jury }}</strong>
+											</p>
+										{% endif %}
+									{% else %}
+											<p class="alert alert-danger"> 
+												<strong>Non disponible </strong>
+											</p>
+									{% endif %}
+						</td>
+						<td>
+							Demande d'inscription en:
+								<p class="alert alert-info">
+									{{ inscription }}
+								</p>
+						</td>
+				</tr>
+				<tr>
+					<td>
+						Nouvelle Photo d'identité :
+					</td>
+					<td>
+						{% if inscription.preinscription.photo.name %} 
+							<img src="{{ inscription.preinscription.photo.url }}" width="180" height="230">
+						{% else %}
+							<strong>Inchangée</strong>
+						{% endif %}
+					</td>
+	    		</tr>
+				<tr>
+					<td>
+						Nouvelle Wilaya de Résidence:
+					</td>
+					<td> 
+						{% if inscription.preinscription.wilaya_residence %} 
+														{{ inscription.preinscription.wilaya_residence }}
+													{% else %}
+														<strong>Vide</strong>
+													{% endif %}
+					</td>
+	    		</tr>
+				<tr>
+					<td>
+						Nouvelle Commune de Résidence:
+					</td>
+					<td> 
+						{% if inscription.preinscription.commune_residence %}
+															{{ inscription.preinscription.commune_residence }}
+													{% else %}
+														<strong>Vide</strong>
+													{% endif %}
+														
+					</td>
+	    		</tr>
+				<tr>
+					<td>
+						Nouvelle Adresse Principale:
+					</td>
+					<td> 
+						{% if inscription.preinscription.adresse_principale %}
+															{{ inscription.preinscription.adresse_principale }}
+													{% else %}
+														<strong>Vide</strong>
+													{% endif %}
+					</td>
+	    		</tr>
+				<tr>
+					<td>
+						Nouveau Numéro de Téléphone:
+					</td>
+					<td> 
+						{% if inscription.preinscription.tel %}
+															{{ inscription.preinscription.tel }}
+													{% else %}
+														<strong>Vide</strong>
+													{% endif %}
+					</td>
+	    		</tr>
+				<tr>
+					<td>
+						Nouveau Numéro de Sécurité Sociale:
+					</td>
+					<td> 
+						{% if inscription.preinscription.numero_securite_sociale %}
+																{{ inscription.preinscription.numero_securite_sociale }}
+													{% else %}
+														<strong>Vide</strong>
+													{% endif %}
+					</td>
+	    		</tr>
+				<tr>
+					<td>
+						Interne? :
+					</td>
+					<td> 
+						{% if inscription.preinscription.interne %} Oui {% else %} Non {% endif %}
+					</td>
+	    		</td>
+	    		{% if inscription.preinscription.interne %} 
+					<tr>
+						<td>
+							Nouvelle Résidence Universitaire :
+						</td>
+						<td> 
+							{% if inscription.preinscription.residence_univ %}
+																	{{ inscription.preinscription.residence_univ }}
+													{% else %}
+														<strong>Vide</strong>
+													{% endif %}
+						</td>
+		    		</tr>
+	    		{% endif %}
+				<tr>
+					<td>
+						Quittance de Payement des frais d'inscription :
+					</td>
+					<td>
+						{% if inscription.preinscription.quittance.name %} 
+							<img src="{{ inscription.preinscription.quittance.url }}" width="50%">
+						{% else %}
+							<strong>Pas de quittance</strong>
+						{% endif %}
+					</td>
+	    		</tr>
+		</table>
+		<div class="row">
+			<div class="col-lg-12">
+				{% crispy form %}
+			<div>
+		</div>
+		
+	</div>
+				
+				
+			
+	<br><br>
+	
+{% endblock %}

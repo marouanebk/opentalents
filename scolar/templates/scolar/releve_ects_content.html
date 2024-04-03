@@ -1,0 +1,184 @@
+  {% load dictionary %}
+	{% with 'RELEVE_NOTES_ECTS'|autorite_entete_from_document_programme:inscription.formation.programme as autorite_entete %}
+	{% with 'RELEVE_NOTES_ECTS'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+	<div>
+	{% if institution.header %}
+		<img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+	{% endif %}
+	<table class="table table-borderless table-sm" width="100%" >
+				<tr> 
+					<td style =" text-align: left; margin-left: 0em;"> 
+					<p align="left">			{{ autorite_entete.intitule }}</p>
+					</td>
+					<td></td>
+					<td style =" text-align: right; margin-right: 0em;" > 
+					<p> {{ autorite_entete.intitule_a }}</p>
+					</td>
+				</tr></table>
+	</div>
+ 
+ 	<h3 align="center">
+ 		
+ 		<strong>
+  		Attestation de Crédits<br>
+ 		<small>Credits Certificate</small>
+ 		</strong>
+ 		<br><br>
+ 	</h3>
+
+		<table class="table table-borderless table-sm" width="100%">
+			<tr>
+				<td>Année universitaire / <small> Year of Study </small>:</td>  
+				<td><strong>{{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</strong></td>
+				<td>Année d'étude  / <small>Level</small>:</td>
+				<td><strong>{{inscription.formation.programme.titre}} /<br> 
+					<small>{% if inscription.formation.programme.titre|english %}{{inscription.formation.programme.titre|english}}{% else %}{{ inscription.formation.programme.titre_en|default_if_none:"" }}{% endif %}</small>
+					</strong>
+				</td>
+
+			</tr>
+			<tr>
+				<td>Matricule / <small>Registration N° </small>:</td>
+				<td> <strong>{{inscription.etudiant.matricule}}</strong></td>
+				{% if inscription.formation.programme.specialite %}
+					<td>Spécialité  / <small>Speciality</small>:</td>
+					<td><strong>{{inscription.formation.programme.specialite.intitule}} /<br> 
+					<small>{{inscription.formation.programme.specialite.title|default_if_none:""}}</small>
+					</strong></td>				
+				{% endif %}
+
+			</tr>
+			<tr>
+				<td>Nom  / <small>Last name </small>:</td> 
+				<td><strong>{{ inscription.etudiant.nom }}</strong> </td>
+				<td> Prénom / <small>First name </small>:</td>
+				<td><strong>{{ inscription.etudiant.prenom }}</strong> </td>
+			</tr>
+			<tr>
+				<td> Date de naissance / <small>Date of birth </small>:</td> 
+				<td><strong>{% if inscription.etudiant.date_naissance %} {{ inscription.etudiant.date_naissance|date:'d/m/Y' }}{% endif %}</strong> </td>
+				<td> Lieu de naissance / <small>Place of birth </small>:</td> 
+				<td><strong>{{inscription.etudiant.lieu_naissance|default_if_none:""}}</strong> </td>		
+			</tr>
+			<tr>
+				<td>Diplôme préparé / <small>Prepared degree </small>:</td> 
+				<td colspan="3"><strong>{{inscription.formation.programme.diplome}} /<small>{% if inscription.formation.programme.diplome.intitule|english %} {{inscription.formation.programme.diplome.intitule|english}}{% else %}{{inscription.formation.programme.diplome.intitule_en}}{% endif %}</small></strong></td>
+			</tr>
+		</tr>
+		</table>
+		<br>
+    		<table width="100%">
+
+    			<thead>
+ 
+    				<tr>
+    					<th colspan="2">Semestre <br> <small>Semester</small></th>
+    					<th colspan="1">Unité d'enseignement <br> <small>Teaching unit</small></th>
+    					<th colspan="3">Matière <br> <small>Subject</small></th>
+    					<th colspan="3">Total(**) Crédits obtenus par compensation <br> <small>Total(**) Granted credits with compensation</small></th>
+    				</tr>
+    				<tr>
+    					<th>Code</th>
+    					<th>Session</th>
+    					<th>Code</th>
+    					<th>Code</th>
+    					<th>Intitulé <br> <small>Title</small></th>
+    					<th>Note  <br> <small>Grade</small></th>
+    					<th>Matière <br><small>Subject</small></th>
+    					<th>UE <br><small>Teaching Unit</small></th></th>
+						<th>Semestre<br><small>Semester</small></th></th>    					
+    				</tr>
+
+    			</thead>
+ 
+    			<tbody>
+					{% for periode in inscription.inscription_periodes.all|dictsort:'periodepgm.periode.code' %}
+    				<tr>
+    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">
+    						{{ periode.periodepgm.code }}
+    					</td>
+						<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">
+							{{ periode|session_from_inscription_periode:periode.periodepgm.periode }} /<br><small>{{ periode|session_from_inscription_periode:periode.periodepgm.periode|english }}</small>
+						</td>
+						{% for ue in periode.resultat_ues.all %}
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+								{{ ue.ue.code }}
+							</td>
+							{% for resultat in ue.resultat_matieres.all %}	
+								<td><strong>{{ resultat.module.matiere.code }}</strong></td>
+								<td>{{ resultat.module.matiere.titre }} / <small>{{ resultat.module.matiere.titre_en }}</small></td>
+								<td>{{ resultat.calcul_ects }}</td>
+								<td>{{ resultat.credits_obtenus }}</td>
+								{% if forloop.first %}
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+											{{ ue.credits_obtenus }}
+									</td>
+									{% if forloop.parentloop.counter == 1 %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.credits_obtenus }}</td>
+									{% endif %}
+   								{% endif %}
+								</tr><tr>
+							{% endfor %}
+						{% endfor %}
+					</tr>
+    				{% endfor %}
+    	    	</tbody>
+  			</table>
+			<small>
+  			<strong>(*) Les notes correspondent à la notation ECTS / <small>The grades follow ECTS notation</small>
+  				<table class="table table-borderless table-sm" width="100%">
+  					<tr>
+  						<td>A:  parmi les 10% mieux classés <br> <small> among 10% best ranked </small></td>
+  						<td>B:  parmi les 25% suivants mieux classés <br><small> among following 25% best ranked </small></td>
+  						<td>C:  parmi les 30% suivants mieux classés <br><small> among following 30% best ranked </small></td>
+  						<td>D:  parmi les 25% suivants mieux classés <br><small> among following 25% best ranked </small></td>
+  					</tr>
+  					<tr>
+  						<td>E:  parmi les 10% suivants mieux classés <br><small> among following 10% best ranked </small></td>
+  						<!--
+  						<td>Fx:  Echec > note éliminatoire du module <br><small> Fail > subject eliminatory mark</small></td>
+  						-->
+  						<td>F:  Echec <br><small> Fail </small></td>
+  					</tr>
+  				</table>
+  			</strong>
+  			</small>
+
+	<table class="table table-borderless table-sm" width="100%">
+		<tr>
+			<td>Total des crédits cumulés dans l'année avec compensation entre semestres / <small>Total year granted credits with conpensation between semesters</small>: <strong>{{inscription.credits_obtenus}}</strong></td>
+		</tr>
+		<!--
+		<tr>
+			<td>Total des crédits cumulés dans le cursus / <small>Total of credits granted during the curriculum </small>: <strong>{{inscription.credits_cursus}}</strong></td>
+		</tr>
+		-->
+		<tr>
+			<td>Rang / <small>Rank</small>: <strong>{{inscription.rang}}</strong> sur / <small> among</small> <strong>{{inscription.nb_inscrits}}</strong>
+		</tr>
+		<tr>
+			<td><br>Fait à {{ institution.ville }} le : {{date|date:'d/m/Y'}}</td>
+		</tr>
+	</table>
+	
+	{% if view.kwargs.signature == '1' %}
+		{% if autorite %}
+			{% if autorite.signature.name %}
+				<img src="{{ autorite.signature.url }}" alt="Signature" height="170" >
+				<br><br><br>
+			{% else %}
+				<br><br><br><br><br>
+			{% endif %}
+		{% endif %}
+	{% else %}
+		<br><br><br><br><br><br>
+	{% endif %}
+
+
+	<div style="text-align: center;">
+	{% if institution.footer %}
+		<img src="{{ institution.footer.url }}" alt="Logo" width="100%">
+	{% endif %}
+	</div>
+{% endwith %}
+{% endwith %}

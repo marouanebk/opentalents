@@ -1,0 +1,76 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %}
+{% block signataire %}
+	{% with 'ATTESTATION_ETUDES_FR'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+				<br>
+			<table style="width:100%">
+				<tr> 
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">			{{ autorite.intitule }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p> {{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %}
+				</tr></table>
+		{% endwith %}
+	{% with 'ATTESTATION_ETUDES_FR'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+    			<p align="left">
+					{% if autorite %}
+	    				{% if autorite.responsable %}{{ autorite.responsable}}, <br>{% endif %}
+						{{ autorite.titre_responsable }}<br>
+						{{ institution.nom}}, {{ institution.sigle }}, {{ institution.ville }} <br>
+						{% if autorite.responsable.user.email %}Email: {{ autorite.responsable.user.email}} <br>{% endif %}
+					{% endif %}
+    			</p>
+    			<br>
+	{% endwith %}
+{% endblock %}
+{% block title %} 
+	ATTESTATION
+{% endblock %}
+{% block content %}	
+{% with 'ATTESTATION_ETUDES_FR'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+    <table>
+    	<tr>
+    		<td>
+    			<p align="justify">
+    				Nous attestons que,<br><br> 
+    				M. (elle) : {{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom}}{% if inscription.etudiant.nom_a and inscription.etudiant.prenom_a %} / {{ inscription.etudiant.nom_a }} {{ inscription.etudiant.prenom_a }}{% endif %}, <br><br> 
+    				{% if inscription.etudiant.date_naissance or inscription.etudiant.lieu_naissance %}Né(e) {% if inscription.etudiant.date_naissance %}le: {{ inscription.etudiant.date_naissance|date:'d/m/Y' }} {% endif %}{% if inscription.etudiant.lieu_naissance %}à {{ inscription.etudiant.lieu_naissance }}{% endif %}{% endif %}<br><br>
+    				Est inscrit(e) à : {{ institution.nom }} ({{ institution.sigle }}, {{ institution.ville }}) sous N°: {{ inscription.etudiant.matricule }}. <br><br>
+    				Il/Elle poursuit des études de: {{ inscription.formation.programme.diplome.intitule}}.<br><br> 
+					{% if not inscription.formation.programme.doctorat %}L'ensemble de son cursus est dispensé en langue française. {% endif %}
+					<br><br>
+					Fait pour servir et valoir ce que de droit,
+					<br><br>
+    			
+    			</p>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td>
+    			<p align="center">
+					{% if institution.ville %}{{ institution.ville }}, {% endif %}le: {{ today|date:'d/m/Y' }}	    			
+    			</p>
+    			
+    			<p align="center">
+
+					{% if autorite %}
+				    	{% if autorite.responsable %}{{autorite.responsable}}{% endif %}<br>
+						<br>
+	    				{% if autorite.signature.name %}
+							<img src="{{ autorite.signature.url }}" alt="Signature" width="300" >
+						{% else %}
+							<br><br><br><br><br><br>
+						{% endif %}
+					{% endif %}
+
+    			</p>
+    		</td>
+    	</tr>
+	</table>
+{% endwith %}
+{% endblock %}

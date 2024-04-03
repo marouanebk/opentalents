@@ -1,0 +1,132 @@
+{% load bootstrap4 icons usergroup dictionary static %}
+	{% with 'RELEVE_SEMINAIRES'|autorite_entete_from_document_programme:inscription.formation.programme as autorite_entete %}
+	{% with 'RELEVE_SEMINAIRES'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+	<div >
+	{% if institution.header %}
+		<img src="{{ institution.header.url }}" alt="Logo" width="100%" height="90px"> 
+	{% endif %}
+	<table class="table table-borderless table-sm" width="100%" >
+				<tr> 
+					<td style =" text-align: left; margin-left: 0em;"> 
+					<p align="left">			{{ autorite_entete.intitule }}</p>
+					</td>
+					<td style =" text-align: right; margin-right: 0em;" > 
+					<p>{{ autorite_entete.intitule_a }}</p>
+					</td> 
+				</tr></table>
+				<h3 align="center"> 
+					<strong>SÉMINAIRES</strong>
+				</h3>
+				<br>
+	</div>
+
+		<table class="table table-borderless table-sm" width="100%">
+			<tr>
+				<td>Matricule : <strong>{{inscription.etudiant.matricule}}</strong></td>
+				<td>Année universitaire : <strong> {{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</td>
+				<td>Année d'étude : <strong> {{inscription.formation.programme.titre}}</td>
+				{% if inscription.formation.programme.specialite %}
+					<td> Spécialité : <strong> {{ inscription.formation.programme.specialite.intitule }} </strong> </td>
+				{% endif %}
+			</tr>
+			<tr>
+				<td>Nom : <strong>{{ inscription.etudiant.nom }}</strong> </td>
+				<td> Prénom : <strong>{{ inscription.etudiant.prenom }}</strong> </td>
+				<td> Date de naissance : <strong> {{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong> </td>
+				<td> à  : <strong>{{inscription.etudiant.lieu_naissance|default_if_none:""}}</strong> </td>		
+			</tr>
+			<tr>
+				<td colspan="4">Diplôme préparé : <strong>{{inscription.formation.programme.diplome|default_if_none:""}}</strong></td>
+			</tr>
+		</table>
+    		<table width="100%">
+    			<thead>
+    				<tr>
+    					<th rowspan="1" colspan="3">Séminaires</th>
+    				</tr>	
+    				<tr>	
+    					<th rowspan="2" colspan="2">Titre/Thème</th>
+                        
+    					<th rowspan="2" colspan="1">Crédits</th>   
+    				</tr>
+    			</thead>
+    			<tbody>
+					{% for seminaire in seminaires %}
+						<tr>
+							<td>{{ seminaire.matiere.code }}</td>
+							<td>{{ seminaire.matiere.titre }}</td>
+							<td>{{ seminaire.matiere.credit }}</td>
+						</tr>
+					{% endfor %}
+    	    	</tbody>
+  			</table>
+  			<br>
+		<table class="table table-borderless table-sm" width="100%">
+		<tr style="text-align: center;">
+		<td>
+		<br><br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</td>
+			{% if view.kwargs.signature == '1' or signature == 1 %}
+				<div style="text-align: center;">
+				<td rowspan="3">
+					{% if autorite %}
+						{% if autorite.signature.name %}
+							<img src="{{ autorite.signature.url }}" alt="Signature" height="148" >
+						{% endif %}
+					{% endif %}
+				</td>
+				{% else %}		
+				<td rowspan="3">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br><br><br><br><br><br>
+				</td>
+				</div>
+			{% endif %}	
+		</tr>	
+		<tr>
+			<td colspan="2">
+			<div style="text-align: center;">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total des crédits  : <strong>{{inscription.somme_credits_seminaires}}</strong>
+			</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div style="text-align: center;">
+					Fait le: <strong>{{ date|date:'d/m/Y'}}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					Décision du Conseil :	<strong>
+												{% if inscription.decision_jury|startswith:'M' %}
+													Maladie
+													{% else %}
+													{{decision_jury|get_value_from_dict:inscription.decision_jury}}
+												
+												{% endif %}
+											</strong>
+				</div>
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">
+				<div style="text-align: center;">
+					<small> 
+						{% if pdf %}
+							<strong>
+								Il n'est délivré qu'un seul exemplaire de ce document. 
+							</strong>
+					
+							<strong>
+								لا تمنح الا نسخة واحدة من هذه الوثيقة
+							</strong>
+							<br>
+						{% endif %}
+						<SPAN STYLE="text-decoration:overline">
+	          	  			{{ institution.nom }}    {{institution.nom_a}}	{{ institution.adresse }}. Tél : {{ institution.tel }} ; Fax : {{ institution.fax }}Â ; {{ institution.web }}
+						</SPAN>
+					</small>
+				</div>
+			</td>
+		</tr>
+	</table>
+{% endwith %}
+{% endwith %}

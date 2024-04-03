@@ -1,0 +1,17 @@
+stages:       
+  - deploy
+    
+deploiement:
+  stage: deploy
+  before_script:
+    - apk add --no-cache openssh-client bash sshpass
+    - mkdir -p ~/.ssh
+    - eval "$(ssh-agent -s)"   
+    - bash -c "ssh-add <(echo "$deploykey" | base64 -d)"
+    - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    
+  script:    
+    - echo "Déploiement en cours..." 
+    - ssh esi-talents@10.0.0.120 "cd opentalents && git pull opentalents main && echo $psw | sudo -S docker-compose stop && echo $psw | sudo -S docker-compose up -d"
+  only:
+    - main

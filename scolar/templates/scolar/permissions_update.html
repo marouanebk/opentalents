@@ -1,0 +1,56 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+
+{% block content %}
+
+<style>
+.custom-control-label::before, 
+.custom-control-label::after {
+width: 2.75rem;
+height: 2rem;
+}
+</style>
+<form action="" method="post">
+	{% csrf_token %}
+
+	<table class="table" style="border: 2px solid black;">	
+	
+		{% for fonctionnalite, permissions_par_fonctionnalite_et_cpt in access_table.items %}
+			<tr>
+				<th style="text-align: center; background-color:rgb(225, 228, 220);">Liste permissions<br>- {{ permissions_par_fonctionnalite_et_cpt.1 }} permission(s)</th>
+				<th colspan="{{ groups_count }}"style="text-align: center; background-color:rgb(225, 228, 220);">Bloc : <strong>{{ fonctionnalite }}</strong></th>	
+			</tr>
+			<tr style="background-color:rgb(244, 236, 236);">
+			<td></td>
+				{% for group_name in group_names %}
+					<td style="font-size:14px; text-align: center; font-weight:bold;">{{ group_name }}</td>
+				{% endfor %}
+			</tr>
+				{% for code_et_nom_et_groups in permissions_par_fonctionnalite_et_cpt.0 %}
+					<tr>
+					<td>{% if code_et_nom_et_groups.3 %}<strong>NAV </strong>{% endif %}{{ code_et_nom_et_groups.1 }}</td>
+					{% for group, permission_du_group in code_et_nom_et_groups.2.items %}
+						<td style="text-align:center;">
+							{% with group|addstr:'_'|addstr:code_et_nom_et_groups.0 as key %}
+								{{ form|form_field:key|as_crispy_field }}
+							{% endwith %}	
+						</td>
+					{% endfor %}
+					</tr>
+				{% endfor %}
+			
+		{% endfor %}
+	</table>
+
+
+<br><br>
+<input type="submit" name="submit" value="Enregistrer"  class="btn btn-primary"/>
+<a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
+</form>
+
+
+
+{% endblock %}
+	
+

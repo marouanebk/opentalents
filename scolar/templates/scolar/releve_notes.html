@@ -1,0 +1,21 @@
+{% extends 'scolar/index.html' %}
+{% block content %}
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+
+
+	{% include './releve_notes_content.html' %} 
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags usergroup icons dictionary usergroup %}
+{% block content %}
+  
+  	<div class="container">
+	{% if institution.header %}
+		<img src="{{ institution.header.url }}" alt="Logo" width="100%">
+	{% endif %}
+	<br><br>  	
+	<h2 class="text-center"><strong>Procés Verbal de Délibération de</strong> {{ formation.programme.titre }}</h2>
+	<h3 class="text-center"><strong>Spécialité: </strong>{{formation.programme.specialite.intitule}}</h3>
+	<h4 class="text-center"><strong>Année Universitaire:{{formation.annee_univ}}/{{formation.annee_univ.annee_suivante}}</strong></h4>
+	<h4 class="text-center"> <strong> {% if formation.has_semestres %}Semestre{% else %}Période{% endif %} {{ periode_code }} </strong> </h4>
+	{% endif %}
+	<h5 class="text-center"><strong>Le: {{date|date:'d/m/Y'}}</strong></h5>
+	<br><br>
+	<table class="table-sm">
+		<thead class="thead-dark">
+			<tr>
+				<th>Matricule</th>
+				<th>Nom & Prénom</th>
+				<th>Groupe</th>
+				{% for code in matiere_list %}
+					<th>
+						{{ code }}
+					</th>
+				{% endfor %}
+				<th>
+					<strong>Moy {{ periode_code }}</strong>
+				</th>
+				<th>
+					<strong>Ne {{ periode_code }}</strong>
+				</th>
+				<th>
+					<strong>Rang {{ periode_code }}</strong>
+				</th>
+				{% if photo == 1 %}
+					<th>
+						Photo
+					</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+		{% for inscription in inscription_list %}
+			<tr>
+			<td>
+				<a href="{% url "etudiant_detail" pk=inscription.etudiant.matricule %}">{{ inscription.etudiant.matricule }}</a>
+			</td>
+			<td>
+				{{ inscription.etudiant.nom|addstr:' '|addstr:inscription.etudiant.prenom }}
+			</td>
+			<td>{{inscription.groupe.code}}</td>
+			{% for periode in inscription.inscription_periodes.all %}
+				{% for ue in periode.resultat_ues.all %}
+					{% for code in matiere_list %}
+						{% for matiere in ue.resultat_matieres.all %}
+							{% if matiere.code == code %}
+								{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.code|addstr:'_'|addstr:ue.ue.id|addstr:'_'|addstr:matiere.code as key %}
+									{% with resultat_list|get_value_from_dict:key as resultat %}
+										{% if resultat %}
+											{% if resultat.moy_post_delib < resultat.module.note_eliminatoire %}
+												<td class="table-danger">{{resultat.module.matiere.code}}: {{ resultat.moy_post_delib }} < {{ resultat.module.note_eliminatoire }}</td>
+											{% elif resultat.moyenne_finale < resultat.moy_post_delib %}
+												<td class="table-warning">{{resultat.module.matiere.code}}: {{ resultat.moyenne_finale }} -> {{ resultat.moy_post_delib }} </td>
+											{% else %}
+												<td>{{ resultat.moyenne_finale }}</td>
+											{% endif %}
+										{% else %}
+											<td class="table-active"> </td>
+										{% endif %}
+									{% endwith %}
+								{% endwith%}
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+				{% endfor %}
+				{% if periode.periode.code == periode_code %}
+					<td class="table-info">{{ periode.moyenne_provisoire }}</td>
+					{% if periode.ne > 0 %}
+						<td class="table-danger">{{ periode.ne }}</td>
+					{% else %}
+						<td class="table-info">{{ periode.ne }}</td>
+					{% endif %}
+					<td class="table-info">{{ periode.rang }}</td>
+				{% endif %}
+			{% endfor %}
+			{% if photo == 1 %}
+				<td>
+					{% if inscription.etudiant.photo %}
+						<img src="{{inscription.etudiant.photo.url}}" height="120">
+					{% endif %}
+				</td>
+			{% endif %}
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	<br><br>
+	<strong>Fait à {{ institution.ville }}, le: {{date|date:'d/m/Y'}}</strong>
+	<br><br>
+	<strong>Etaient présents:</strong>
+	<br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br>
+	{% if institution.footer %}
+		<img src="{{ institution.footer.url }}" alt="Logo" width="100%"> 
+	{% endif %}
+	
+	</div>
+</body>
+</html>

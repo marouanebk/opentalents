@@ -1,0 +1,28 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons %}
+{% block content %}
+	<h1>{{ titre }}</h1>
+    	{% if import_url %}
+    		<br>    		
+    		<a href="{{ import_url }}" class="btn btn-info">{{ import_btn }} {% icon 'file-excel' %} </a>
+    	{% endif %}
+    	{% if create_url %}
+    		<a href="{{ create_url }}" class="btn btn-primary">{% icon 'plus'%} {{ create_btn }} </a>
+    	{% endif %}
+		{% for btn, link in btn_list.items %}
+			{% if btn == 'print' %}
+				<a href="{{ link }}" target="_blank">{% icon 'print' %}</a>
+			{% else %}
+				<a href="{{ link }}" class="btn btn-primary">{{ btn }}</a>
+			{% endif %}
+		{% endfor %}
+    	
+    	<br><br>
+		{% render_table table %}
+		<br>
+		{% if back %}
+			<a href="{{ back }}" class="btn btn-secondary">Retour</a>
+		{% endif %}
+		<br><br><br><br><br><br>
+{% endblock %}
+	

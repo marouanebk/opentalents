@@ -1,0 +1,80 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 dictionary %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+{% block content %}
+
+<form action="" method="post">
+	{% csrf_token %}
+	<br><br>
+  
+  <h2>Mon Feedback sur le déroulement de mes enseignements</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+	    <li class="nav-item">
+	      <a class="nav-link active" data-toggle="tab" href="#admin">Info!</a>
+	    </li>
+
+  	{% for module_info in module_list %}
+	    <li class="nav-item">
+	      <a class="nav-link" data-toggle="tab" href="#t{{module_info.module.id}}">{{module_info.module.matiere.code}}</a>
+	    </li>
+	{% endfor %}
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="admin" class="container tab-pane active"><br>
+	<p class="alert alert-info">
+        Merci de nous aider à améliorer le déroulement des enseignements en renseignant ce formulaire.<br>
+        Votre évaluation restera anonyme!<br>
+        Dans vos commentaires, merci d'éviter des expressions bléssantes et la citation de noms.
+		
+	</p>
+	<p class='alert alert-warning'>
+		Les niveaux d'appréciation sont les suivants:
+		<ul>
+			<li>++: Tout à fait d'accord</li>
+			<li>+: D'accord</li>
+			<li>- : Pas d'accord</li>
+			<li>--: En total désaccord</li>
+		</ul>
+    </div>
+
+  {% for module_info in module_list %}
+    <div id="t{{module_info.module.id}}" class="container tab-pane fade"><br>
+		<table class="table table-sm">
+			{% for question in module_info.question_list %}
+				<tr>
+					<td>
+						{{ question.code}} : {{ question.intitule }}
+					</td>
+					<td>
+						{% with module_info.module.id|addstr:'_'|addstr:question.code as key %}
+							{% with form|form_field:key as field %}
+								{% bootstrap_field field  %}
+							{% endwith %}
+						{% endwith %}
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+		{% with module_info.module.id|tostr as key %}
+			{% with form|form_field:key as field %}
+				{{ field|as_crispy_field }}
+			{% endwith %}
+		{% endwith %}
+    </div>
+   {% endfor %}
+  </div>
+
+    <br><br>
+    <input type="submit" name="submit" value="Enregistrer"  class="btn btn-primary"/>
+    <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
+
+
+</form>
+{% endblock %}
+	
+

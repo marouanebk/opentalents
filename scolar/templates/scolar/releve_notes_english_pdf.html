@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+  </head>
+  <body>
+		<small>
+		
+		{% if inscription.formation.programme.programme_complementaire_master %}
+			{% include './releve_notes_master_english_content.html' %}
+		{% else %}
+			{% include './releve_notes_english_content.html' %}
+		{% endif %}
+		
+		</small>
+  </body>
+ </html>

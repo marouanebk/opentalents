@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% if institution.nom_plateforme %} {{ institution.nom_plateforme}} {% else %} {{ institution.sigle }} Talents {% endif %}</title>
+    {% load static icons crispy_forms_tags %}
+    {% if institution.logo_bis %}
+		<link rel="icon" type="image/png" href="{{ institution.logo_bis.url }}" />
+	{% endif %}
+
+	
+	<link rel="stylesheet" href="{% static 'css/bootstrap-4.3.1.min.css' %}">
+	<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+	<script src="{% static 'js/popper-1.14.7.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap-4.3.1.min.js' %}"></script>
+
+	<!-- DateTiemPickerPlus -->
+	<link href="{% static 'bootstrap_datepicker_plus/css/bootstrap-datetimepicker.css' %}" type="text/css" media="all" rel="stylesheet">
+	<link href="{% static 'bootstrap_datepicker_plus/css/datepicker-widget.css' %}" type="text/css" media="all" rel="stylesheet">
+	<script type="text/javascript" src="{% static 'bootstrap_datepicker_plus/js/moment-with-locales.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'bootstrap_datepicker_plus/js/bootstrap-datetimepicker.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'bootstrap_datepicker_plus/js/datepicker-widget.js' %}"></script> 
+
+	<!-- Select2 -->
+	<link href="{% static 'django_select2/css/select2.min.css' %}" type="text/css" media="all" rel="stylesheet">
+	<script type="text/javascript" src="{% static 'django_select2/js/select2.js' %}"></script>
+	<script type="text/javascript" src="{% static 'django_select2/js/select2.min.js' %}"></script> 
+	
+		
+	
+	
+	<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="{% static 'fonts/css/all.min.css' %}">
+	
+	<link rel="stylesheet" href="{% static 'fonts/css/all.css' %}">
+	
+	
+	<script src="{% static 'chart/Chart.min.js' %}"></script>	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	
+  </head>
+  <style type="text/css">
+  	#sidebar-wrapper {
+    	border-right: 1px solid gray;
+	}
+	h2.a {
+  		line-height: 0.01;
+	}
+	h1.a {
+  		line-height: 0.01;
+	}
+	
+	#content {
+    	display: block;
+    }
+
+	#loading {
+	    top: 150px;
+	    left: 100px;
+	    margin: auto;
+	    position: relative;
+	    z-index: 1000;
+	    width: 900px;
+	    height: 240px;
+	    background: url('/media/loading.gif') no-repeat;
+	    background-size: 500px;
+	    cursor: wait;
+    }
+
+	.custombgcolor {
+		background-color: {{ institution.color }};
+	}
+
+
+  </style>
+  <body>
+	<script type="text/javascript">
+        function preloader(){
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("content").style.display = "none";
+        }
+        function postloader(){
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("content").style.display = "block";
+        }
+
+        window.onbeforeunload = preloader;
+        window.onload = postloader;
+        window.onblur = postloader;
+	</script>
+
+  	<div class="container-fluid">
+
+	{% block navbar %}
+    	{% include  './_items/navbar.html' %}
+	{% endblock %}
+	<br><br><br>
+
+    <header class="row">
+		<style>
+		@media screen and (max-width: 1000px) {
+		    .mobilelogo {
+		        width: 150px;
+		    }
+		}
+		</style>
+    	<div class="col-lg-2 d-none d-md-block">
+ 			{% if institution.logo %}
+        	 	<center><img src="{{ institution.logo.url }}" alt="Logo" class="mobilelogo" width="100%" ></center>
+			{% endif %}
+    	</div>
+    	<div class="col-lg-7 offset-lg-1 d-none d-md-block">
+			{% if institution.banniere %}
+        		<img src="{{ institution.banniere.url }}" alt="Bannière" width="100%" >
+			{% endif %}
+    	</div>
+    	<div class="col-lg-1 offset-lg-1">
+			{% if institution.logo_bis %}
+    			<center><img src="{{ institution.logo_bis.url }}" alt="Logo Talents" width="100%" class="mobilelogo"></center>
+			{% endif %}
+    	</div>
+    	
+	</header>
+	<div class="row">
+    	<div class="col-lg-2">
+        	<p>
+            	Bienvenue <strong>{{ user.prenom }}</strong> 
+          	</p>
+		</div>
+    </div>
+	<div class="row">
+		<div id="sidebar-wrapper" class="col-lg-2">
+			<div id="sidebar">
+				{% block sidebar %}
+        		{% endblock %}
+       		</div>
+       	</div>
+        <section class="col-lg-10 pull-right">
+			{% if messages %}
+				{% for message in messages %}
+					<div class="alert alert-{{message.tags}}">
+  						<strong>{{ message }}</strong>
+					</div>
+				{% endfor %}
+			{% endif %}  
+			<div id="loading"></div>			
+			<div id="content">
+				{% if user.is_authenticated and institution.activation_webhelp and webhelp %}
+					<a class="card" style="text-align:center; background-color:#e3faff; border-width: thin;" data-toggle="collapse" href="#infospersos" role="button" aria-expanded="false" aria-controls="infospersos">
+					  <span><span style="font-size: 20px;">{% icon "info" %}</span>&nbsp;&nbsp;&nbsp; <strong>Aide contextuelle : Appuyez ici pour afficher/masquer l'aide relative à cette page</strong></span>
+					</a>
+					<br>
+					<div class="collapse" id="infospersos">
+					  <div class="card card-body" style="background-color:#f5fdff">
+			            <p style="padding:0; margin:0;">{{ webhelp }}</p>
+					  </div>
+					<br>
+					</div>
+				{% endif %}
+
+				{% block content %}
+	
+				{% endblock %}
+			</div>
+        </section>
+	</div>
+    <br><br><br><br>
+    <footer class="row"><small><small>
+		<div class="fixed-bottom text-center text-white custombgcolor col-lg-12">
+          <address>
+          	  	<strong>{{ institution.nom }}    {{institution.nom_a}}</strong><br>
+				{{ institution.adresse }}.{% if institution.tel %} Tél : {{ institution.tel }} ;{% endif %}{% if institution.fax %} Fax : {{ institution.fax }} ;{% endif %}{% if institution.web %} {{ institution.web }}{% endif %}
+				
+          </address>
+        </div>
+	</small></small></footer>
+	
+	</div>
+  </body>
+</html>

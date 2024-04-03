@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  </head>
+  <body>
+  {% load dictionary %}
+  
+  	<div class="container">
+	<h2 class="text-center">Procés Verbal de Délibérations de la formation {{ formation }}:</h2>
+	<small>
+	<table class="table table-bordered table-sm">
+		<thead class="thead-dark">
+			<tr>
+				<th>
+				</th>
+				<th>
+				</th>
+				{% for periode in formation.programme.periodes.all %}
+					{% for ue in periode.ues.all %}
+						<th colspan="{{ue.matieres.all.count|add:1}}">
+							{{ ue.code }}
+						</th>
+					{% endfor %}
+					<th></th>
+					<th></th>
+				{% endfor %}
+				<th>
+				</th>
+				<th>
+				</th>
+				<th>
+				</th>
+			</tr>
+			<tr>
+				<th>Matricule</th>
+				<th>Nom & Prénom</th>
+				{% for periode in formation.programme.periodes.all %}
+					{% for ue in periode.ues.all %}
+						{% for matiere in ue.matieres.all %}
+							<th>
+								{{ matiere.code }}
+							</th>
+						{% endfor %}
+						<th>
+							Moy
+						</th>
+					{% endfor %}
+
+					<th>
+						<strong>Moy {{ periode.periode.code }}</strong>
+					</th>
+					<th>
+						<strong>Ne {{ periode.periode.code }}</strong>
+					</th>
+				{% endfor %}
+				<th>
+					Rang
+				</th>
+				<th>
+					Moy
+				</th>
+				<th>
+					<strong>Decision</strong>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for inscription in inscription_list %}
+			<tr>
+			<td>
+				{{ inscription.etudiant.matricule }}
+			</td>
+			<td>
+				{{ inscription.etudiant.nom|addstr:' '|addstr:inscription.etudiant.prenom }}
+			</td>
+
+			{% for periode in formation.programme.periodes.all %}
+				{% for ue in periode.ues.all %}
+					{% for matiere in ue.matieres.all %}
+						{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.code|addstr:'_'|addstr:ue.id|addstr:'_'|addstr:matiere.code as key %}
+							{% with resultat_list|get_value_from_dict:key as resultat %}
+								{% if resultat %}
+									<td>{{ resultat.moy }}</td>
+								{% else %}
+									<td class="table-active"> </td>
+								{% endif %}
+							{% endwith %}
+						{% endwith%}
+					{% endfor %}
+					{% with inscription.etudiant.matricule|addstr:'_'|addstr:ue.id|addstr:'_moy' as key %}
+						{% with resultat_list|get_value_from_dict:key as note %}
+							{% if note %}
+								<td>{{ note }}</td>
+							{% else %}
+								<td class="table-active"></td>
+							{% endif %}
+						{% endwith %}
+					{% endwith%}
+				{% endfor %}
+				{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.code|addstr:'_moy' as key %}
+					{% with resultat_list|get_value_from_dict:key as note %}
+						<td class="table-success">{{ note }}</td>
+					{% endwith %}
+				{% endwith%}
+				{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.code|addstr:'_ne' as key %}
+					{% with resultat_list|get_value_from_dict:key as nb %}
+						<td class="table-success">{{ nb }}</td>
+					{% endwith %}
+				{% endwith%}
+
+			{% endfor %}
+			<td>
+				{{ inscription.rang }}
+			</td>			
+			{% with inscription.etudiant.matricule|addstr:'_moy' as key %}
+				{% with resultat_list|get_value_from_dict:key as note %}
+					<td>{{ note }}</td>
+				{% endwith %}
+			{% endwith%}
+			<td>
+				{{ inscription.decision_jury|decision_full }}
+			</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	
+	</small>
+	</div>
+</body>
+</html>

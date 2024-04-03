@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static dictionary bootstrap4 icons usergroup %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	<style>
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-before: always;
+  			}
+		}
+    </style>	
+  </head>
+  <body>
+	<div class="container new-page">
+	<br><br>
+		{% if institution.header %}
+			<div style="text-align: center;">
+				<img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+			</div>
+		{% endif %}
+	 	<h1 align="center">
+	 		<br>
+	 		<strong>
+		  		Livret personnel des compétences<br>
+	 		</strong>
+	 		<br><br>
+	 	</h1>	
+		<div style="padding:20px;" width="100%">
+		    <table class="table table-borderless table-sm" style="border: 2px solid black; font-size:20px;">
+				<tr>
+					<td>Nom :</td> 
+					<td><strong>{{ etudiant.nom }}</strong> </td>
+					<td> Prénom :</td>
+					<td><strong>{{ etudiant.prenom }}</strong> </td>
+				</tr>
+				<tr>
+					<td> Date de naissance :</td> 
+					<td><strong> {{ etudiant.date_naissance|date:'d/m/Y' }}</strong> </td>
+					<td> Lieu de naissance :</td> 
+					<td><strong>{{etudiant.lieu_naissance}}</strong> </td>		
+				</tr>
+				<tr>
+					<td colspan="4" style="text-align: center;"><br>Délivré le : <strong>{{ date|date:'d/m/Y'}}</strong></td>
+				</tr>
+		    </table>
+			<br><br><br>
+			<p style="font-size:20px;"><strong>Remarques :</strong></p><br>
+			<p style="text-align: justify; font-size:16px;">
+				Le livret des compétences personnel est un document attestant des compétences acquises durant tout le cursus de l'étudiant. Chaque matière étudiée et acquise donne à l'étudiant un ensemble de compétences prévues par celle-ci. Il est organisé par niveaux d'études, là où chaque niveau est prévu à former l'étudiant à un ensemble de compétences attendues par le milieu professionnel dans le domaine.<br><br> 
+			
+				Le livret inclut une rubrique exposant le niveau global d'acquisition des compétences prévues pour l'étudiant durant ses années accomplies (avec admission) à l'établissement : <strong>{{institution.nom}}.</strong><br><br>
+				
+				Les matières en <strong><span style="color:#006e21;">vert</span></strong> sont celles acquises par l'étudiant et ayant fait profiter l'étudiant des compétences prévues par celles-ci.<br><br>
+			
+				Les matières en <strong><span style="color:#960017;">rouge</span></strong> sont celles non acquises par l'étudiant montrant ainsi des insuffisances dans les éléments de compétences prévues par celles-ci. <br><br>
+				
+				La notation ECTS est utilisée afin de déterminer le niveau d'acquisition des compétences selon l'acquisition de la matière concernée. Pour rappel :
+				
+				 <table class="table table-borderless" width="100%">
+  					<tr>
+  						<td>A:  parmi les 10% mieux classés <br></td>
+  						<td>B:  parmi les 25% suivants mieux classés <br></td>
+  						<td>C:  parmi les 30% suivants mieux classés <br></td>
+  						<td>D:  parmi les 25% suivants mieux classés <br></td>
+  					</tr>
+  					<tr>
+  						<td>E:  parmi les 10% suivants mieux classés <br></td>
+  						<td colspan="3">F:  Echec <br></td>
+  					</tr>
+  				</table>
+			</p>
+		</div>
+		<br><br>
+		{% if institution.footer %}
+		   	<div style="text-align: center;">
+				<img src="{{ institution.footer.url }}" alt="Logo" width="100%">
+			</div> 		
+		{% endif %}	
+	</div>
+	<div class="container new-page">
+		<br><br>
+		{% if institution.header %}
+			<div style="text-align: center;">
+				<img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+			</div>	
+		{% endif %}
+	 	<h3 align="center">
+	 		<br><br>
+	 		<strong>Niveaux de maîtrise par familles de compétences</strong><br>(pour toutes les années avec admission)
+	 		<br><br><br><br>
+	 	</h3>
+		
+		<table class="table table-sm" style="border: 2px solid black;">	
+			<tr>
+				<th style="text-align: center; font-weight:bold; font-size:20px"><strong>Famille de compétences</strong></th>
+				<th style="text-align: center; font-weight:bold; font-size:20px"><strong>ECTS Global</strong></th>
+			</tr>
+			
+			{% for famille, ects_global in familles_ects_global.items %}
+				<tr>
+					<td><strong>{{famille.code}}</strong>: {{famille.intitule}}</td>
+					<td style="text-align:center; font-size:18px; {% if ects_global != "F" %} color:#006e21; {% else %} color:#960017; {% endif %} ">{{ects_global}}</td>
+				</tr>
+			{% endfor %} 			
+		</table>
+
+		<br><br><br><br><br><br><br>
+		{% if institution.footer %}
+		   	<div style="text-align: center;">
+				<img src="{{ institution.footer.url }}" alt="Logo" width="100%">
+			</div> 	
+		{% endif %}			
+	</div>	
+	
+	{% for inscription, familys in inscriptions_competencefamilys.items %}
+		<div class="container new-page">
+		<br><br>
+			{% if institution.header %}
+				<div style="text-align: center;">
+					<img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+				</div>	
+			{% endif %}
+		 	<h3 align="center">
+		 		<br><br>
+		 		Niveau concerné :<strong>{{inscription.formation.programme}}</strong><br>
+				Année universitaire concernée: <strong>{{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</strong><br>
+		 		<br><br>
+		 	</h3>
+			    <table class="table-sm" style="border: 2px solid black;">				
+					{% for family, competences_et_ects_moyen in familys.items %}
+						<tr>
+							<th colspan="7" style="text-align: center; background-color:rgb(225, 228, 220);">Famille de compétences <strong>{{family.code}}</strong>: {{family.intitule}}</th>
+						</tr>
+						<tr>
+							<td colspan="4" style="background-color:rgb(255, 241, 232); text-align:center;" ><strong>ECTS de la famille de compétences</strong></td>
+							<td colspan="3" style="text-align:center; font-weight:bold; font-size:24px; {% if competences_et_ects_moyen.1 != "F" %} color:#006e21; {% else %} color:#960017; {% endif %}"><strong>{{competences_et_ects_moyen.1}}</strong></td>
+						</tr>
+						<tr>
+							<th><strong>Compétence</strong></th>
+							<th><strong>Élément de compétence</strong></th>
+							<th><strong>Matière</strong></th>
+							<th><strong>Niveau<br>visé</strong></th>							
+							<th><strong>ECTS<br>Matière</strong></th>
+							<th><strong>ECTS<br>Élément</strong></th>
+							<th><strong>ECTS<br>Compétence</strong></th>
+							
+						</tr>		
+						{% for competence, elements_et_nb_lignes_elements_multiplie_par_matieres_et_ects_moyen in competences_et_ects_moyen.0.items %}																			
+						<tr>	
+							<td rowspan="{{elements_et_nb_lignes_elements_multiplie_par_matieres_et_ects_moyen.1}}"><strong>{{competence.code}}:</strong> {{competence.intitule}}</td>
+							
+							{% for element, matieres_ects_et_ects_moyen_et_nb in elements_et_nb_lignes_elements_multiplie_par_matieres_et_ects_moyen.0.items %}
+								
+								<td rowspan="{{matieres_ects_et_ects_moyen_et_nb.2}}">{{element.code}}: {{element.intitule}}</td>
+											
+								{% for matiere, ects_et_niveau in matieres_ects_et_ects_moyen_et_nb.0.items %}
+								
+									{% if ects_et_niveau.0 != "F" %}
+										<td><span style="color:#006e21;">{{matiere.code}}</span></td>										
+									{% else %}
+										<td><span style="color:#960017;">{{matiere.code}} </span></td>
+									{% endif %}
+								
+									{% if ects_et_niveau.1 == 'B' %}
+										<td style="background-color:#64FE2E; text-align:center;">Base</td>	
+									{% elif ects_et_niveau.1 == 'I' %}
+										<td style="background-color:#F7FE2E; text-align:center;">Intermédiaire</td>
+									{% else %}
+										<td style="background-color:#58D3F7; text-align:center;">Avancé</td>
+									{% endif %}									 
+																	
+									{% if ects_et_niveau.0 != "F" %}
+										<td style="text-align:center;"><span style="color:#006e21;">{{ects_et_niveau.0}}</span></td>										
+									{% else %}
+										<td style="text-align:center;"><span style="color:#960017;">{{ects_et_niveau.0}} </span></td>
+									{% endif %}
+									
+									{% if forloop.first %}
+										<td rowspan="{{matieres_ects_et_ects_moyen_et_nb.2}}" style="text-align:center; font-weight:bold; {% if matieres_ects_et_ects_moyen_et_nb.1 != "F" %} color:#006e21; {% else %} color:#960017; {% endif %}">{{matieres_ects_et_ects_moyen_et_nb.1}}</td> 
+										{% if forloop.parentloop.counter == 1 %}
+											<td rowspan="{{elements_et_nb_lignes_elements_multiplie_par_matieres_et_ects_moyen.1}}" style="text-align:center; font-weight:bold; font-size:24px; {% if elements_et_nb_lignes_elements_multiplie_par_matieres_et_ects_moyen.2 != "F" %} color:#006e21; {% else %} color:#960017; {% endif %} ">{{elements_et_nb_lignes_elements_multiplie_par_matieres_et_ects_moyen.2}}</td> {% endif %}
+									{% endif %}
+									</tr>{% if not forloop.last %}<tr> {% endif %}										
+								{% endfor %} 
+								</tr>{% if not forloop.last %}<tr>{% endif %}			
+							{% endfor %}
+							</tr>{% if not forloop.last %}<tr>{% endif %}																		
+						{% endfor %}																						
+					{% endfor %}
+			    </table>
+			<br><br><br><br><br><br><br>
+			{% if institution.footer %}
+			   	<div style="text-align: center;">
+					<img src="{{ institution.footer.url }}" alt="Logo" width="100%">
+				</div>
+			{% endif %}				
+		</div>			
+	{% endfor %}	
+  </body>
+ </html>

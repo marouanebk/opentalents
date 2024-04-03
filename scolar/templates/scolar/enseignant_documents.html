@@ -1,0 +1,25 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons %}
+{% block content %}
+
+		<h1>{{ titre }}</h1>
+		
+		<h3> Documents spécifiques</h3>
+			<table class="table table-bordered">
+				<thead class="thead-dark">
+					<tr>
+						<th>Intitulé du document</th>
+						<th>Document</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for intitule, lien in documents.items %}
+						<tr>
+							<td>{{ intitule }}</td>
+							<td><a href="{{ lien }}">{% icon 'file-pdf' %}</a></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+{% endblock %}
+	

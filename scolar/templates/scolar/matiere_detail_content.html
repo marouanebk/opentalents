@@ -1,0 +1,223 @@
+		{% if institution.header %}
+			<img src="{{ institution.header.url }}" alt="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " width="100%"> 
+		{% endif %}
+		{% load dictionary icons %}
+		
+		<h3 align="center" id="{{object.matiere.code}}" name="{{object.matiere.code}}">
+		Syllabus {{ object.matiere.code }} <br>
+		{% if not pdf %}
+		<small> <a href="{% url "matiere_detail_pdf" pk=object.matiere.id %}">Télécharger {% icon 'file-pdf' %}</a> </small>
+		{% endif %}
+		</h3>
+			
+			<br><br>
+			<small>
+			<table border=1 width=100%">
+			<tr>
+			<td>
+				{% if object.matiere.credit %}
+					<strong> Crédits : {{ object.matiere.credit }} </strong>
+				{% endif %}
+			</td>
+				<td>
+					<h3 align="center"> 
+						<strong>{{ object.matiere.code }}</strong> <br> 
+						{{ object.matiere.titre }}<br>
+						{% if object.matiere.titre_en %}
+							<small>{{ object.matiere.titre_en }}</small>
+						{% endif %}
+						{% if object.matiere.titre_a %}
+							<br><small>{{ object.matiere.titre_a }}</small>
+						{% endif %}
+					</h3>
+				</td>
+				<td>
+					<strong> Coef : {{ object.matiere.coef|converson_reel_vers_entier_si_possible }} </strong>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{% if object.matiere.vh_cours %}<strong> VH Cours : </strong> {{ object.matiere.vh_cours }}<br>{% endif %}
+					{% if object.matiere.vh_td %}<strong> VH TD : </strong> {{ object.matiere.vh_td }}<br>{% endif %}
+					{% if object.matiere.vh_tp %}<strong> VH TP : </strong> {{ object.matiere.vh_tp }}{% endif %}
+				</td>
+				<td colspan="2">
+					<h5 > 
+						<strong>Pré-requis :</strong> 
+					</h5>
+					{{ object.matiere.pre_requis }}
+				</td>
+			</tr>
+			{% if institution.activation_competences %}
+				<tr>
+					<td colspan="3">
+						<h2 align="center"> 
+							<strong>Ingénierie des Compétences</strong> 
+						</h2>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<strong>Familles de Compétences</strong>
+						<ul>
+							{% for cf_code, cf_ in object.cf_list.items %}
+								<li>
+									<strong>{{cf_code}} : </strong>{{ cf_.competence_family.intitule }}
+								</li>
+							{% endfor %}
+						</ul>
+						
+			  			<strong>Type de compétence:</strong>
+			  				<strong>TEC : </strong> Technique,  
+							<strong>MET : </strong> Méthodologique,
+							<strong>MOD : </strong> Modélisation,
+							<strong>OPE : </strong> Opérationnel,
+					</td>
+					<td>
+			  			<strong>Niveau de compétence:</strong>
+			  			<table>
+			  			<tr>
+			  				<td style="background-color:#64FE2E;">Base</td>
+			  				<td style="background-color:#F7FE2E;">Intermédiaire</td>
+			  				<td style="background-color:#58D3F7;">Avancé</td>
+			  			</tr>
+			  			</table>
+			  			<br><br>
+			  		</td>
+				</tr>
+				<tr>
+					<small><td colspan="3">
+				    	<table class="table-sm">
+				    		<thead class="thead-dark">
+				    		<tr>
+				    			<th>
+				    				Famille de Compétence
+				    			</th>
+				    			<th>
+				    				Compétence
+				    			</th>
+				    			<th>
+				    				Elément de Compétence
+				    			</th>
+				    			<th>
+				    				Type
+				    			</th>
+				    			<!--
+				    			<th>
+				    				Objectifs Pédagogiques
+				    			</th>
+				    			-->
+				    		</tr>
+				    		</thead>
+				    		<tbody>
+				    			{% for cf_code, cf_ in object.cf_list.items %}
+				    				<tr>	
+				    				<td rowspan="{{ cf_.nb_ce }}">
+				    					{{ cf_.competence_family.code }}
+				    				</td>
+					    				{% for c_id_, c_ in cf_.c_list.items %}
+					    					<td rowspan="{{ c_.nb_ce }}">
+					    						<strong>{{c_.competence.code}}:</strong> {{ c_.competence.intitule }}
+					    					</td>
+							    			{% for ce_ in c_.ce_list %}
+												{% if object.matiere.ddc %}
+							    					{% with ce_.id|addstr:'_'|addstr:object.matiere.ddc.id as key_%}
+							    						{% with object.ce_ddc_list|get_value_from_dict:key_ as ce_ddc_ %}
+							    							{% if ce_ddc_ %}
+																	{% for ce_matiere_ in ce_ddc_ %}
+																		{% if ce_matiere_.niveau == 'B' %}
+																			<td style="background-color:#64FE2E;">
+																				<strong>{{ ce_matiere_.competence_element.code }}:</strong> {{ ce_matiere_.competence_element.intitule }}
+																			</td>
+																		{% elif ce_matiere_.niveau == 'I' %}
+																			<td style="background-color:#F7FE2E;">
+																				<strong>{{ ce_matiere_.competence_element.code }}:</strong> {{ ce_matiere_.competence_element.intitule }}
+																			</td>
+																		{% else %}
+																			<td style="background-color:#58D3F7;">
+																				<strong>{{ ce_matiere_.competence_element.code }}:</strong> {{ ce_matiere_.competence_element.intitule }}
+																			</td>
+																		{% endif %}
+																	{% endfor %}
+			
+							    							{% else %}
+							    								<td class="table-active">
+							    								</td>
+							    							{% endif %}
+							    						{% endwith %}
+							    					{% endwith %}
+												{% else %}
+							    					{% with ce_.id|addstr:'_'|addstr:'0' as key_%}
+							    						{% with object.ce_ddc_list|get_value_from_dict:key_ as ce_ddc_ %}
+							    							{% if ce_ddc_ %}
+																	{% for ce_matiere_ in ce_ddc_ %}
+																		{% if ce_matiere_.niveau == 'B' %}
+																			<td style="background-color:#64FE2E;">
+																				<strong>{{ ce_matiere_.competence_element.code }}:</strong> {{ ce_matiere_.competence_element.intitule }}
+																			</td>
+																		{% elif ce_matiere_.niveau == 'I' %}
+																			<td style="background-color:#F7FE2E;">
+																				<strong>{{ ce_matiere_.competence_element.code }}:</strong> {{ ce_matiere_.competence_element.intitule }}
+																			</td>
+																		{% else %}
+																			<td style="background-color:#58D3F7;">
+																				<strong>{{ ce_matiere_.competence_element.code }}:</strong> {{ ce_matiere_.competence_element.intitule }}
+																			</td>
+																		{% endif %}
+																	{% endfor %}
+			
+							    							{% else %}
+							    								<td class="table-active">
+							    								</td>
+							    							{% endif %}
+							    						{% endwith %}
+							    					{% endwith %}											
+												
+												{% endif %}
+			
+							    				<td>
+							    					{{ ce_.type}}
+							    				</td>
+												<!--
+							    				<td>
+							    					{{ ce_.objectif }}
+							    				</td>
+							    				-->
+							    				</tr><tr>
+							    			
+							    			{% endfor %}
+							    			
+							    		{% endfor %}
+							    		</tr>
+						    	{% endfor %}
+				    		</tbody>
+				    	</table>   
+					</td></small>
+				</tr>
+			{% endif %}
+		    <tr>
+		    	<td colspan="3">
+					<h2 align="center"> 
+						<strong>Description du programme de la matière</strong> 
+					</h2>
+					<table border=1 class="table-sm" width="100%">
+						<tr>
+							<td><strong>Objectifs: </strong></td> <td>{{ object.matiere.objectifs|linebreaks }}</td>
+						</tr>
+						<tr>
+							<td><strong>Contenu: </strong></td> <td>{{ object.matiere.contenu|linebreaks }}</td>
+						</tr>
+						<tr>
+							<td><strong>Travail Personnel: </strong></td> <td>{{ object.matiere.travail_perso|linebreaks }}</td>
+						</tr>
+						<tr>
+							<td><strong>Bibliographie: </strong></td> <td>{{ object.matiere.bibliographie|linebreaks }}</td>
+						</tr>
+					</table>
+		    	</td>
+		    </tr>
+			</table>
+			</small>
+		{% if institution.footer %}
+			<img src="{{ institution.footer.url }}"  alt="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " width="100%"> 
+		{% endif %}

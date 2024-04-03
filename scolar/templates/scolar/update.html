@@ -1,0 +1,8 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<br><br>
+	<h1>Modification de {{ object }}</h1>
+    <br>
+    {% crispy form %}
+{% endblock %}

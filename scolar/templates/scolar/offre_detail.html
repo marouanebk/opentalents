@@ -1,0 +1,56 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>{{ titre }}</h2>
+  <br>
+  
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#offre">Offre</a>
+    </li>
+	{% if offre.activation_candidatures and perms.scolar.fonctionnalitenav_offres_validation or offre.activation_candidatures and offre.user == user %}
+	    <style>
+		.nombre-candidatures{
+		    border-radius:20%;
+		    height: 24px;
+		    line-height: 20px;
+		    display: inline-block;
+		    text-align: center;
+		    padding: 2px;
+			padding-right: 6px;
+			padding-left: 6px;
+			color:white;
+		}
+		</style>
+		<li class="nav-item">
+	      <a class="nav-link" data-toggle="tab" href="#candidatures">{% if offre.nb_candidatures %}<span class="nombre-candidatures" style="background:green;"><strong>{{ offre.nb_candidatures }}</strong></span> {% endif %}Candidatures</a>
+	    </li>
+	{% endif %}
+  </ul>
+ 
+
+  <div class="tab-content">
+		<div id="offre" class="container tab-pane active"><br>
+		    {% if offre.activation_candidatures and offre.user and offre.user != user %}
+		        <br><a href="{% url "candidature_create" offre_pk=offre.id %}" class="btn btn-warning"  > Candidater </a>
+				<br><br>
+		    {% endif %}	
+	    	{% crispy offre_form %}
+			{% if fichiers %}
+				{% for fichier in fichiers %}
+					<h4><br>Pièce jointe : <a href="{{fichier.url}}"><strong>{{ fichier|filename }}</strong></a></h4>
+				{% endfor %}
+			{% endif %}
+		</div>
+		{% if offre.activation_candidatures and perms.scolar.fonctionnalitenav_offres_validation or offre.activation_candidatures and offre.user == user %}
+			<div id="candidatures" class="container tab-pane fade"><br>
+				{% render_table candidature_table %}  
+			</div>
+		{% endif %}
+    </div>
+    
+  </div>
+{% endblock %}
+	

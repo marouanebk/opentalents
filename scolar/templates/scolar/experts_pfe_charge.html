@@ -1,0 +1,38 @@
+{% extends 'scolar/index.html' %}
+{% load icons dictionary bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+
+{% block content %}
+		<h1 align="center">
+			Index des experts des sujets de PFE<br>
+			depuis {{ date_debut|date:'d/m/Y' }}
+		</h1>
+		<br><br><br>
+		<table class="table tables-bordered table-striped" width="80%">
+			<thead>
+				<th>Enseignant</th>
+				<th>Liste des sujets expertisés </th>
+				<th>Nombre</th>
+			</thead>
+			<tbody>
+				{% for enseignant, pfe_list in experts_index.items %}
+					<tr>
+						<td> {{ enseignant }} </td>
+						<td>
+							{% for pfe in pfe_list %}
+								{% if pfe.groupe %}
+									{{ pfe.groupe }},
+								{% else %}
+									{{ pfe.id }},
+								{% endif %}
+							{% endfor %}
+						</td>
+						<td>
+							{{ pfe_list|length }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+{% endblock %}

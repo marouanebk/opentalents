@@ -1,0 +1,60 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+
+{% block content %}
+
+<style>
+.custom-control-label::before, 
+.custom-control-label::after {
+width: 2.75rem;
+height: 2rem;
+}
+</style>
+<form action="" method="post">
+	{% csrf_token %}
+	<h2>Rôles</h2>
+	<table class="table table-bordered" style="border: 2px solid black; ">	
+		<tr style="background-color:rgb(244, 236, 236);">
+			{% for group_name in group_names %}
+				<td style="font-size:14px; text-align: center; font-weight:bold;">{{ group_name }}</td>
+			{% endfor %}
+		</tr>
+		<tr>
+			{% for group_name in group_names %}
+				{% with 'group_'|addstr:group_name as key %}
+					<td style="text-align: center;">{{ form|form_field:key|as_crispy_field }}</td>
+				{% endwith %}
+			{% endfor %}
+		</tr>		
+	</table>
+	<br><br>
+	<h2>Accès supplémentaires</h2>
+	<table class="table table-bordered" style="border: 2px solid black; ">	
+		{% for fonctionnalite, permissions_par_fonctionnalite_et_cpt in access_table.items %}
+			<tr>
+				<th style="text-align: center; background-color:rgb(225, 228, 220);">Liste permissions<br>- {{ permissions_par_fonctionnalite_et_cpt.1 }} permission(s)</th>
+				<th style="text-align: center; background-color:rgb(225, 228, 220);">Bloc : <strong>{{ fonctionnalite }}</strong></th>	
+			</tr>
+			{% for code_et_nom in permissions_par_fonctionnalite_et_cpt.0 %}
+				<tr>
+				<td>{% if code_et_nom.3 %}<strong>NAV </strong>{% endif %}{{ code_et_nom.1 }}</td>
+				<td style="text-align:center;">
+					{% with 'permission_'|addstr:code_et_nom.0 as key %}
+						{{ form|form_field:key|as_crispy_field }}
+					{% endwith %}	
+				</td>
+				</tr>
+			{% endfor %}
+		{% endfor %}
+	</table>
+<br><br>
+<input type="submit" name="submit" value="Enregistrer"  class="btn btn-primary"/>
+<a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
+</form>
+
+
+
+{% endblock %}
+	
+

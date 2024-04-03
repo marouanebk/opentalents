@@ -1,0 +1,60 @@
+{% extends 'scolar/index.html' %}
+{% load icons dictionary bootstrap4 crispy_forms_tags %}
+{% block content %}
+
+<br><br>
+<div class="col-md-12">
+	<h1>{{titre}}</h1>
+	<br>
+	<table class="table table-bordered">
+		<tr>
+			<td><h2 align="center"><strong>TABLEAU</strong></h2></td>
+		</tr>
+	</table>
+	<br><br>
+    <form action="" method="post">
+    	{% csrf_token %}
+    	
+    	
+        <table class="table table-bordered table-sm">
+             <thead class="thead-dark">
+                 <tr>
+                 	<th></th>
+                    {% for colonne in salle.colonne_list %}
+                        <th>{{colonne}}</th>
+                    {% endfor %}
+                 </tr>
+            </thead>
+			<tbody>
+	            {% for ligne in salle.ligne_list %}
+	            	<tr>
+	            		<td>
+	            			{{ligne}}
+	            		</td>
+	            		{% for colonne in salle.colonne_list %}
+	            			<td>
+	            				{% with ligne|addstr:"_"|addstr:colonne|addstr:"_code" as key %}
+	            					{% with form|form_field:key as field %}
+	            						{{ field|as_crispy_field }}
+	            					{% endwith %}
+	            				{% endwith %}
+	            				{% with ligne|addstr:"_"|addstr:colonne|addstr:"_disponible" as key %}
+	            					{% with form|form_field:key as field %}
+	            						{{ field|as_crispy_field }}
+	            					{% endwith %}
+	            				{% endwith %}
+	            				
+	            			</td>
+	            		{% endfor %}
+	            	</tr>
+	            {% endfor %}
+			</tbody>
+		</table>	     
+        
+			<br><br>
+			<input type="submit" value="Enregistrer" class="btn btn-primary"/>
+			<a href="{% url 'salle_list' %}" class="btn btn-secondary">Annuler</a>
+        
+    </form>
+</div>
+{% endblock %}

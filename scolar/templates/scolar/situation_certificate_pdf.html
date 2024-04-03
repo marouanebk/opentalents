@@ -1,0 +1,89 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %} 
+{% block signataire%}
+{% with 'ATTESTATION_ETUDES_EN'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+<table style="width:100%">
+				<tr> 
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">			{{ autorite.intitule_en }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p>{{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %}
+				</tr></table>
+{% endwith %}
+{% endblock %}
+
+{% block title %} 
+	<br>
+	SITUATION CERTIFICATE
+	 <br><br>
+{% endblock %}
+{% block content %}	
+{% with 'ATTESTATION_ETUDES_EN'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+<big>
+    <table>
+			
+    	<tr>
+    		<td>
+    			
+    			<p align="left">
+					{% if autorite %}
+						{% if autorite.responsable %}{{ autorite.responsable}}, <br>{% endif %}
+						{{ autorite.titre_responsable_en }} <br>
+						{{ institution.nom }}, {{ institution.sigle }}, {{ institution.ville }} <br>
+						{% if autorite.responsable.user.email %}Email: {{ autorite.responsable.user.email}} <br>{% endif %}
+					{% endif %}
+						
+    			</p>
+    			<br><br>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td>
+    			<p align="left">
+    			Dear Madam, Sir
+    			<br><br>
+    			</p>
+    			<p align="justify">
+    				It is hereby certified that, {{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom}}{% if inscription.etudiant.nom_a and inscription.etudiant.prenom_a %} ( {{ inscription.etudiant.nom_a }} {{ inscription.etudiant.prenom_a }} ){% endif %}{% if inscription.etudiant.date_naissance or inscription.etudiant.lieu_naissance %}, born {% if inscription.etudiant.date_naissance %}on {{ inscription.etudiant.date_naissance }} {% endif %}{% if inscription.etudiant.lieu_naissance %}at {{ inscription.etudiant.lieu_naissance }}{% endif %}{% endif %}<br><br>
+    				Is a registered student at {{ institution.nom }} ({{ institution.sigle }}, {{ institution.ville }}) N°: {{ inscription.etudiant.matricule }}. <br><br>
+    				She/he is preparing a diploma of {% if inscription.formation.programme.diplome.intitule|english %}{{inscription.formation.programme.diplome.intitule|english}}{% else %}{{inscription.formation.programme.diplome.intitule_en}}{% endif %}.<br><br> 
+    				She/He is currently following the {% if inscription.formation.programme.titre|english %}{{inscription.formation.programme.titre|english }}{% elif inscription.formation.programme.titre_en %}{{inscription.formation.programme.titre_en }}{% else %} - {% endif %}
+    				{% if inscription.formation.programme.specialite %} 
+    					{{inscription.formation.programme.specialite.title}} 
+    				{% endif %}
+    				program.<br><br>
+					S{% if inscription.formation.activation_credits %}hould she/he validate all required credits, s{% endif %}he/he will get graduated by <!-- September -->{{ inscription.annee_diplome }}.
+						<br><br>
+					Sincerely yours,
+					<br><br>
+    			</p>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td>
+    			<p align="center">
+					{% if institution.ville %}{{ institution.ville }}, {% endif %}on: {{ today }}	    			
+    			</p>
+    			<p align="center">
+				{% if autorite %}
+				    {% if autorite.responsable %}{{autorite.responsable}}{% endif %}<br>
+					<br>
+				    {% if autorite.signature.name %}
+						<img src="{{ autorite.signature.url }}" alt="Signature" width="300" >
+					{% else %}
+						<br><br><br><br><br><br>
+					{% endif %}
+				{% endif %}
+
+    			</p>
+    		</td>
+    	</tr>
+	</table>
+</big>
+{% endwith %}
+{% endblock %}

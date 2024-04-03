@@ -1,0 +1,94 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup %}
+{% block content %}
+
+
+  <h2>Ingénierie pédagogique du module {{ module.matiere.code }}</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#semainier">Semainier</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#controles">Contrôles prévus</a>
+    </li>
+	{% if institution.activation_feedback %}
+	    <li class="nav-item">
+	      <a class="nav-link" data-toggle="tab" href="#feedback">Feedback Live!</a>
+	    </li>
+	{% endif %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url "matiere_detail" pk=module.matiere.id %}">Syllabus</a>
+    </li>
+
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="semainier" class="container tab-pane  active"><br>
+		<h3>Semainier</h5>
+		{% if user|has_group:"enseignant" or perms.scolar.fonctionnalite_pedagogie_gestioncoordination %}
+		    {% if module.coordinateur == request.user.enseignant or perms.scolar.fonctionnalite_pedagogie_gestioncoordination %}
+				<a href="{% url "semainier_create" module_pk=object.id %}" > {% icon 'plus' %} Semaine </a>
+			{% endif %}
+    	{% endif %}
+	    <br><br>
+	    {% render_table semainier %}
+	    <br>
+
+    </div>
+
+    <div id="controles" class="container tab-pane fade"><br>
+		<h3><strong>Contrôles prévus</strong></h3>
+		{% if user|has_group:"enseignant" or perms.scolar.fonctionnalite_pedagogie_gestioncoordination %}
+		    {% if module.coordinateur == request.user.enseignant or perms.scolar.fonctionnalite_pedagogie_gestioncoordination %}
+				<a href="{% url "evaluation_create" module_pk=object.id %}" > {% icon 'plus' %} Evaluation </a>
+			{% endif %}
+		{% endif %}
+	    {% if perms.scolar.fonctionnalite_pedagogie_gestioncoordination %}
+			<a href="{% url "module_evaluation_copy" module_pk=object.id %}" > {% icon 'copy' %} Formule d'un autre module </a>
+		{% endif %}
+		{% if module.activation_rattrapage and perms.scolar.fonctionnalite_pedagogie_gestioncoordination %}
+			<a href="{% url "module_params_update" pk=object.id %}" > {% icon 'pencil-alt' %} Paramètres liés au rattrapage </a>
+		{% endif %}
+    	
+	    <br><br>
+	    {% render_table evaluations %}
+
+    </div>
+	{% if institution.activation_feedback %}
+	    <div id="feedback" class="container tab-pane fade"><br>
+			<div class="row">
+				<div class="col-md-6">
+					<h5><strong> Résultat de l'évaluation de {{ module.matiere.code }} par les étudiants </strong></h5>
+							{{ feedback_chart.as_html }}
+				</div>						
+				<div class="col-md-6">
+					<small>
+					<h5><strong> Légende </strong></h5>
+					<ul>
+					{% for question in question_list%}
+					<li> <strong>{{ question.code }}</strong> {{ question.intitule }}</li>
+					{% endfor %}
+					</ul>
+					</small>
+				</div>
+			</div>
+			{% if feedback_list %}
+				<div class="row">
+					<h5><strong> Commentaires </strong></h5>
+					<ul>
+					{% for feedback_ in feedback_list %}
+						{% if feedback_.comment %}
+							<li>{{ feedback_.comment }}</li>	
+						{% endif %}
+					{% endfor %}
+					</ul>
+				</div>
+			{% endif %}
+	    </div>
+	{% endif %}
+  </div>
+
+{% endblock%}

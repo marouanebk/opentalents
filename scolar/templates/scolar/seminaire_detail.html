@@ -1,0 +1,23 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>{{ titre }}</h2>
+  <br>
+  
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+     </li>
+    
+  </ul>
+
+ 
+  <div class="tab-content">
+
+    	{% crispy seminaire_form %}
+    </div>
+    
+  </div>
+{% endblock %}
+	
+

@@ -1,0 +1,158 @@
+    {% load dictionary usergroup %}
+	{% with 'CERTIFICAT_SCOLARITE'|autorite_entete_from_document_programme:inscription.formation.programme as autorite_entete %}
+	{% with 'CERTIFICAT_SCOLARITE'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+  	<table>
+  		<tr>
+  		{% for i in range %}
+  			<td>
+  				<table >
+					{% if institution.header %}
+		    			<tr>
+			    			<td colspan="3">
+			        	 		<img src="{{ institution.header.url }}" width="750" height="100" alt="Logo" > 
+			    			</td>
+		    			</tr>
+					{% endif %}
+					<tr> 
+					{% if autorite_entete %}
+						<td style =" text-align: left;"> 
+						<p align="left" >{{ autorite_entete.intitule }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right;" > 
+						<p align="right" dir="rtl">{{ autorite_entete.intitule_a }}</p>
+						</td>
+					{% endif %}
+					</tr>
+	    			<tr>
+	    				<td></td>
+	    				<td >
+							<h4 align="center">
+							 	شهادة مدرسية<br>
+								<small><small>Certificat de scolarité / School certificate</small></small>
+							</h4>
+						</td>
+						{% if i != 'f' %}
+			    			<td>
+			    				<img src="/media/duplicata.jpg" height="100" alt="DUPLICATA" >
+			    			</td>
+		    			{% else %}
+		    				<td><img src="" height="100" alt="" ></td>
+		    			{% endif %}
+	    			</tr>
+					<tr>
+						<td style="text-align:center;" colspan="3">
+						<strong>
+							{% if autorite %} 
+								<span style="font-size:12px">
+		    						يشهد {{ autorite.titre_responsable_a }} ب{{ institution.nom_a }} بان<br>
+								</span>
+								<small>
+									{{ autorite.titre_responsable }} de : {{ institution.nom }}, atteste que:/ <br>
+									{{ autorite.titre_responsable_en }} at {{ institution.nom }} certifies that:
+								</small>
+							{% endif %}	
+						</strong>
+						</td>
+						
+					</tr>
+					<tr>
+						<td style="text-align:left;">M (elle) /<br><small>M (Miss) </small>:</td> 
+						<td style="text-align:center;">
+							<strong>{{ inscription.etudiant.nom }}    {% if inscription.etudiant.nom_a %}{{ inscription.etudiant.nom_a }}{% endif %}</strong><br>
+							<strong>{{ inscription.etudiant.prenom }}    {% if inscription.etudiant.prenom_a %}{{ inscription.etudiant.prenom_a }}{% endif %}</strong>
+						</td>
+						<td style="text-align:right;">السيد / السيدة</td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">Né(e) le /<br><small>Born on </small>: </td>
+						<td style="text-align:center;"><strong>{{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong></td>
+						<td style="text-align:right;">المولود(ة) في</td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">Lieu de naissance /<br><small>Place of birth </small>: </td>
+						<td style="text-align:center;"><strong>{% if inscription.etudiant.lieu_naissance %}{{inscription.etudiant.lieu_naissance}}{% endif%}   {% if inscription.etudiant.lieu_naissance_a %}{{inscription.etudiant.lieu_naissance_a}}{% endif %}</strong></td>
+						<td style="text-align:right;">مكان الازدياد</td>		
+					</tr>
+					<tr>
+						<td style="text-align:left;">N° d'inscription /<br><small>Registration N° </small> : </td>
+						<td style="text-align:center;"><strong>{{inscription.etudiant.matricule}}</strong></td>
+						<td style="text-align:right;">رقم التسجيل</td>
+					</tr>
+					<tr>	
+						<td style="text-align:left;">Est inscrit(e) en /<br><small>Is registered in</small> :</td> 
+						<td style="text-align:center;"><strong>{% if inscription.formation.programme.titre_a %}{{inscription.formation.programme.titre_a}}{% endif %}</strong><br>
+							<small>{{inscription.formation.programme.titre}}/<br>
+							{% if inscription.formation.programme.titre|english %}{{inscription.formation.programme.titre|english}}{% elif inscription.formation.programme.titre_en %}{{inscription.formation.programme.titre_en}} {% endif %}</small></td>
+						<td style="text-align:right;">مسجل (ة) في</td>
+					</tr>
+					{% if inscription.formation.programme.specialite %}
+					<tr>	
+						<td style="text-align:left;">Spécialité /<br><small>Speciality</small> :</td> 
+						<td style="text-align:center;"><strong>{% if inscription.formation.programme.specialite.intitule_a %}{{inscription.formation.programme.specialite.intitule_a}}{% endif %}</strong><br>
+							<small>{{inscription.formation.programme.specialite.intitule}}/<br>
+							{% if inscription.formation.programme.specialite.title %}{{inscription.formation.programme.specialite.title}}{% endif %}</small></td>
+						<td style="text-align:right;">تخصص</td>
+					</tr>
+					{% endif %}
+
+					<tr>
+						<td style="text-align:left;">Durant l'année univ. /<br><small> During University Year </small> : </td>
+						<td style="text-align:center;"><strong>{{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</strong></td>
+						<td style="text-align:right;">خلال السنة الجامعية</td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">Diplôme préparé /<br><small>Prepared degree </small> : </td>
+						<td style="text-align:center;"><strong>{% if inscription.formation.programme.diplome.intitule_a %}{{inscription.formation.programme.diplome.intitule_a}}{% endif %} <br>
+							<small>{% if inscription.formation.programme.diplome %}{{inscription.formation.programme.diplome}}{% endif %} /<br>{% if inscription.formation.programme.diplome.intitule|english %}{{inscription.formation.programme.diplome.intitule|english}}{% elif inscription.formation.programme.diplome.intitule_en %}{{inscription.formation.programme.diplome.intitule_en}}{% endif %}</small></strong>
+						</td>
+						<td style="text-align:right;">لتحضير شهادة</td>
+					</tr>
+					<tr>
+					<td></td>
+					<td style="text-align:center;" rowspan="2">
+					{% if view.kwargs.signature == '1' or signature == 1 %}
+						{% if autorite %}
+							{% if autorite.signature.name %}
+								<img src="{{ autorite.signature.url }}" alt="Signature" height="160" >
+							{% endif %}
+						{% endif %}
+					{% else %}
+						<br><br><br><br><br><br>
+					{% endif %}
+					</td>
+					</tr>
+					<tr>
+						<td style="text-align:center;" colspan="3">
+							{{ institution.ville }}, le: {{date|date:'d/m/Y'}} : {{ institution.ville_a }}  في 
+						</td>
+					</tr>
+			    	<tr>
+				    	<td colspan="3">
+				    		<div style="text-align:center;" >
+				    			<small> 
+				    				<strong>
+				    					لا تمنح الا نسخة واحدة من هذه الوثيقة
+				    				</strong>
+				    			</small>
+				    		</div>
+							{% if institution.footer %}
+				        	 	<img src="{{ institution.footer.url }}"  width="750" alt="Logo"> 
+							{% endif %}
+				    	</td>
+			    	</tr>
+  				</table>
+  			</td>
+  			{% if i != 'r' %}
+  			<td>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				  
+  			</td>
+  			{% endif %}
+  		{% endfor %}
+  		</tr>
+  	</table>
+{% endwith %}
+{% endwith %}

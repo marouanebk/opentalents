@@ -1,0 +1,16 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 %}
+{% block content %}
+	
+	<br><br>
+	<h2 style="color:brown">Attention !</h2>
+    <br>
+    <h4>{{ info }}</h4>
+	<br>
+	<br>
+	<h3>Confirmez-vous?</h3>
+	<br>
+    <a href="{{ lien }}" class="btn btn-info">Confirmer</a>
+    <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
+	<br><br>
+{% endblock %}

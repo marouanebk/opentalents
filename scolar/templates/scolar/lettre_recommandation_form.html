@@ -1,0 +1,241 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% load dictionary %}
+{% block content %}
+<head>
+	<script>
+			var diplome = "'Diplome/Formation'"
+			function  generate(){
+				event.preventDefault();
+				var motif = document.getElementById("id_motif").value;
+				if(motif!="")
+					motif = " de "+motif+".";
+				else
+					motif = ".";
+				var mat = document.getElementById("id_matière").value;
+				if(mat=="")
+					mat = "'module'";
+				var mot = "M/Mlle ";
+				var mott= "il/elle";
+				if (diplome==null)
+				{
+					diplome = "'Diplome/Formation'";
+				}
+				var nominstitution="{{ institution.nom }}".replace(new RegExp("&"+"#"+"x27;", "g"), "'")
+				if('{{object.sexe}}' == 'M'){
+					mot = "M. ";
+					mott = "il";
+				} else {
+					if('{{object.sexe}}' == 'F'){
+						mot = "Mlle ";
+						mott = "elle";
+					}
+				}
+				document.getElementById("id_text").value = "J'ai connu "+mot+"{{object.prenom}} {{object.nom}} durant mes enseignements de "+mat+" de la formation de "+diplome+" à : "+nominstitution+" - {{ institution.sigle }}.\nDurant ces séances, {{object.prenom}} avait toujours attiré mon attention dans les travaux à faire, de plus "+mott+" a acquis tant de notions théoriques et pratiques lors de sa formation à mes côtés.\n\nJe recommande fortement "+mot+"{{object.prenom}} {{object.nom}} qui répond aujourd'hui à votre offre"+motif;
+			}
+		</script>
+</head>
+<body>
+<h1>Lettre de recommandation</h1>
+<form  method="POST" class="form mt-3">
+
+	<!--<input type="hidden" name="csrfmiddlewaretoken" value="q4xZiAOSeiFgHkei8TpGW4nyedwSHWnG4WTAx870qthSdI6FjFhyiEPPMYfnuccg">-->
+	{% csrf_token %}
+
+	<div class="input form-inline ">
+		<input type="text" title="Exemples de motif de candidature d'étudiants : Master en informatique, stage pratique en entreprise..." name="motif" class="textinput textInput form-control is-valid m-1 " placeholder="Motif de candidature" title="" id="id_motif" >
+		<select type="text" title="Sélectionner le module dans lequel on recommande l'étudiant" name="matière"  onchange="updateTab()" class="select form-control  is-valid m-1 ropdown-menu scrollable-menu" placeholder="Matière" title="" id="id_matière">
+			<option value="" selected="">Module</option>
+			{% for activite in resultat %}
+			<option data-moyenne = "{{activite.moy}}" data-nbabsence ="{{activite.nabsences}}" data-diplome="{{activite.module.formation.programme.diplome.intitule}}" data-module = {{activite.module.matiere}}>
+				{{ activite.module.matiere }} {{activite.module.formation}}
+			</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="row">
+		<div class="col-lg-5">
+			<div class="row offset-lg-1">
+				{% if object.photo %}
+					<img id="photoprofil" src="{{ object.photo.url }}" height="150">
+				    <canvas hidden id="photoprofilCanvas" width="0" height="0" style="border:2px solid rgb(255, 255, 255);">
+				      
+				    </canvas>
+					<script>
+					setInterval(drawphotoprofil, 2000)
+					function drawphotoprofil()
+					{
+				        var canvas = document.getElementById("photoprofilCanvas");
+				        var ctx = canvas.getContext("2d");
+				        var imgcanvas = document.getElementById("photoprofil");
+						document.getElementById("photoprofilCanvas").width = imgcanvas.width;
+						document.getElementById("photoprofilCanvas").height = imgcanvas.height;
+						ctx.drawImage(imgcanvas, 0, 0, imgcanvas.width, imgcanvas.height );	
+					}
+				    
+				    </script>
+				{% endif %}
+				
+				
+				
+				<table class ="table table-bordered mt-5 mb-5" style="width : 20%">
+					<thead>
+					<tr>
+						<td>Moyenne générale</td>
+						<td>Nombre d'absences</td>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td id="tableMoyenne"></td>
+						<td id="tableAbsence"></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			{% if institution.activation_ddc %}
+				{% render_chart profile_chart %}
+			{% endif %}
+		</div>
+		<div id="parcours" class="col-lg-6">
+
+				{% render_table parcours %}
+
+		</div>
+	</div>
+	<div class="row" >
+		<div class="col-lg-5">
+			<div>
+				<br><br>
+				<textarea name="textLettre" id="id_text" class = "textinput textInput form-control" rows="10" style="resize : none;">Zone de modification du commentaire libre</textarea>
+				<div class="offset-lg-1"><button class="btn btn-primary" onclick="generate()">Générer un exemple de commentaire</button></div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<table class="table table-bordered ">
+				<thead>
+				<tr>
+					<th scope="col">Compétence</th>
+					<th scope="col">Non spécifié</th>
+					<th scope="col">Faible</th>
+					<th scope="col">Passable</th>
+					<th scope="col">Moyen</th>
+					<th scope="col">Bon</th>
+					<th scope="col">Excellent</th>
+				</tr>
+				</thead>
+				<tbody id="matriceDesCompetencesBody">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<input formaction="{% url "lettre_recommandation_pdf" etudiant_pk=object.matricule %}" type="submit" class="btn btn-info" value="Télécharger format PDF"/>
+	<input id="boutonword" formaction="{% url "lettre_recommandation_word" etudiant_pk=object.matricule %}" type="submit" class="btn btn-info" value="Télécharger format Word"/>
+
+	<input type="hidden" value="string" id="imageDataUrlForm" name="imageDataUrlForm">
+	<input type="hidden" value="string" id="imagePhotoProfilDataUrlForm" name="imagePhotoProfilDataUrlForm">
+	<div id = "listeCritereEtNiveauDeCompetencesArray"></div>
+</form>
+
+<script>
+
+			function updateTab(){
+				<!--var tdTab = document.getElementById("tableTD);-->
+				var moyenneTab = document.getElementById("tableMoyenne");
+				var absenceTab = document.getElementById("tableAbsence");
+				var select = document.getElementById("id_matière");
+				<!--tdTab.innerHTML = (select.options[select.selectedIndex].dataset.td);-->
+				moyenneTab.innerHTML = (select.options[select.selectedIndex].dataset.moyenne);
+				absenceTab.innerHTML  = (select.options[select.selectedIndex].dataset.nbabsence);
+				diplome = (select.options[select.selectedIndex].dataset.diplome);
+			}
+
+		var ListeCritere = ["Esprit de synthèse","Assiduité","Autonomie","Communication","Aptitudes techniques"];
+		var niveauDeCompetence = ["Faible" ,"Passable", "Moyen" , "Bon" , "Excellent"];
+		var tableCritere = document.getElementById("matriceDesCompetencesBody");
+		var tmp = "";
+
+
+        //On ajoute des input de  type hidden pour pouvoir passer la liste des critere et des niveau de competences au a la vue lettreRecommandationPdf
+
+        var tmp2 = "";
+        for (var i = 0 ; i<ListeCritere.length;i++) {
+		    tmp2 += '<input type="hidden" name = "critere[]" value="'+ListeCritere[i]+   '">'  ;
+		}
+		for (var i = 0 ; i<niveauDeCompetence.length;i++) {
+		    tmp2 += '<input type="hidden" name = "competence[]" value="'  +  niveauDeCompetence[i]+   '">'  ;
+		}
+
+		rows = [...document.querySelectorAll("#parcours table tbody tr td:nth-child(-n+3) ")].map(i => i.textContent);
+		for (var i = 0 ; i<rows.length;i++) {
+			tmp2 += '<input type="hidden" name = "prc[]" value="'+rows[i]+   '">'  ;
+		}
+
+        document.getElementById("listeCritereEtNiveauDeCompetencesArray").innerHTML = tmp2;
+
+
+        // le tableau d'evaluation des competences
+		for (var i = 0 ; i<ListeCritere.length;i++) {
+			tmp += "<tr>"
+			tmp += "<td>"+ListeCritere[i]+"</td>";
+			tmp += '<td><input type="radio" name="'+ListeCritere[i]+'" value="Non spécifié" checked></td>' ;
+		  	for (var j = 0 ; j < niveauDeCompetence.length;j++) {
+		  		tmp+='<td><input  id=" '+ListeCritere[i]+'-'+niveauDeCompetence[j]+ '"   type="radio" name="'+ListeCritere[i]+'" value="'+niveauDeCompetence[j]+'"></td>';
+			}
+			tmp+="</tr>";
+		}
+
+
+		 document.getElementById("matriceDesCompetencesBody").innerHTML = tmp;
+
+
+
+		//Recuperer le radar sous forme de dataUrl
+
+		function recupererPhotos(){
+		{% if object.photo %}
+			var canvas = document.getElementsByTagName("canvas")[1];
+		{% else %}
+			var canvas = document.getElementsByTagName("canvas")[0];
+		{% endif %}
+		{% if institution.activation_ddc %}
+			var img    = canvas.toDataURL("image/png").replace("data:image/png;base64,","");
+		{% endif %}
+		{% if object.photo %}
+			var photoprofil = document.getElementsByTagName("canvas")[0];
+			var imgPhotoProfil = photoprofil.toDataURL("image/png").replace("data:image/png;base64,","");
+		{% endif %}
+
+		//On passe le dataUrl du radar comme valeur dans le formulaire
+		{% if institution.activation_ddc %}
+			document.getElementById("imageDataUrlForm")["value"] = img;
+		{% endif %}
+		{% if object.photo %}
+			document.getElementById("imagePhotoProfilDataUrlForm")["value"] = imgPhotoProfil;
+		{% endif %}
+		document.getElementById("boutonword").disabled = false;
+		}
+
+
+		//On attend 2 secondes que l'animation se termine avant de recuperer les photos
+
+		function recupererPhotosDelai() {
+			document.getElementById("boutonword").disabled = true;
+  			timeout = setTimeout(recupererPhotos, 2000);
+		}
+
+		window.addEventListener('load', recupererPhotosDelai, false);
+
+
+
+
+	</script>
+<script>
+			rows = [...document.querySelectorAll("#parcours table tbody tr td:nth-child(-n+3) ")].map(i => i.textContent);
+			var tmp2 = "";
+			for (var i = 0 ; i<rows.length;i++) {
+				tmp2 += '<input type="hidden" name = "critere[]" value="'+ListeCritere[i]+   '">'  ;
+			}
+		</script>
+</body>
+{% endblock %}

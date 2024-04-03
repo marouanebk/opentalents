@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+       
+  </head>
+  <body>
+  {% load dictionary icons %}
+  	{% if institution.header %}
+		<img src="{{ institution.header.url }}" alt="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " width="100%">
+	{% endif %}
+	<h1 align="center" id="top">{{ titre }}</h1>
+	<br><br>
+	<table>
+			<tr>
+				<td colspan="2">
+					<strong>Familles de Compétences</strong>
+					<ul>
+						{% for cf_code, cf_ in cf_list.items %}
+							<li>
+								<strong>{{cf_code}} : </strong>{{ cf_.competence_family.intitule }}
+							</li>
+						{% endfor %}
+					</ul>
+					
+		  			<strong>Type de compétence:</strong>
+		  				<strong>TEC : </strong> Technique,  
+						<strong>MET : </strong> Méthodologique,
+						<strong>MOD : </strong> Modélisation,
+						<strong>OPE : </strong> Opérationnel,
+				</td>
+				<td>
+		  			<strong>Niveau de compétence:</strong>
+		  			<table>
+			  			<tr>
+			  				<td style="background-color:#64FE2E;">Base</td>
+			  				<td style="background-color:#F7FE2E;">Intermédiaire</td>
+			  				<td style="background-color:#58D3F7;">Avancé</td>
+			  			</tr>
+		  			</table>
+		  			<br><br>
+		  		</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+			    	<table class="table-sm">
+			    		<thead class="thead-dark">
+					    		<tr>
+					    			<th>
+					    				Famille de Compétence
+					    			</th>
+					    			<th>
+					    				Compétence
+					    			</th>
+					    			<th>
+					    				Elément de Compétence
+					    			</th>
+					    			<th>
+					    				Type
+					    			</th>
+									<th>
+										Matières
+									</th>
+					    			<th>
+					    				Objectifs Pédagogiques
+					    			</th>
+					    		</tr>
+					    </thead>
+			    		<tbody>
+			    			
+			    			{% for cf_code, cf_ in cf_list.items %}
+			    				<tr>	
+			    				<td rowspan="{{ cf_.nb_ce }}">
+			    					<strong>{{ cf_.competence_family.code }}</strong>: {{cf_.competence_family.intitule}}
+			    				</td>
+				    				{% for c_id_, c_ in cf_.c_list.items %}
+				    					
+				    					<td rowspan="{{ c_.nb_ce }}">
+				    						<strong>{{ c_.competence.code }}:</strong> {{ c_.competence.intitule }}
+				    					</td>
+						    			{% for ce_ in c_.ce_list %}
+						    			
+						    				<td>
+						    					<strong>{{ ce_.code }}:</strong> {{ ce_.intitule }}
+						    				</td>
+						    				<td>
+						    					{{ ce_.type}}
+						    				</td>
+						    				<td>
+						    				{% for ddc_ in ddc_list %}
+						    					{% with ce_.id|addstr:'_'|addstr:ddc_.id as key_%}
+						    						{% with ce_ddc_list|get_value_from_dict:key_ as ce_ddc_ %}
+						    							{% if ce_ddc_ %}
+																{% for ce_matiere_ in ce_ddc_ %}
+																	{% if ce_matiere_.niveau == 'B' %}
+																		<a href="#{{ce_matiere_.matiere.id}}" style="background-color:#64FE2E;">{{ ce_matiere_.matiere.code }}</a>
+																	{% elif ce_matiere_.niveau == 'I' %}
+																		<a href="#{{ce_matiere_.matiere.id}}" style="background-color:#F7FE2E;">{{ ce_matiere_.matiere.code }}</a>
+																	{% else %}
+																		<a href="#{{ce_matiere_.matiere.id}}" style="background-color:#58D3F7;">{{ ce_matiere_.matiere.code }}</a>
+																	{% endif %}
+																{% endfor %}
+														{% endif %}
+						    						{% endwith %}
+						    					{% endwith %}
+						    				{% endfor %}
+											{% if ce_ddc_list_zero %}
+												{% with ce_.id|addstr:'_'|addstr:'0' as key_%}
+													{% with ce_ddc_list|get_value_from_dict:key_ as ce_ddc_ %}
+						    							{% if ce_ddc_ %}
+																{% for ce_matiere_ in ce_ddc_ %}
+																	{% if ce_matiere_.niveau == 'B' %}
+																		<a href="#{{ce_matiere_.matiere.id}}" style="background-color:#64FE2E;">{{ ce_matiere_.matiere.code }}</a>
+																	{% elif ce_matiere_.niveau == 'I' %}
+																		<a href="#{{ce_matiere_.matiere.id}}" style="background-color:#F7FE2E;">{{ ce_matiere_.matiere.code }}</a>
+																	{% else %}
+																		<a href="#{{ce_matiere_.matiere.id}}" style="background-color:#58D3F7;">{{ ce_matiere_.matiere.code }}</a>
+																	{% endif %}
+																{% endfor %}
+														{% endif %}
+													{% endwith %}
+												{% endwith %}
+											
+											{% endif %}
+						    				</td>
+						    				<td>
+						    					{{ ce_.objectif }}
+						    				</td>
+						    				</tr><tr>
+						    			
+						    			{% endfor %}
+						    			
+						    		{% endfor %}
+						    		</tr>
+					    	{% endfor %}
+			    		</tbody>
+					</table>   
+				</td>
+			</tr>
+		</table> 	
+	{% for key, object in matiere_list.items %}
+		<div id="{{object.matiere.id}}">
+			{% include './matiere_detail_content.html' %}
+			<br><br>
+			<a href="#top">Retour</a>
+		</div>
+	{% endfor %}
+	
+  </body>
+</html>

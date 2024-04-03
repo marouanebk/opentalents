@@ -1,0 +1,99 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>Dashboard Etudiants</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#effectifs">Effectifs par palier</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#wilayas">Wilayas de résidence</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#assiduite">Assiduité Live!</a>
+    </li>
+    <li class="nav-item">
+    	{% if perms.scolar.fonctionnalitenav_etudiants_annuairecomplet %}
+      		<a class="nav-link" href="{% url "etudiant_list" %}">Talents Finder</a>
+      	{% else %}
+      		<a class="nav-link" href="{% url "public_etudiant_list" %}">Talents Finder</a>
+      	{% endif %}
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="effectifs" class="container tab-pane active"><br>
+	      <div class="row">
+			<div class="col-lg-6">
+				<h5>Effectifs par palier/spécialité</h5>
+				{{ effectifs_par_sexe_chart.as_html }}
+			</div>
+			<div class="col-lg-6">
+				<h5>Répartition par sexe par palier/spécialité</h5>
+				{{ effectifs_ratio_par_sexe_chart.as_html }}
+			</div>
+		  </div>
+    </div>
+    <div id="wilayas" class="container tab-pane fade"><br>
+    	  <div class="row">
+    	  	<div class="col-lg-10">
+    	  		<p class="alert alert-info">
+    	  			Ces statistiques tiennent compte des inscriptions de l'année en cours
+    	  		</p>
+    	  		<div class="row">
+    	  		<div class="col-lg-6">
+    	  		<h5> Répartition selon type de résidence </h5>
+    	  		{{ interne_chart.as_html }}
+				</div>
+    	  		<div class="col-lg-6">
+    	  		<h5> Répartition par Wilaya de résidence </h5>
+    	  		{{ effectifs_wilaya_residence.as_html }}
+    	  		</div>
+				</div>
+    	  	</div>
+    	  	<div class="col-lg-2">
+    	  		<table class="table table-sm table-striped">
+    	  			<thead>
+    	  				<tr>
+    	  					<th>Wilaya</th>
+    	  					<th>Nombre</th>
+    	  					<th>%</th>
+    	  				</tr>
+    	  			</thead>
+    	  			<tbody>
+    	  				{% for element in wilayas_aggregate %}
+    	  					<tr>
+    	  						<td>{% if element.wilaya_residence__nom %}
+    	  								<small>{{ element.wilaya_residence__nom }}</small>
+    	  							{% else %}
+    	  								<small>Non dispo</small>
+    	  							{% endif %}
+    	  						</td>
+    	  						<td>{{ element.nb_etudiants }}</td>
+    	  						<td>{{ element.nb_etudiants|as_percentage_of:total }}</td>
+    	  					</tr>
+    	  				{% endfor %}
+    	  			</tbody>
+    	  		</table>
+    	  	</div>
+    	  </div>
+    </div>
+
+    <div id="assiduite" class="container tab-pane fade"><br>
+			<div class="col-lg-8">
+				<h5>Nombre d'absences par jour </h5>
+				{{ absence_live_chart.as_html }}
+			</div>
+
+    </div>
+  </div>
+
+
+
+{% endblock %}
+	
+

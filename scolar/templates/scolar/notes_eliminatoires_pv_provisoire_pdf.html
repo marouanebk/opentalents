@@ -1,0 +1,48 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %}
+	{% block title %} 
+		Procés Verbal de Délibération : {{ formation.programme }}<br>
+		{% if formation.programme.specialite %}
+			Spécialité: {{ formation.programme.specialite.intitule }}<br>
+		{% endif %}
+		Année universitaire: {{ formation.annee_univ }} / {{ formation.annee_univ.annee_suivante }}
+	{% endblock %}
+	{% block content %}	
+		<h3 align="center"><strong>Notes Eliminatoires de la période {{ periode.periode.code }}</strong></h3>
+			<br><br>
+    		<table class="table table-bordered table-sm">
+    			<thead>
+    				<tr>
+    					<th colspan="2">Matière</th>
+    					<th rowspan="2">Moyenne</th>
+    					<th rowspan="2">Moyenne NE</th>
+    					<th rowspan="2">Coef</th>
+						{% if formation.activation_credits %}
+    						<th rowspan="2">Crédits</th>
+						{% endif %}
+    				</tr>
+    				<tr>
+    					<th>Code</th>
+    					<th>Intitulé</th>
+    				</tr>
+    			</thead>
+    			<tbody>
+						{% for code, module in module_list.items %}
+							<tr>	
+								<td>{{ code }}</a></td>
+								<td>{{ module.matiere.titre }}</td>
+								<td>{{ module.moy }}</td>
+								<td>{{ module.note_eliminatoire }}</td>
+								<td>{{ module.matiere.coef }}</td>
+								{% if formation.activation_credits %}
+									<td>{{ module.matiere.credit }}</td>
+								{% endif %}
+							</tr>
+						{% endfor %}
+    	    	</tbody>
+  			</table>
+	
+		Fait le : {{date|date:'d/m/Y'}}
+	<br><br><br><br><br><br><br><br>
+	
+	{% endblock %}

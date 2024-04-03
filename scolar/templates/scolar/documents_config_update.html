@@ -1,0 +1,64 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+
+{% block content %}
+
+<style>
+.custom-control-label::before, 
+.custom-control-label::after {
+width: 2.75rem;
+height: 2rem;
+}
+</style>
+<form action="" method="post">
+	{% csrf_token %}
+
+	<table class="table" style="border: 2px solid black;">	
+		{% for type, documents_config in documents_config_table.items %}
+			<tr>
+				<th style="text-align: center; background-color:rgb(225, 228, 220);">Liste des documents</th>
+				<th colspan="4"style="text-align: center; background-color:rgb(225, 228, 220);">Type : <strong>{{ type }}</strong></th>	
+			</tr>
+			<tr style="background-color:rgb(244, 236, 236);">
+			<td></td>
+				<td style="font-size:14px; text-align: center; font-weight:bold;">Activé</td>
+				<td style="font-size:14px; text-align: center; font-weight:bold;">Autorité signataire</td>
+				<td style="font-size:14px; text-align: center; font-weight:bold;">Autorité d'entête</td>
+			</tr>
+				{% for document_config in documents_config %}
+					<tr>
+					<td> {{ document_config }}</td>
+						<td style="text-align:center;">
+							{% with document_config.id|addstr:'_'|addstr:'actif' as key %}
+								{{ form|form_field:key|as_crispy_field }}
+							{% endwith %}
+						</td>
+						<td style="text-align:center;">
+							{% with document_config.id|addstr:'_'|addstr:'autorite' as key %}
+								{{ form|form_field:key|as_crispy_field }}
+							{% endwith %}
+						</td>
+						<td style="text-align:center;">
+							{% with document_config.id|addstr:'_'|addstr:'autorite_entete' as key %}
+								{{ form|form_field:key|as_crispy_field }}
+							{% endwith %}
+						</td>
+					</tr>
+				{% endfor %}
+			
+		{% endfor %}
+	
+	</table>
+
+
+<br><br>
+<input type="submit" name="submit" value="Enregistrer"  class="btn btn-primary"/>
+<a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
+</form>
+
+
+
+{% endblock %}
+	
+

@@ -1,0 +1,63 @@
+{% load bootstrap4 icons dictionary %}
+	
+    		<table width="70%">
+    			<thead>
+    				<tr>
+    					
+    						<th colspan="7">
+    					
+    							<strong>
+    								{{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}       		
+									{{inscription.formation.programme.titre}}
+									{% if inscription.formation.programme.specialite %}
+											      {{ inscription.formation.programme.specialite.intitule }}
+									{% endif %}
+								</strong>
+    						</th>
+    				</tr>
+    				<tr>
+    					<th rowspan="2">{% if inscription.formation.has_semestres %}Semestre{% else %}Période{% endif %}</th>
+						{% if inscription.formation.activation_ues %}
+	    					<th rowspan="2">Nature</th>
+	    					<th rowspan="2">Code</th>
+						{% endif %}
+    					<th rowspan="2" colspan="2">Intitulé</th>    					
+    					<th colspan="1">Note de soutenance</th>
+    					<th colspan="1">Mention</th>    					
+    				</tr>    				
+    			</thead>
+    			<tbody>
+					{% for periode in inscription.inscription_periodes.all|dictsort:'periodepgm.periode.code' %}
+    				<tr>
+    					<td style="vertical-align:middle; text-align:center;" >{{ periode.periodepgm.code }}</td>
+						{% for ue in periode.resultat_ues.all|dictsort:'ue.code' %}
+							{% if inscription.formation.activation_ues %}
+								<td style="vertical-align:middle; text-align:left;" >
+									{{ categorie_ue|get_value_from_dict:ue.ue.type }}
+								</td>
+								
+								<td style="vertical-align:middle; text-align:center;">
+									{{ ue.ue.code }}
+								</td>
+							{% endif %}
+
+							{% for resultat in ue.resultat_matieres.all|dictsort:'module.matiere.code' %}	
+								<td><strong>{{ resultat.module.matiere.code }}</strong></td>
+								<td><strong>{{ resultat.module.matiere.titre }}</strong></td>
+								
+								
+										<td style="vertical-align:middle; text-align:center;" >
+											{{inscription.moyenne }}											
+										</td>
+										<td style="vertical-align:middle; text-align:center;">
+												{{ mention|get_value_from_dict:inscription.mention }}
+										</td>									
+									
+								</tr><tr>
+							{% endfor %}
+						{% endfor %}
+					</tr>
+    				{% endfor %}
+    				
+    	    	</tbody>
+  			</table>

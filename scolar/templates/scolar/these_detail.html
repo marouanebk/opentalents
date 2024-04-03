@@ -1,0 +1,31 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>{{ titre }}</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#these">Sujet de Thèse</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#validation">Validation</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="these" class="container tab-pane active"><br>
+    	<h3>Sujet de thèse N° {{ view.kwargs.pk }}</h3>
+    	{% crispy these_form %}
+    </div>
+    <div id="validation" class="container tab-pane fade"><br>
+    	<h3>Avis sur le Sujet de Thèse</h3>
+    	<br><br>
+		{% render_table these_validation_table %}
+	</div>
+  </div>
+{% endblock %}
+	
+

@@ -1,0 +1,49 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<h1>{{ titre }}</h1>
+	
+	<br>
+	{% if perms.scolar.fonctionnalite_configurationetablissement_modification %}
+       	<a href="{% url 'permissions_user_update' pk=user_.id %}" class="btn btn-primary">Modifier les rôles et accès supplémentaires</a> 
+	{% endif %}
+	<br>  
+	<h2>Rôles</h2>
+	<table class="table table-bordered" style="border: 2px solid black; ">	
+	
+			<tr style="background-color:rgb(244, 236, 236);">
+				{% for group_name in group_names %}
+					<td style="font-size:14px; text-align: center; font-weight:bold;">{{ group_name }}</td>
+				{% endfor %}
+			</tr>
+			<tr>
+				{% for affectation in groups_affectations %}
+					<td style="font-size:20px; text-align:center;">{% if affectation %}<span style="color:rgb(0, 128, 0)">&#10004;</span> {% else %}<span style="color:rgb(255, 0, 0)">&#10060;</span>{% endif %}</td>
+				{% endfor %}
+			</tr>			
+	</table>
+	<br><br>
+	<h2>Accès supplémentaires</h2>
+	<table class="table table-bordered" style="border: 2px solid black; ">	
+	
+		{% for fonctionnalite, permissions_par_fonctionnalite_et_cpt in access_table.items %}
+			<tr>
+				<th style="text-align: center; background-color:rgb(225, 228, 220);">Liste permissions<br>- {{ permissions_par_fonctionnalite_et_cpt.1 }} permission(s)</th>
+				<th style="text-align: center; background-color:rgb(225, 228, 220);">Bloc : <strong>{{ fonctionnalite }}</strong></th>	
+			</tr>
+			{% for code_et_nom in permissions_par_fonctionnalite_et_cpt.0 %}
+				<tr>
+				<td>{% if code_et_nom.3 %}<strong>NAV </strong>{% endif %}{{ code_et_nom.1 }}</td>
+				<td style="font-size:20px; text-align:center;">{% if code_et_nom.2 %}<span style="color:rgb(0, 128, 0)">&#10004;</span> {% else %}<span style="color:rgb(255, 0, 0)">&#10060;</span>{% endif %}</td>
+				</tr>
+			{% endfor %}
+			
+			
+		{% endfor %}
+	</table>
+	
+	
+
+
+	<br>
+{% endblock %}

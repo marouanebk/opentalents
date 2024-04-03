@@ -1,0 +1,8 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons %}
+{% block content %}
+	<h1>EDT de {{ enseignant }}</h1>
+	<br><br>
+    {{ enseignant.edt|safe }}
+    
+{% endblock %}

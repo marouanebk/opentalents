@@ -1,0 +1,111 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>Dashboard Enseignants</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#effectifs">Effectifs</a>
+    </li>
+	{% if perms.scolar.fonctionnalitenav_enseignants_visualisationabsences %}
+	    <li class="nav-item">
+	      <a class="nav-link" data-toggle="tab" href="#assiduite">Assiduité Live!</a>
+	    </li>
+	{% endif %}
+	{% if perms.scolar.fonctionnalitenav_enseignants_visualisationcharges and institution.activation_charges %}
+	    <li class="nav-item">
+	      <a class="nav-link" data-toggle="tab" href="#charges">Charges</a>
+	    </li>
+	{% endif %}
+	{% if perms.scolar.fonctionnalitenav_enseignants_annuairecomplet %}
+	    <li class="nav-item">
+	      <a class="nav-link" href="{% url "enseignant_list" %}">Annuaire complet</a>
+	    </li>
+	{% else %}
+	    <li class="nav-item">
+	      <a class="nav-link" href="{% url "public_enseignant_list" %}">Annuaire public</a>
+	    </li>
+	{% endif %}
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="effectifs" class="container tab-pane active"><br>
+    	  <div class="row">
+    	  	<div class="col-lg-6">
+    	  		<h5>Répartition par grade</h5>
+    	  		{{ enseignant_grade_chart.as_html }}
+    	  	</div>
+    	  	<div class="col-lg-6">
+    	  		<strong> Total des effectifs permanents en activité: </strong> {{ total }}
+    	  		<table class="table table-bordered table-sm">
+    	  			<thead>
+    	  				<tr>
+    	  				{% for grade_ in grade_count_list.keys %}
+    	  					<th> {{grade_}} </th>
+    	  				{% endfor %}
+    	  				</tr>
+    	  			</thead>
+    	  			<tbody>
+    	  				<tr>
+    	  					{% for grade_, count_ in grade_count_list.items %}
+    	  						<td>
+    	  						{{ count_ }}
+    	  						</td>
+    	  					{% endfor %}
+    	  				</tr>
+    	  				<tr>
+    	  					{% for grade_, count_ in grade_count_list.items %}
+    	  						<td>
+    	  						{{ count_|as_percentage_of:total }} %
+    	  						</td>
+    	  					{% endfor %}
+    	  				</tr>
+    	  				
+    	  			</tbody>
+    	  		</table>
+    	  	</div>
+    	  </div>
+	      <div class="row">
+			<div class="col-lg-6">
+				<h5>Répartition par statut (Permanents / vacataires) en activité</h5>
+				{{ effectifs_par_sexe_chart.as_html }}
+			</div>
+			<div class="col-lg-6">
+				<h5>En pourcentage </h5>
+				{{ effectifs_ratio_par_sexe_chart.as_html }}
+			</div>
+		  </div>
+    </div>
+	{% if perms.scolar.fonctionnalitenav_enseignants_visualisationabsences %}
+	    <div id="assiduite" class="container tab-pane fade"><br>
+				<div class="col-lg-8">
+					<h5>Nombre d'absences par jour </h5>
+					{{ enseignant_absence_live_chart.as_html }}
+				</div>
+	
+	    </div>
+	{% endif %}
+	{% if perms.scolar.fonctionnalitenav_enseignants_visualisationcharges and institution.activation_charges %}
+	    <div id="charges" class="container tab-pane fade"><br>
+	    	<div class="row">
+				<div class="col-lg-8">
+					<h5>Répartition des enseignants selon leur charge </h5>
+					{{ enseignant_charge_chart.as_html }}
+				</div>
+					<div class="offset-lg-2 col-lg-2">
+						<a href="{% url "charge_list" %}" class="btn btn-info"> Charges </a>
+					</div>
+				
+			</div>
+	    </div>
+	{% endif %}
+  </div>
+
+
+
+{% endblock %}
+	
+

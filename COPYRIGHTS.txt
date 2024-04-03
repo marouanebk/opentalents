@@ -1,0 +1,28 @@
+/**
+
+ * @package OpenTalents
+ * @version 2.0 - Mai, 2022
+ 
+ * @copyright (C) 2018-2022 Yacine CHALLAL
+ * @copyright (C) 2021-2022 Adam BENBRAHIM (en partie - Contribution par le biais d'un projet de fin d'études)
+ * @copyright (C) 2021-2022 Sabrina SMAIL (en partie - Contribution par le biais d'un projet de fin d'études)
+ * @copyright (C) 2021-2022 Imene LAIFA (en partie - Contribution en tant qu'ingénieure à la scolarité de l'ESI)
+ * @copyright (C) 2021-2022 Yasmina DIBOUNE (en partie - Contribution dans les modules de post-graduation en tant qu'ingénieure à la DSI de l'ESI)
+ * @copyright (C) 2021-2022 Atika TEZKRATT (en partie - Contribution dans les modules de post-graduation en tant qu'ingénieure à la DSI de l'ESI)
+ * @copyright (C) 2022 Amira HAMMADI (en partie - Contribution dans le cadre du Stage Pratique en Entreprise à l'ESI - Module de la lettre de recommandation)
+ * @copyright (C) 2022 Syphax CHERFAOUI (en partie - Contribution dans le cadre du Stage Pratique en Entreprise à l'ESI - Module de la lettre de recommandation)
+ * @copyright (C) 2022 Faiez KAMICHE (en partie - Contribution dans le cadre du Stage Pratique en Entreprise à l'ESI - Relevé de notes en langue arabe)
+  
+Autres contributions de la communauté open-source :
+
+* @muhammedBkf (Mohamed El Amin BOUKERFA): 
+- Renforcement de l'opération de changement de mot de passe en exigeant à l'utilisateur de s'authentifier
+- Ajout de permission dans la vue de passage à l'année suivante
+- Adding HTML emails support
+
+* @Abdeldjalil-H (Abdeldjalil HEZOUAT)
+- Use f formating in __str__ for models
+
+ Les droits d'auteurs des packages open-source (sous licences non restrictives) et distribués avec cette licence sont mentionnés chacun dans leur package.
+ 
+ */

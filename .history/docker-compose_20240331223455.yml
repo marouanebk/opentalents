@@ -1,0 +1,115 @@
+version: '3'
+
+services:
+
+# Un premier conteneur (ou service "db") contenant Postgres, dont les données sont persistantes dans un répertoire postgres_data monté sur l'hôte (ignoré dans .gitignore). Ce répertoire contient la base de données. La base de données "opentalents" est créée automatiquement grâce au fichier install/init.sql seulement si le dossier postgres_data est vide. S'il ne l'est pas, aucune initialisation n'est faite d'où la persistance des données.
+  db:
+    image: postgres:14.2
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER} 
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./install/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped  
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d opentalents"]
+      interval: 5s
+      timeout: 5s
+      retries: 5    
+  
+# Un deuxième conteneur contenant Python et l'application Django. Si c'est une nouvelle installation il est construit à zéro en installant les requirements, puis en chargeant la base de données et settings par les valeurs par défaut. Si ce n'est pas une nouvelle installation (présence d'au moins un fichier de migration) alors il y a juste un makemigrations et migrate.
+  opentalents:
+    build:
+         context: .
+         dockerfile: Dockerfile
+    volumes:
+      - .:/opentalents
+    command: bash -c "
+             mkdir -p docker_tmp &&
+             if [ ${RESTORE} -eq 1 ] ; then
+               if [[ -f '${RESTORE_FILE}' ]]; then
+                 echo 'Procedure de restauration enclenchee' &&
+                 echo 'Base de donnees JSON de restauration - ${RESTORE_FILE}' &&
+                 sed -i 's/@receiver/#@receiver/g' scolar/views.py &&
+                 python manage.py flush --no-input &&
+                 python manage.py shell < ./install/restore-prepare.py &&
+                 echo 'Restauration en cours, veuillez patienter, cela peut prendre du temps.....' &&
+                 python manage.py loaddata ${RESTORE_FILE} &&
+                 sed -i 's/#@receiver/@receiver/g' scolar/views.py &&
+                 echo 'Restauration effectuee avec succes. CTRL+C pour quitter ';
+               else
+                 echo 'Le fichier de restauration JSON - ${RESTORE_FILE} - est inexistant. CTRL+C pour quitter';
+               fi &&
+               sleep infinity ;
+             else
+               if [[ -f 'scolar/migrations/0001_initial.py' ]]; then  
+                 echo 'Il y a au moins une migration, aucune nouvelle installation enclenchee.' &&
+                 python manage.py makemigrations scolar && 
+                 python manage.py migrate &&
+                 cp -f install/nginx.conf.example nginx/nginx.conf ;                                        
+               else
+                 echo 'Aucune migration disponible, nouvelle installation en cours..' &&
+                 cp install/settings_default.py SMS/settings.py &&
+                 python manage.py makemigrations scolar && 
+                 python manage.py migrate &&
+                 python manage.py loaddata install/pays_wilayas_communes.json &&
+                 python manage.py shell < ./install/create-default-superuser.py &&
+                 python manage.py shell < ./install/requete_permissions.py &&
+                 mkdir -p nginx &&
+                 cp -f install/nginx.conf.example nginx/nginx.conf ;                                   
+               fi &&
+               mkdir -p media/photos &&
+               mkdir -p media/admin &&
+               mkdir -p media/quittances &&
+               mkdir -p media/tmp && 
+               mkdir -p media/files &&
+               chmod -R 777 media/photos &&
+               chmod -R 777 media/admin &&
+               chmod -R 777 media/quittances &&
+               chmod -R 777 media/tmp && 
+               chmod -R 777 media/files &&
+               gunicorn --workers=${NB_WORKERS} --threads=${NB_THREADS} --timeout=${WORKERS_TIMEOUT} SMS.wsgi:application --bind 0.0.0.0:8000;
+             fi"
+    container_name: ${APP_CONTAINER_NAME}
+    restart: unless-stopped
+    expose:
+      - 80010:8000
+    depends_on:
+      - db
+      - cache
+    tty: true
+
+# Un troisième conteneur Nginx
+  nginx:
+    image: nginx:1.21
+    container_name: ${NGINX_CONTAINER_NAME}
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./root:/opentalents/root
+      - ./media:/opentalents/media
+      - ./media/photos:/opentalents/protected/media/photos
+      - ./media/quittances:/opentalents/protected/media/quittances
+      - ./nginx/logs/:/var/log/nginx/
+    ports:
+      - "${NGINX_PORT}:80"
+    links:
+      - opentalents:opentalents
+      
+# Un quatrième conteneur Redis (utilisé pour le cache select2 et la montée en charge qui ne peut plus utiliser un seul process - on aura une erreur de type no results found si aucun cache n'est utilisé
+
+  cache:
+    image: redis:6.2-alpine
+    container_name: ${CACHE_CONTAINER_NAME}
+    restart: unless-stopped
+    volumes:
+      - ./cache:/data
+    command: redis-server
+    expose:
+      - 6379
+
+
+
+

@@ -1,0 +1,20 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 %}
+{% block content %}
+{% if sms %}
+<script>
+	window.alert('Munissez vous de votre téléphone\n'+
+	'N° : ******'+'{{ user.enseignant.tel|slice:"6:"}}'+'\n'+
+	'pour recevoir un MOT DE PASSE par SMS.\n'+
+	'Si le numéro est incorrect ou absent, merci de le rectifier \n'+
+	'd\'abord auprès de l\'administration');
+</script>
+{% endif %}
+
+	<br><br>
+	<h5> {{ titre }} </h5>
+    <br>
+    
+	{% crispy form %}
+	
+{% endblock %}

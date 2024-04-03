@@ -1,0 +1,71 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %}
+
+
+{% block signataire %}
+{% with 'Demande_Chambre_Universitaire'|autorite_entete_from_document_programme:inscription_periode.inscription.formation.programme as autorite %}
+				<br>
+<table style="width:100%">
+				<tr> 
+					<td style =" text-align: left;"> 
+					<p align="left">			{{ autorite.intitule }}</p>
+					</td>
+					<td></td>
+					<td style =" text-align: right; " > 
+					<p>{{ autorite.intitule_a }}</p>
+					</td> 
+				</tr></table>
+{% endwith %}
+
+{% endblock %}
+{% block title %}
+<h2 style="font-size: 22px;"><p align="right"> 
+	<br> <br> Madame,Monsieur:La directrice/Le directeur <br> 
+		de la cité Universitaire<br><br><br>
+	    				</p></h2>
+{% endblock %}
+{% block content %}	
+{% with 'Demande_Chambre_Universitaire'|autorite_from_document_programme:inscription_periode.inscription.formation.programme as autorite %}
+<br><br><br>
+    <table>
+    	<tr>
+    		<td>
+    			<p style="font-size: 18px; text-align: justify;">
+    				Je soussigné,le responsable du service des stages, atteste que: <br><br> 
+    				M. (elle) : {{ inscription_periode.inscription.etudiant.nom }} {{ inscription_periode.inscription.etudiant.prenom}} / {{ inscription_periode.inscription.etudiant.nom_a }} {{ inscription_periode.inscription.etudiant.prenom_a }}, <br> 
+    				Né(e) le: {{ inscription_periode.inscription.etudiant.date_naissance }} à {{ inscription_periode.inscription.etudiant.lieu_naissance }}<br>
+    				Est inscrit(e) à l'{{ institution.nom }} ({{ institution.sigle }}, {{ institution.ville }}) sous N°: {{ inscription_periode.inscription.etudiant.matricule }}. <br>
+    				Elle/Il poursuit des études de: <strong>{{ inscription_periode.inscription.formation.programme.diplome.intitule}}.</strong><br><br> 
+					Cette année {{inscription_periode.inscription.formation.annee_univ}}/{{inscription_periode.inscription.formation.annee_univ.annee_suivante}},il/elle est actuellement entrain de travailler sur son projet de fin d'études (PFE) et par conséquent nécessite une chambre, dans la mesure du possible, pour mener à bout et bonne fin de son travail, sachant que sa soutenance est programmée pour le mois de (Octobre {{inscription_periode.inscription.formation.annee_univ.annee_suivante}}).
+					
+					
+					<br><br>
+					Veuillez agréer, Madame/Monsieur, mes salutations distinguées<br><br><br><br>
+					Fait pour servir et valoir ce que de droit,
+					<br><br><br><br>
+    			
+    			</p>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td>
+    			<p align="center">
+					{{ institution.ville }}, le: {{ today|date:'d/m/Y' }}	    			
+    			</p>
+    			
+    			<p align="center">
+    				{{inscription_periode.inscription.formation.programme.departement.responsable}}<br>
+				<br>
+				
+				{% if view.kwargs.signature == '1' and autorite.signature.name %}
+					<img src="{{ autorite.signature.url }}" alt="Signature" width="300" >
+				{% else %}
+					<br><br><br><br><br><br><br><br><br>
+				{% endif %}
+
+    			</p>
+    		</td>
+    	</tr>
+	</table>
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 %}
+{% block content %}
+	<br>
+	<div class="row">
+		<div class="offset-lg-3 col-lg-4 text-center">
+
+			<h1>Connexion</h1>
+			<br>
+			<form method="post">
+		  	{% csrf_token %} {{ form.as_p }}
+		  	<button type="submit" class="btn btn-primary">Connexion</button><br><br>
+			{% if institution.activation_emails %}
+		  		<a href="{% url 'password_reset' %}" >Mot de passe oublié?</a>
+			{% endif %}
+			</form>
+			
+			<br>
+			{% if institution.activation_authentification_google %}
+				<strong>-- OU --</strong>
+				<br><br>
+		  		<a href="{% url 'social:begin' 'google-oauth2' %}?{{ request.META.QUERY_STRING }}" class="btn btn-secondary">Connexion avec Google {% if institution.email_domain %}@{{ institution.email_domain }}{% endif %}</a>
+			{% endif %}
+			{% if institution.activation_enregistrement_etudiants %}
+				<br><br>
+				<strong>-- OU --</strong>
+				<br><br>
+		  		<a href="{% url 'enregistrement_etudiant_create' %}" class="btn btn-success">Demande d'un compte étudiant</a>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

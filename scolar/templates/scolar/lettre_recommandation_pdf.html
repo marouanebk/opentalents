@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% load dictionary %}
+<html>
+<head>
+
+	<meta charset="utf-8">
+    <!--{% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<style>
+		* {
+		  box-sizing: border-box;
+		  font-family:Arial;
+		}
+
+		.row {
+		  display: flex;
+		}
+
+		/* Create two equal columns that sits next to each other */
+
+		.column{
+		  flex: 30%;
+		}
+		#profileChart{
+			height:6cm;
+
+		}
+
+		th, td {
+		  padding: 15px;
+		  text-align: left;
+		}
+		table {
+	  border-collapse: collapse;
+	}
+	table, td, th {
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+
+	</style>
+</head>
+</head>
+<script>console.log("{{esprit}}");console.log("{{critereList}}");console.log("{{competenceList}}");</script>
+<body >
+
+	 
+	<div class="row">
+		{% if institution.header %}
+			<img src="{{ institution.header.url }}" height="74px" alt="Logo" width="100%">
+		{% endif %}
+		<div class = "column" style="position:absolute; top:3cm; left:0.5cm">
+			<p>{{institution.nom}} - {{institution.sigle}}</p>
+			<p>{{institution.ville}}{% if institution.wilaya_institution %} - {{institution.wilaya_institution.nom}}{% endif %}</p>
+			<br>
+			<p>De {{enseignant.nom}} {{enseignant.prenom}}</p>
+			<p>{{enseignant.email}}</p>
+			<br>
+			<p>Le {{date}}</p>
+			<div id="texte" style="width: 15cm; margin-top:3cm; font-size:20px"> <b>Objet : Lettre de recommandation pour {{object.nom}} {{object.prenom}}</b><br><br><span style="text-align: justify; text-justify: inter-word;">{{ texte|linebreaks }}</span></div>
+			<div style="font-size:18px;margin-top:2cm"><center>Signature</center></div>
+		</div>
+		<div style="position:absolute; top:2cm ; right : {% if institution.activation_ddc %}-50px{% else %}0px{% endif %} " class="column">
+			<div align="center" alt="Photo">
+				{% if object.photo %}
+					<img src="{{ object.photo.url }}" width="180">
+				{% endif %}
+			</div>
+			<div align="center">
+				{{object.nom}} {{object.prenom}}
+			</div>
+			<br>
+			<br>
+			{% if institution.activation_ddc %}
+				<br>
+				<img id = "profileChart" src="data:image/png;base64,{{profile_chart }}" style="object-fit: none;" >
+				<br>
+			{% endif %}
+			<br>
+			<br>
+			{% if matrix.items %}
+			<table align="center" class="table-sm table-bordered ">
+				<thead>
+				<tr>
+					<td><b>Compétence</b></td>
+					<td><b>Evaluation</b></td>
+				</tr>
+				</thead>
+				<tbody>
+				{% for key, value in matrix.items %}
+				{% if value != "Non spécifié" %}
+				<tr>
+					<td>{{ key }}</td>
+					<td>{{value}}</td>
+				</tr>
+				{% endif %}
+				{% endfor %}
+				</tbody>
+			</table>
+			{% endif %}
+			<br>
+			<br>
+			<table align="center" class="table-sm table-bordered ">
+				<thead >
+					<tr>
+						<td><b>Année</b></td>
+						<td><b>Moyenne</b></td>
+						<td><b>Rang</b></td>
+					</tr>
+				</thead>
+				<tbody>
+					{% for Annee, moyenne , groupe in parcours %}
+					<tr>
+						<td>{{Annee}}</td>
+						<td>{{moyenne}}</td>
+						<td>{{groupe}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

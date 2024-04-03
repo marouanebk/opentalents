@@ -1,0 +1,41 @@
+# OpenTalents CHANGELOG
+
+# 2.0 (2022-05-02)
+
+* Paramétrage des fonctionnalités
+* Configuration des autorités
+* Gestion du rattrapage
+* Gestion des dettes
+* Gestion de la post-graduation : Doctorants, thèses, états d'avancement, etc.
+* Livret des compétences
+* Exportation au format Progres
+* Exportation au format du service national
+* Exportation des enseignants et étudiants avec possibilité d'importation
+* Gestion des utilisateurs
+* Gonfiguration des documents et signatures
+* Génération d'une lettre de recommandation
+* Traçabilité
+* Notifications
+* Dockerization
+* Matrice des droits d'accès
+* Webhelp
+* Multiples rectifications mineures
+
+
+
+# 1.1 (2021-12-19)
+
+* Profil enseignant
+* Conversion des vues d'importation de CSV vers Excel (.xlsx)
+* Justification des absences par période
+* Extraction des mentions A, B, .. du code
+* N'afficher les préinscriptions qu'à l'assistant concerné
+* Ajout du champs observation dans le profil de l'étudiant
+* Ajout de quelques filtres de recherche
+* Gérer les matières d'équipe comme des PFE
+* Relevé de notes en anglais
+* Rectifications mineures (Importation étudiants, statistiques des étudiants, ..)
+
+# 1.0 (2021-10-11)
+
+* Première version de OpenTalents

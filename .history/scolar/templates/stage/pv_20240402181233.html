@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Selection Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin-bottom: 2em;
+        }
+        label {
+            font-weight: bold;
+        }
+        select, input[type="date"], input[type="submit"] {
+            margin: 0.5em 0;
+            padding: 0.5em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #f2f2f2;
+            padding: 1em;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <label for="semester">Semester:</label><br>
+        <select id="semester" name="semester">
+            <option value="s1">S1</option>
+            <option value="s2">S2</option>
+            <!-- Add more options as needed -->
+        </select><br>
+
+        <label for="level">Level:</label><br>
+        <select id="level" name="level">
+            <option value="level1">Level 1</option>
+            <option value="level2">Level 2</option>
+            <!-- Add more options as needed -->
+        </select><br>
+
+        <label for="role">Role:</label><br>
+        <select id="role" name="role">
+            <option value="chef">Chef Department</option>
+            <option value="enseignant">Enseignant</option>
+            <option value="representant">Representant du Groupe</option>
+        </select><br>
+
+        <label for="s1date">S1 Date:</label><br>
+        <input type="date" id="s1date" name="s1date"><br>
+
+        <label for="s2date">S2 Date:</label><br>
+        <input type="date" id="s2date" name="s2date"><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <table>
+        <tr>
+            <th>Enseignants</th>
+            <th>Modules</th>
+            <th>Delegues</th>
+        </tr>
+        <!-- Add rows as needed -->
+    </table>
+</body>
+</html>

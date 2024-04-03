@@ -1,0 +1,714 @@
+{% extends 'scolar/base.html' %}
+{% load static usergroup icons bootstrap4 crispy_forms_tags %}
+{% block sidebar %}
+<style>
+.btn-sidebar {
+	width:100%;
+    background-color: {{institution.color}} !important;
+	font-weight: bold;
+	margin-top:10px;
+	text-align:left;
+}
+
+.btn-sidebar:hover {
+	width:100%;
+    background-color: {{institution.color}}90 !important;
+	font-weight: bold;
+	text-aligh:left;
+}
+
+.nombre-offres{
+    border-radius:20%;
+    height: 24px;
+    line-height: 20px;
+    display: inline-block;
+    text-align: center;
+    padding: 2px;
+	padding-right: 6px;
+	padding-left: 6px;
+}
+
+
+</style>
+	{% if user.is_authenticated %}
+		{% if request.user|has_object:"Enseignant" %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_monespace_enseignant">{% icon 'fa fa-chalkboard-teacher' %} Mon espace Enseignant</button>
+				</li>
+				<div id="menu_monespace_enseignant" class="collapse">
+				{% if institution.activation_charges or institution.activation_google_agenda %}
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'tasks' %} Planification</a>
+				  <div class="dropdown-menu">
+					{% if institution.activation_charges %}
+				  		<a class="dropdown-item" href="{% url "charge_enseignant" enseignant_pk=request.user.enseignant.id %}">{% icon 'battery-half' %} Ma charge</a>
+					{% endif %}
+					{% if institution.activation_google_agenda %}
+				  		<a class="dropdown-item" href="{% url "enseignant_edt" enseignant_pk=request.user.enseignant.id %}  ">{% icon 'calendar' %} Mon EDT</a>
+					{% endif %}
+				  </div>
+				</li>
+				{% endif %}
+				
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'briefcase' %} Mes activités</a>
+				  <div class="dropdown-menu">
+				  	<a class="dropdown-item" href="{% url "activite" %}">{% icon 'book' %} Enseignements</a>
+				  	<a class="dropdown-item" href="{% url "activite_surveillance" %}">{% icon 'coffee' %} Surveillances</a>
+				  	<a class="dropdown-item" href="{% url "activite_soutenance" %}">{% icon 'graduation-cap' %} Soutenances & Encadrements </a>
+					<a class="dropdown-item" href="{% url "coordination_notes" %}">{% icon 'file-excel' %} Notes (Coordination)</a>
+					<a class="dropdown-item" href="{% url "coordination" %}">{% icon 'cogs' %} Coordination</a>
+					{% if institution.activation_theses %}
+						<a class="dropdown-item" href="{% url "enseignant_etat_avancement_list" %}">{% icon 'calendar' %} États d'Avancement Doctorat</a>
+					{% endif %}
+				  </div>
+				</li>
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'list' %} Mes Sujets</a>
+				  <div class="dropdown-menu">
+					<a class="dropdown-item" href="{% url "organisme_select_for_pfe_create" %}">{% icon 'plus' %} Nouveau dépôt de stage</a>
+				  	<a class="dropdown-item" href="{% url "enseignant_pfe_list" %}">{% icon 'list' %} Mes Sujets de Stages</a>
+					{% if institution.activation_theses %}
+						<a class="dropdown-item" href="{% url "enseignant_sujets_theses_list" %}">{% icon 'fa fa-bars' %} Mes Sujets de Thèses</a>
+				  	{% endif %}
+					<a class="dropdown-item" href="{% url "enseignant_expertise_list" %}">{% icon 'check' %} Validations des Sujets </a>
+				  </div>
+				</li>
+
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'user-friends' %} Mes Étudiants</a>
+				  <div class="dropdown-menu">
+					<a class="dropdown-item" href="{% url "enseignant_groupe_all_list" %}">{% icon 'user' %} Groupes</a>
+				    <a class="dropdown-item" href="{% url "tutorat_list" %}"> {% icon 'hands-helping' %} Tutorats</a>
+				  </div>
+				</li>
+	        	 <li class="list-group-item">
+			  		<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'magic' %} Mon Compte</a>
+			  		<div class="dropdown-menu">
+			  			<a class="dropdown-item" href="{% url "enseignant_detail" request.user.enseignant.id %}">{%  icon 'graduation-cap' %} Mon Profil</a>
+					  	<a class="dropdown-item" href="{% url "enseignant_documents"  pk=request.user.enseignant.id %}">{% icon 'folder-open' %} Mes Documents</a>
+						<a class="dropdown-item" href="{% url "enseignant_update" pk=request.user.enseignant.id %}">{% icon 'cog' %} Préférences</a>
+			  		</div>
+				</li>
+				</div>
+   			</ul>
+		{% endif %}
+
+		{% if request.user|has_object:"Etudiant" %}
+			<ul class="nav list-group">
+				<li>
+				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_monespace_etudiant">{% icon 'fa fa-user' %} Mon espace Étudiant</button>
+				</li>
+				<div id="menu_monespace_etudiant" class="collapse">
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'tasks' %} Planification</a>
+				  <div class="dropdown-menu">
+					{% if institution.activation_google_agenda %}
+				  		<a class="dropdown-item" href="{% url "edt_etudiant" %}">{% icon 'calendar' %} Mon EDT</a>
+				  	{% endif %}
+					<a class="dropdown-item" href="{% url "examen_etudiant_list" %}">{% icon 'calendar-check' %} Mes examens</a>
+				  </div>
+				</li>
+				<li>
+				  	<a class="list-group-item" href="{% url "etudiant_activite" %}">{%  icon 'book' %} Mes Modules</a>
+				</li>
+				{% if request.user.etudiant.eligible_pfe %}
+					<li class="list-group-item">
+					  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'list' %} Stages</a>
+					  <div class="dropdown-menu">
+				  		<a class="dropdown-item" href="{% url "organisme_select_for_pfe_create" %}">{% icon 'plus' %} Nouveau dépôt de stage</a>
+					  	<a class="dropdown-item" href="{% url "etudiant_pfe_list" %}">{% icon 'fa fa-suitcase' %} Mes Sujets de Stages</a>
+					  </div>
+					</li>
+				{% endif %}
+				{% if institution.activation_feedback %}
+					<li class="list-group-item">
+					  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'chart-bar' %} Feedback Live!</a>
+					  <div class="dropdown-menu">
+					  	{% for inscription in user.inscription_encours_list %}
+					  		{% for periode in inscription.formation.programme.periodes.all %}
+					  			<a class="dropdown-item" href="{% url "feedback_etudiant_update" periode_pk=periode.id inscription_pk=inscription.id %}">{%  icon 'chart-bar' %} Mon Feedback sur {{ periode }}</a>
+							{% endfor %}
+						{% endfor %}
+					  </div>
+					</li>
+				{% endif %}
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'magic' %} Mon Compte</a>
+				  <div class="dropdown-menu">
+				  	<a class="dropdown-item" href="{% url "preinscription_create" %}">{%  icon 'folder-open' %} Inscription</a>
+				  	<a class="dropdown-item" href="{% url "etudiant_detail" request.user.etudiant.matricule %}">{%  icon 'graduation-cap' %} Mon Parcours</a>
+				  	<a class="dropdown-item" href="{% url "etudiant_documents_list" etudiant_pk=user.etudiant.matricule %}">{% icon 'folder-open' %} Mes Documents</a>
+				  	<a class="dropdown-item" href="{% url "etudiant_profile_update" pk=request.user.etudiant.matricule %}">{% icon 'cog' %} Préférences</a>
+				  </div>
+				</li>
+				</div>
+   			</ul>
+		{% endif %}
+
+		{% if request.user.is_partenaire %}
+
+			<ul class="nav list-group">
+				<li>
+				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_monespace_partenaire">{% icon 'fa fa-handshake' %} Mon espace Partenaire</button>
+				</li>
+				<div id="menu_monespace_partenaire" class="collapse">
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'list' %} Stages de fin d'études</a>
+				  <div class="dropdown-menu">
+				  	<a class="dropdown-item" href="{% url "organisme_select_for_pfe_create" %}">{% icon 'plus' %} Nouveau dépôt de stage</a>
+				  	<a class="dropdown-item" href="{% url "partenaire_pfe_list" %}">{% icon 'list' %} Mes Sujets de Stages</a>
+				  </div>
+				</li>
+				{% if institution.activation_offres %}
+					<li>
+						<a class="list-group-item" href="{% url "user_offre_list" %}">{% icon 'folder' %} Mes offres</a>
+					</li>
+				{% endif %}
+				</div>
+	        </ul>
+		{% endif %}
+		
+		{% if request.user|has_object:"Doctorant" and institution.activation_theses %}
+			<ul class="nav list-group">
+				<li>
+				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_monespace_doctorant">{% icon 'fa fa-user-graduate' %} Mon espace Doctorant</button>
+				</li>
+				<div id="menu_monespace_doctorant" class="collapse">
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'fa fa-book' %} Ma thèse</a>
+				  <div class="dropdown-menu">
+				  	<a class="dropdown-item" href="{% url "doctorant_sujet_these_list" %}">{% icon 'search' %} Mon Sujet</a>
+				  	<!--<a class="dropdown-item" href="">{% icon 'calendar' %} Mes États d'Avancement</a>-->
+				  </div>
+				</li>
+				<li>
+					<a class="list-group-item" href="{% url "doctorant_seminaires_list" %}">{% icon 'fa fa-list-alt' %} Mes séminaires</a>
+	        	</li>
+				</div>
+			</ul>
+		{% endif %}
+		
+		{% if perms.scolar.fonctionnalitenav_configurationetablissement_enregistrementetudiants and institution.activation_enregistrement_etudiants %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_demandes_enregistrement">Demandes d'enregistrement</button>
+				</li>
+				<div id="menu_demandes_enregistrement" class="collapse">
+				<li>
+					<a class="list-group-item" href="{% url "enregistrement_etudiant_list" %}">{% icon 'users' %} Étudiants ({{ institution.nb_enregistrements_etudiants_en_attente }})</a>
+				</li>
+				</div>
+			</ul>
+		{% endif %}
+
+		{% if request.user|has_bloc_navigation:"dashboard" %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_dashboards">{% icon 'fa fa-chart-pie' %} Dashboards</button>
+				</li>
+				<div id="menu_dashboards" class="collapse">
+                {% if perms.scolar.fonctionnalitenav_dashboard_etudiants %}
+					<li>
+						<a class="list-group-item" href="{% url "dashboard_etudiant" %}">{% icon 'users' %} Étudiants</a>
+					</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_dashboard_enseignants %}
+					<li>
+						<a class="list-group-item" href="{% url "dashboard_enseignant" %}">{% icon 'user-friends' %} Enseignants</a>
+					</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_dashboard_formations %}
+					<li>
+						<a class="list-group-item" href="{% url "dashboard_formation" %}">{% icon 'graduation-cap' %} Formations</a>
+					</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_dashboard_stages %}
+					<li>
+						<a class="list-group-item" href="{% url "dashboard_stages" %}">{% icon 'fa fa-suitcase' %} Stages</a>
+					</li>
+				{% endif %}
+				</div>
+			</ul>
+		{% endif %}
+{% if request.user|has_bloc_navigation:"Export" %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_export">{% icon 'file-excel' %} Export</button>
+				</li>
+				<div id="menu_export" class="collapse">
+                {% if perms.scolar.fonctionnalitenav_Export_exportationprogres %}
+					<li>
+						<a class="list-group-item" href="{% url "progres_formation_list" %}">{% icon 'file-excel' %} Progres</a>
+					</li>
+				{% endif %}
+				<li>
+					<a class="list-group-item" href="{% url "export_listes" %}">{% icon 'file-excel' %} Listes</a>
+				</li>
+				</div>
+				
+			</ul>
+		{% endif %}
+
+		<ul class="nav list-group">
+			<li>
+				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_enseignants">{% icon 'fa fa-user-friends' %} Enseignants</button>
+			</li>
+			<div id="menu_enseignants" class="collapse">
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'user-friends' %} Annuaire</a>
+				  <div class="dropdown-menu">
+						<a class="dropdown-item" href="{% url "public_enseignant_list" %}">{% icon 'user-friends' %} Annuaire public</a>
+						{% if perms.scolar.fonctionnalitenav_enseignants_annuairecomplet %}
+							<a class="dropdown-item" href="{% url "enseignant_list" %}">{% icon 'university' %} Annuaire complet</a>
+						{% endif %}
+				  </div>
+				</li>
+			{% if perms.scolar.fonctionnalitenav_enseignants_visualisationabsences or perms.scolar.fonctionnalitenav_enseignants_signalementabsences %}
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'calendar-times' %} Absences</a>
+				  <div class="dropdown-menu">
+						{% if perms.scolar.fonctionnalitenav_enseignants_visualisationabsences %}
+							<a class="dropdown-item" href="{% url "absence_enseignant_list" %}">{% icon 'calendar-times' %} Absences</a>
+				    	{% endif %}
+						{% if perms.scolar.fonctionnalitenav_enseignants_signalementabsences %}
+							<a class="dropdown-item" href="{% url "signaler_absence_enseignant" %}">{% icon 'exclamation-triangle' %} Signaler Absence</a>
+						{% endif %}
+				  </div>
+				</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_enseignants_visualisationcharges and institution.activation_charges %}
+				<li>
+					<a class="list-group-item" href="{% url "charge_list" %}">{% icon 'balance-scale' %} Charges</a>
+				</li>
+			{% endif %}
+			</div>
+		</ul>
+
+		<ul class="nav list-group">
+			<li>
+				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_etudiants">{% icon 'users' %} Étudiants</button>
+			</li>
+			<div id="menu_etudiants" class="collapse">
+			<li class="list-group-item">
+			  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'user-friends' %} Annuaire</a>
+			  <div class="dropdown-menu">
+					<a class="dropdown-item" href="{% url "public_etudiant_list" %}">{% icon 'users' %} Annuaire public</a>
+					{% if perms.scolar.fonctionnalitenav_etudiants_annuairecomplet %}
+						<a class="dropdown-item" href="{% url "etudiant_list" %}">{% icon 'university' %} Annuaire complet</a>
+					{% endif %}
+			  </div>
+			</li>
+			{% if perms.scolar.fonctionnalitenav_etudiants_visualisationabsences or perms.scolar.fonctionnalitenav_etudiants_signalementabsences or perms.scolar.fonctionnalitenav_etudiants_rapportabsences %}
+				<li class="list-group-item">
+				  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'calendar-times' %} Absences</a>
+				  <div class="dropdown-menu">
+						{% if perms.scolar.fonctionnalitenav_etudiants_visualisationabsences %}
+							<a class="dropdown-item" href="{% url "absence_list" %}">{% icon 'calendar-times' %} Absences</a>
+				    	{% endif %}
+						{% if perms.scolar.fonctionnalitenav_etudiants_signalementabsences %}
+							<a class="dropdown-item" href="{% url "signaler_absence_etudiant" %}">{% icon 'exclamation-triangle' %} Signaler Absence</a>
+						{% endif %}
+						{% if perms.scolar.fonctionnalitenav_etudiants_rapportabsences %}
+							<a class="dropdown-item" href="{% url "absence_etudiant_report" %}">{% icon 'chart-line' %} Rapport Absences</a>
+						{% endif %}
+				  </div>
+				</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_etudiants_groupes %}
+				<li>
+					<a class="list-group-item" href="{% url "groupe_all_list" %}"> {% icon 'list' %} Groupes</a>
+				</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_etudiants_documentsgroupes %}
+				<li>
+					<a class="list-group-item" href="{% url "document_list" %}">{% icon 'folder-open' %} Documents</a>
+				</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_etudiants_preinscriptions %}
+				<li>
+					<a class="list-group-item" href="{% url "preinscription_list" %}"> {% icon 'folder-open' %} Demandes d'inscription</a>
+				</li>
+			{% endif %}
+			</div>
+		</ul>
+
+
+		<ul class="nav list-group">
+			<li>
+				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_pedagogie">{% icon 'fa fa-graduation-cap' %} Pédagogie</button>
+			</li>
+			<div id="menu_pedagogie" class="collapse">
+			<li class="list-group-item">
+			  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'university' %} Programmes</a>
+			 	<div class="dropdown-menu">
+					<a class="dropdown-item" href="{% url "programme_list" %}">{% icon 'list' %} Catalogue</a>
+					{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+						<a class="dropdown-item" href="{% url "programme_design" %}">{% icon 'fa fa-cog' %} Élaboration</a>
+					{% endif %}
+				</div>
+			</li>
+			{% if institution.activation_competences %}
+	        	<li>
+					<a class="list-group-item" href={% url "competence_list" %}>{% icon 'check' %} Compétences</a>
+	        	</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_pedagogie_visualisationfeedbacks and institution.activation_feedback %}
+	        	<li>
+					<a class="list-group-item" href="{% url "module_list" %}">{% icon 'chart-bar' %} Feedback</a>
+	        	</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_pedagogie_edt and institution.activation_google_agenda %}
+	        	<li>
+					<a class="list-group-item" href="{% url "edt_list" %}">{% icon 'calendar-check' %} Emplois du temps</a>
+	        	</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_pedagogie_visualisationcoordination %}
+	        	<li>
+					<a class="list-group-item" href="{% url "coordination" %}">{% icon 'cogs' %} Coordination</a>
+	        	</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_pedagogie_visualisationnotes or request.user.has_cycles_avec_acces_visualisation_notes %}
+	        	<li>
+					<a class="list-group-item" href="{% url "notes_formation_list" %}">{% icon 'file-excel' %} Notes</a>
+	        	</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_pedagogie_visualisationdettes and institution.has_one_or_more_cycle_dette %}
+	        	<li>
+					<a class="list-group-item" href="{% url "programme_dette_list" %}">{% icon 'list' %} Dettes</a>
+	        	</li>
+			{% endif %}
+			{% if perms.scolar.fonctionnalitenav_pedagogie_visualisationpvsdeliberation or perms.scolar.fonctionnalitenav_pedagogie_generationpvsdeliberation %}
+				<li class="list-group-item">
+				  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'gavel' %} Délibérations</a>
+				 	<div class="dropdown-menu">
+						{% if perms.scolar.fonctionnalitenav_pedagogie_visualisationpvsdeliberation %}
+							<a class="dropdown-item" href="{% url "pv_list" %}">{% icon 'file' %} Procés Verbaux de Délibération</a>
+						{% endif %}
+						{% if perms.scolar.fonctionnalitenav_pedagogie_generationpvsdeliberation %}
+							<a class="dropdown-item" href="{% url "deliberation_list" %}">{% icon 'gavel' %} Délibération</a>
+						{% endif %}
+					</div>
+				</li>
+			{% endif %}
+			</div>
+		</ul>
+
+
+		{% if request.user|has_bloc_navigation:"planification" %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_planification">{% icon 'cogs' %} Planification</button>
+				</li>
+				<div id="menu_planification" class="collapse">
+				{% if perms.scolar.fonctionnalitenav_planification_visualisationformations %}
+		        	<li>
+						<a class="list-group-item" href="{% url "anneeuniv_list" %}">{%  icon 'list' %} Formations/Groupes</a>
+		        	</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_planification_activites %}
+		        	<li>
+						<a class="list-group-item" href="{% url "planification_list" %}">{% icon 'cogs' %} Planification Activités</a>
+		        	</li>
+				{% endif %}
+				{% if institution.activation_google_agenda %}
+					{% if perms.scolar.fonctionnalitenav_planification_chargementagenda or perms.scolar.fonctionnalitenav_planification_reinitialisationagenda %}
+						<li class="list-group-item">
+						  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'calendar-check' %} Opérations Agenda</a>
+						 	<div class="dropdown-menu">
+								{% if perms.scolar.fonctionnalitenav_planification_chargementagenda %}
+									<a class="dropdown-item" href="{% url "authorize_from_fet_to_google_agenda" %}">{% icon 'upload' %} Chargement Google Agenda</a>
+								{% endif %}
+								{% if perms.scolar.fonctionnalitenav_planification_reinitialisationagenda %}
+									<a class="dropdown-item" href="{% url "authorize_clear_google_agenda" %}">{% icon 'trash' %} Réinitialisation Google Agenda</a>
+								{% endif %}
+								{% if perms.scolar.fonctionnalitenav_planification_liaisongroupeetagenda %}
+									<a class="dropdown-item" href="{% url "googlecalendar_list" %}">{%  icon 'list' %} Google calendar</a>
+								{% endif %}
+							</div>
+						</li>
+					{% endif %}
+				{% endif %}
+				
+				</div>
+    		</ul>
+		{% endif %}
+
+		{% if request.user|has_bloc_navigation:"examens" %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_examens">{% icon 'calendar-alt' %} Examens</button>
+				</li>
+				<div id="menu_examens" class="collapse">
+				{% if perms.scolar.fonctionnalitenav_examens_gestionsalles %}
+		        	<li>
+						<a class="list-group-item" href="{% url "salle_list" %}">{% icon 'building' %} Salles d'Examens</a>
+		        	</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_examens_visualisationexamens %}
+		        	<li>
+						<a class="list-group-item" href="{% url "examen_list" %}">{% icon 'calendar-alt' %} Gérer Examens</a>
+		        	</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_examens_visualisationsurveillance or perms.scolar.fonctionnalitenav_examens_visualisationplacesetudiants or perms.scolar.fonctionnalitenav_examens_exportatonlisteplaces %}
+					<li class="list-group-item">
+					  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'arrows-alt-h' %} Répartition</a>
+					 	<div class="dropdown-menu">
+							{% if perms.scolar.fonctionnalitenav_examens_visualisationsurveillance %}
+								<a class="dropdown-item" href="{% url "surveillance_list" %}">{% icon 'list' %} Surveillances</a>
+							{% endif %}
+							{% if perms.scolar.fonctionnalitenav_examens_visualisationplacesetudiants %}
+								<a class="dropdown-item" href="{% url "place_etudiant_list" %}">{% icon 'fas fa-chair' %} Places Etudiants</a>
+							{% endif %}
+							{% if perms.scolar.fonctionnalitenav_examens_exportatonlisteplaces %}
+								<a class="dropdown-item" href="{% url "export_place_list" %}">{% icon 'file-excel' %} Exporter Liste Places</a>
+							{% endif %}
+						</div>
+					</li>
+				{% endif %}
+				</div>
+    		</ul>
+		{% endif %}
+		{% if request.user|has_bloc_navigation:"stages" %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_stages">{% icon 'search' %} Stages de fin d'études</button>
+				</li>
+				<div id="menu_stages" class="collapse">
+				{% if perms.scolar.fonctionnalitenav_stages_visualisationstages %}
+					<li>
+						<a class="list-group-item" href="{% url "pfe_list" %}">{% icon 'search' %} Liste des stages</a>
+					</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_stages_soumission %}
+					<li>
+						<a class="list-group-item" href="{% url "organisme_select_for_pfe_create" %}">{% icon 'plus' %} Nouveau dépôt de stage</a>
+					</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_stages_exportationstages %}
+					<li class="list-group-item">
+					  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'file-excel' %} Export Liste Stages</a>
+					 	<div class="dropdown-menu">
+					  		<a class="dropdown-item" href="{% url "export_pfe_reservation_list" %}">{% icon 'file-excel' %} Liste des Stages Reservés</a>
+					  		{% for annee_univ in annee_univ_list %}
+					  			<a class="dropdown-item" href="{% url "export_pfe_list" annee_univ_pk=annee_univ.annee_univ %}">{% icon 'file-excel' %} Liste des Stages {{ annee_univ }}</a>
+					  		{% endfor %}
+						</div>
+					</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_stages_validation or perms.scolar.fonctionnalitenav_stages_experts %}
+					<li class="list-group-item">
+					  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'check' %} Validation</a>
+					 	<div class="dropdown-menu">
+							{% if perms.scolar.fonctionnalitenav_stages_validation %}
+								<a class="dropdown-item" href="{% url "service_pfe_list" %}">{%  icon 'check' %} Validation</a>
+							{% endif %}
+							{% if perms.scolar.fonctionnalitenav_stages_experts %}
+								<a class="dropdown-item" href="{% url "experts_index" %}">{%  icon 'file-pdf' %} Expertises de l'année en cours</a>
+								<a class="dropdown-item" href="{% url "experts_pfe_charge" %}">{%  icon 'sort-alpha-down' %} Charges des experts</a>
+							{% endif %}
+						</div>
+					</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_stages_visualisationsoutenances or perms.scolar.fonctionnalitenav_stages_visualisationsoutenancesequipes %}
+		        	<li>
+						<a class="list-group-item" href="{% url "notes_formation_pfe_list" %}">{% icon 'file-excel' %} Soutenances & PV</a>
+		        	</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_stages_visualisationstatistiques %}
+		        	<li>
+						<a class="list-group-item" href="{% url "statistiques_soutenances" %}">{% icon 'chart-bar' %} Statistiques (soutenances)</a>
+		        	</li>
+				{% endif %}
+				{% if perms.scolar.fonctionnalitenav_stages_visualisationpartenaires or perms.scolar.fonctionnalitenav_stages_exportationpartenaires %}
+					<li class="list-group-item">
+					  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'handshake' %} Organismes </a>
+					 	<div class="dropdown-menu">
+							{% if perms.scolar.fonctionnalitenav_stages_visualisationpartenaires %}
+								<a class="dropdown-item" href="{% url "organisme_list" %}">{% icon 'handshake' %} Organismes </a>
+							{% endif %}
+							{% if perms.scolar.fonctionnalitenav_stages_exportationpartenaires %}
+								<a class="dropdown-item" href="{% url "export_organisme_list" %}">{% icon 'file-excel' %} Liste des Organismes </a>
+							{% endif %}
+						</div>
+					</li>
+				{% endif %}
+				</div>
+    		</ul>
+		{% endif %}
+		
+        {% if institution.activation_public_projets or institution.activation_public_equipesrecherche or request.user|has_bloc_navigation:"postgraduation" and institution.activation_theses %}
+        
+             <ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_postgraduation">{% icon 'fa fa-project-diagram' %} Post-Graduation & Recherche</button>
+				</li>
+			<div id="menu_postgraduation" class="collapse">
+        	{% if perms.scolar.fonctionnalitenav_postgraduation_visualisationdoctorants or perms.scolar.fonctionnalitenav_postgraduation_preinscriptions %}
+	             <li class="list-group-item">
+					  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'users' %} Doctorants</a>
+					  <div class="dropdown-menu">
+					  	{% if perms.scolar.fonctionnalitenav_postgraduation_visualisationdoctorants %}
+							<a class="dropdown-item" href="{% url "doctorant_list" %}">{% icon 'users' %} Liste des doctorants</a>
+						{% endif %}	
+						{% if perms.scolar.fonctionnalitenav_postgraduation_preinscriptions %}
+							<a class="dropdown-item" href="{% url "preinscription_doctorat_list" %}">{% icon 'check' %} Demandes d'inscription</a>
+						{% endif %}
+					  </div>
+				</li>
+			{% endif %}
+			
+        	{% if perms.scolar.fonctionnalitenav_postgraduation_visualisationsujets or perms.scolar.fonctionnalitenav_postgraduation_gestionsujets %}
+	             <li class="list-group-item">
+					  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'search' %} Sujets de thèse</a>
+					  <div class="dropdown-menu">
+					  	{% if perms.scolar.fonctionnalitenav_postgraduation_visualisationsujets %}
+					  
+							<a class="dropdown-item" href="{% url "sujets_doctorat_list" %}">{% icon 'list' %} Liste des sujets</a>
+						{% endif %}	
+						{% if perms.scolar.fonctionnalitenav_postgraduation_gestionsujets %}
+							<a class="dropdown-item" href="{% url "validation_theses_list" %}">{% icon 'check' %} Validation</a>
+						{% endif %}
+					  </div>
+				</li>
+			{% endif %}
+
+			{% if institution.activation_public_projets or perms.scolar.fonctionnalitenav_postgraduation_visualisationprojetsrecherche %}
+	        	<li>
+					<a class="list-group-item" href="{% url "projet_list" %}">{% icon 'fa fa-project-diagram' %} Projets de recherche</a>
+	        	</li>
+			{% endif %}
+
+			{% if institution.activation_public_equipesrecherche or perms.scolar.fonctionnalitenav_postgraduation_visualisationequipesrecherche %}
+	        	<li>
+					<a class="list-group-item" href="{% url "equiperecherche_list" %}">{% icon 'user-friends' %} Équipes de recherche</a>
+	        	</li>
+			{% endif %}	
+			
+			{% if perms.scolar.fonctionnalitenav_postgraduation_visualisationseminaires %}
+	        	<li>
+					<a class="list-group-item" href="{% url "seminaires_list" %}">{% icon 'fa fa-list-alt' %} Séminaires</a>
+	        	</li>
+			{% endif %}
+			
+			{% if perms.scolar.fonctionnalitenav_postgraduation_visualisationavancementdoctorants %}
+	        	<li>
+					<a class="list-group-item" href="{% url "formation_doctorat_list" %}">{% icon 'fa fa-tasks' %} États d'avancement</a>
+	        	</li>
+			{% endif %}
+			
+			</div>
+			</ul>
+		{% endif %}
+		
+		{% if request.user|has_bloc_navigation:"postes" %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_postes">{% icon 'list' %} Postes</button>
+				</li>
+				<div id="menu_postes" class="collapse">
+                {% if perms.scolar.fonctionnalitenav_postes_visualisation %}
+					<li>
+						<a class="list-group-item" href="{% url "poste_list" %}">{% icon 'list' %} Postes</a>
+					</li>
+				{% endif %}
+				</div>
+				
+			</ul>
+		{% endif %}
+
+		{% if institution.activation_offres %}
+			<ul class="nav list-group">
+				<li>
+					<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_offres">{% icon 'fa fa-suitcase' %} Offres (thèses, emplois, ..){% if institution.nb_offres_ouvertes %} <span class="nombre-offres" style="background:green;"><strong>{{ institution.nb_offres_ouvertes }} ouverte(s)</strong></span>{% endif %}{% if perms.scolar.fonctionnalitenav_offres_validation and institution.nb_offres_en_attente %} - <span class="nombre-offres" style="background:rgb(255, 128, 64);"><strong>{{ institution.nb_offres_en_attente }} en attente</strong></span>{% endif %}</button>
+				</li>
+				<div id="menu_offres" class="collapse">
+					<li>
+						<a class="list-group-item" href="{% url "offre_list" %}">{% icon 'list' %} Liste des offres</a>
+					</li>
+					<li>
+						<a class="list-group-item" href="{% url "user_offre_list" %}">{% icon 'folder' %} Mes offres</a>
+					</li>
+					{% if not user.is_partenaire_only %}
+						<li>
+							<a class="list-group-item" href="{% url "user_candidature_list" %}">{% icon 'file' %} Mes candidatures</a>
+						</li>
+					{% endif %}
+				</div>
+				
+			</ul>
+		{% endif %}
+       
+
+	{% else %}
+		<ul class="nav list-group">
+			<li>
+			<strong>VISITEUR</strong>
+			</li>
+
+        	<li>
+            	<a class="list-group-item" href="{% url "programme_list" %}">{% icon 'university' %} Programmes</a>
+			</li>
+			{% if institution.activation_competences %}
+	        	<li>
+					<a class="list-group-item" href={% url "competence_list" %}>{% icon 'check' %} Compétences</a>
+	        	</li>
+			{% endif %}
+        	<li>
+        		<a class="list-group-item" href="{% url "public_etudiant_list" %}">{% icon 'users' %} Talents</a>
+        	</li>
+			<li>
+        		<a class="list-group-item" href="{% url "public_enseignant_list" %}">{% icon 'user-friends' %} Enseignants</a>
+        	</li>
+
+			{% if institution.activation_public_stages %}
+				<li>
+					<a class="list-group-item" href="{% url "pfe_list" %}">{% icon 'fa fa-suitcase' %} Stages de fin d'études</a>
+				</li>
+			{% endif %}
+
+			{% if institution.activation_public_projets or institution.activation_public_equipesrecherche %}
+			
+	             <li class="list-group-item">
+					  <a class="dropdown-toggle" data-toggle="dropdown" href="#">{% icon 'search' %} Recherche</a>
+					  <div class="dropdown-menu">
+					  	{% if institution.activation_public_projets %}
+					  
+							<a class="dropdown-item" href="{% url "projet_list" %}">{% icon 'fa fa-project-diagram' %} Projets de recherche</a>
+						{% endif %}	
+						{% if institution.activation_public_equipesrecherche %}
+							<a class="dropdown-item" href="{% url "equiperecherche_list" %}">{% icon 'user-friends' %} Équipes de recherche</a>
+						{% endif %}
+					  </div>
+				</li>
+			
+			{% endif %}
+			{% if institution.activation_demandes_comptes %}
+				<li>
+					<a class="list-group-item" href="{% url "demande_compte" %}">{% icon 'user' %} <strong>Créer un compte</strong><br> (pour le dépôt d'une offre de stage, thèse, emploi, etc.)</a>
+				</li>
+			{% endif %}
+		</ul>
+
+	{% endif %}
+	
+	<br><br>
+{% endblock %}
+
+{% block content %}
+	<div align="center">
+		<h3>Architecture des études</h3>
+		{% if institution.illustration_cursus %}
+					<style>
+					@media screen and (max-width: 1000px) {
+					    .mobilepicture {
+					        width: 100%;
+					    }
+					}
+					</style>
+			<img src="{{ institution.illustration_cursus.url }}" alt="Architecture des études" width="60%" class="mobilepicture" >
+		{% endif %}
+	</div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons %}
+{% load dictionary %}
+{% block content %}
+	<h1>{{ titre }}</h1>
+		
+		<h3> Documents spécifiques</h3>
+			<table class="table table-bordered">
+				<thead class="thead-dark">
+					<tr>
+						<th>Intitulé du document</th>
+						<th>Document</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for intitule, lien in documents.items %}
+						<tr>
+							<td>
+								{{ intitule }}
+								{% if intitule == "Livret des compétences" and etudiant.livret_last_upload %}<br>Date de dernière génération : {{ etudiant.livret_last_upload }}{% endif %}
+							</td>
+							<td>{% if intitule == "Livret des compétences" and etudiant.livret_competences or intitule != "Livret des compétences" %}<a href="{{ lien }}">{% icon 'file-pdf' %}</a>{% endif %}{% if intitule == "Livret des compétences" %} <br><small><a href="{% url "livret_competences_generation" etudiant_pk=etudiant.matricule %}">Générer</a>{% endif %}</small></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			
+		   {% if user.is_etudiant  or perms.scolar.fonctionnalite_etudiants_telechargerdocuments %}	
+		   <h3> Documents par année d'étude</h3>
+    	   <br>
+		       {% render_table table %}
+		   <br>
+		   {% endif %}
+		<a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Retour</a>
+{% endblock %}
+	

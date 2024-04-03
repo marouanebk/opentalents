@@ -1,0 +1,24 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 %}
+{% block content %}
+	<div class="alert alert-danger">
+		<p>
+			Il y a eu une erreur. Merci de le signaler à l'administrateur.
+		</p>
+	</div>
+	<h3> Architecture des études </h3>
+    
+		<style>
+		@media screen and (max-width: 1000px) {
+		    .mobilepicture {
+		        width: 100%;
+		    }
+		}
+		</style>
+	{% if institution.illustration_cursus %}	
+    <div align="center">
+		<img src="{{ user.institution.illustration_cursus.url }}" alt="Architecture des études" width="60%" class="mobilepicture">
+	</div>
+	{% endif %}
+	
+{% endblock %}

@@ -1,0 +1,265 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% block content %}
+ 	<br><br>
+ 	{% if user.is_authenticated %}
+		<div class="row">
+			<div class="offset-lg-8 col-lg-4">				
+				{% if perms.scolar.fonctionnalite_etudiants_documents or perms.scolar.fonctionnalite_postgraduation_visualisationdocumentsdoctorants and object.is_doctorant or perms.scolar.fonctionnalite_postgraduation_visualisationdocumentsnonsignesdoctorants and object.is_doctorant %}
+				<a href="{% url "etudiant_documents_list" etudiant_pk=object.matricule %}" class="btn btn-info">{% icon 'folder-open' %} Documents</a>
+				{% endif %}
+				{% if perms.scolar.fonctionnalite_etudiants_gestion %}
+				<a href="{% url "etudiant_update" pk=object.matricule %}" class="btn btn-info">{% icon 'pencil-alt' %} Modifier </a>
+				<a href="{% url "etudiant_matricule_update" pk=object.matricule %}" class="btn btn-success">{% icon 'pencil-alt' %} Modifier le matricule </a>
+				{% endif %}
+				{% if perms.scolar.fonctionnalite_etudiants_suppression %}
+					<a href="{% url "etudiant_delete" pk=object.matricule %}" class="btn btn-danger">{% icon 'trash' %} Supprimer </a>
+				{% endif %}
+
+			</div>
+		</div>
+	{% endif %}
+	<div class="row">
+		<div class="col-lg-12">
+				{% if user.is_enseignant and institution.activation_lettres_recommandation %}
+					<div class="offset-lg-8">
+						<!-- Boutton générer lettre recommandation -->
+						<a href="{% url "lettre_recommandation_form" etudiant_pk=object.matricule %}" class="btn btn-info"> Lettre de Recommandation </a>
+						<!---->
+					</div>
+				{% endif %}
+
+
+			<h5 class="text-center"> <strong>Matricule: </strong>{{ object.matricule }} </h5>
+			
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="row">
+						<div class="col-lg-10">
+
+							<h3 class="text-center">
+								<strong> Situation Actuelle:</strong>
+							</h3>
+							{% if doctorant %}
+								<p class="alert alert-warning">
+									<strong style="font-size:22px;">Doctorant(e)</strong><br>
+									{% if doctorant.organisme %}
+										<br>Affiliation : <strong>{{ doctorant.organisme }}</strong><br>
+									{% endif %}
+									{% if doctorant.these %}
+										<br>Thèse : <strong>{{ doctorant.these.sujet.intitule }}</strong><br>
+									{% endif %}
+									{% if perms.scolar.fonctionnalitenav_postgraduation_visualisationdoctorants %}
+										<br>Crédits cumulés (séminaires) : <strong>{{ doctorant.somme_credits_seminaires }}</strong><br>
+									{% endif %}
+								</p>
+							{% endif %}
+							{% for inscription_ in object.inscriptions_encours %}
+								{% if inscription_.decision_jury == 'C' or inscription_.decision_jury == 'A' or inscription_.decision_jury == 'AR' or inscription_.decision_jury == 'SR' or inscription_.decision_jury == 'AD' or inscription_.decision_jury == 'AC' or inscription_.decision_jury == 'CR' %}
+									<p class="alert alert-success">
+										<strong> Formation:</strong>
+										{{ inscription_.formation }}: <strong>{{ decision_jury|get_value_from_dict:inscription_.decision_jury }}</strong><br>
+										{% if not inscription_.formation.programme.doctorat %}
+											<strong>Groupe:</strong>
+											{% for periode_ in inscription_.inscription_periodes.all|dictsort:'periodepgm.periode.code' %}
+												&nbsp;&nbsp;&nbsp;&nbsp;{{ periode_.periodepgm.periode.code }} : <strong>{% if not periode_.groupe.is_pfe %}{{ periode_.groupe.section.code }} {% endif %}{{ periode_.groupe.code }}</strong>,
+											{% endfor %}
+										{% endif %}
+									</p>
+								{% else %}
+									<p class="alert alert-danger">
+										<strong> Formation:</strong>
+										{{ inscription_.formation }}: <strong>{{decision_jury|get_value_from_dict:inscription_.decision_jury}}</strong><br>
+										{% if not inscription_.formation.programme.doctorat %}
+											<strong>Groupe:</strong> 
+											{% for periode_ in inscription_.inscription_periodes.all|dictsort:'periodepgm.periode.code' %}
+												&nbsp;&nbsp;&nbsp;&nbsp;{{ periode_.periodepgm.periode.code }} : <strong>{% if not periode_.groupe.is_pfe %}{{ periode_.groupe.section.code }} {% endif %}{{ periode_.groupe.code }}</strong>, 
+											{% endfor %}
+										{% endif %}
+										
+									</p>
+								{% endif %}
+							{% endfor %}
+							
+							{% for inscription_ in object.inscriptions_encours %}
+								{% for periode_ in inscription_.inscription_periodes.all|dictsort:'periodepgm.periode.code' %}
+									{% if periode_.groupe.pfe %}
+										<p class="alert alert-info">
+											{% if inscription_.formation.programme.ordre == 5 %}
+												<big><strong>Projet de fin d'études</strong></big>
+											{% else %}
+												<big><strong>Mémoire de Master </strong></big>
+											{% endif %}<br>
+												<strong>Titre: </strong> {{periode_.groupe.pfe.intitule}} <br>
+												<strong>Organisme: </strong> {{periode_.groupe.pfe.organisme.nom}}<br>
+												<strong>Promoteur: </strong> {{periode_.groupe.pfe.promoteur}}<br>
+												<strong>Coencadrants: </strong>
+													{% for enseignant in periode_.groupe.pfe.coencadrants.all %} 
+														{{enseignant}},
+													{% endfor %}<br>
+												<a href="{% url "pfe_detail" pk=periode_.groupe.pfe.id %}">Plus de détails</a>
+										</p>
+									{% endif %}
+								{% endfor %}
+							{% endfor %}
+							
+						</div>
+						
+						<div class="col-lg-2" alt"Photo">
+							{% if object.photo %}
+								<img src="{{ object.photo.url }}" width="180">
+							{% endif %}
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<table class="table table-sm table-striped table-responsive">
+								<tr>
+									<td><strong> Nom :  </strong> {{ object.nom }} {% if object.nom_a %}<br>{{ object.nom_a }}{% endif %}</td>
+									<td><strong> Prénom :  </strong> {{ object.prenom }} <br>{% if object.prenom_a %}{{ object.prenom_a }}{% endif %}</td>
+								</tr>
+								{% if object.sexe %}
+									<tr>
+										<td><strong> Sexe :  </strong> {{ sexes|get_value_from_dict:object.sexe }}</td>
+									</tr>
+								{% endif %}
+								{% if not private %}
+								<tr>
+									<td><strong> Né(e) le :  </strong> {% if object.date_naissance %}{{ object.date_naissance|date:'d/m/Y' }}{% endif %}</td>
+									<td><strong> à :  </strong>{% if object.lieu_naissance %} {{ object.lieu_naissance }}{% endif %}{% if object.lieu_naissance_a %} {{ object.lieu_naissance_a }}{% endif %}</td>
+								</tr>
+									{% if object.addresse_principale %}
+									<tr>
+										<td colspan="2"><strong> Adresse :  </strong> {{ object.addresse_principale }}</td>
+									</tr>
+									{% endif %}
+									{% if object.wilaya_residence %}
+									<tr>
+										<td colspan="2"><strong> Wilaya  </strong> {{ object.wilaya_residence }}</td>
+									</tr>
+									{% endif %}
+								<tr>
+									<td><strong> Interne :  </strong> {% if object.interne %} Oui {% else %} Non {% endif %} </td>
+									<td>
+									{% if object.interne and object.residence_univ %}
+										<strong> Résidence U :  </strong> {{ object.residence_univ }}
+									{% endif %}
+									</td>
+								</tr>
+								<tr>
+									{% if object.tel %}
+										<td colspan="2"><strong> Tel :  </strong> {{ object.tel }}</td>
+									{% endif %}	
+								</tr>
+								{% endif %}
+								{% if object.tuteur %}
+									<tr>
+										<td colspan="2"><strong>Tuteur:</strong> {{ object.tuteur }}</td>
+									</tr>
+								{% endif %}
+								<tr>
+									<td colspan="2"><strong>Email:</strong> {{ object.get_email }}</td>
+								</tr>
+									{% if object.github %}
+										<tr><td colspan="2"><strong>Github:</strong> <a href="{{ object.github }}">{{ object.github }}</a></td></tr>
+									{% endif %}
+									{% if object.linkdin %}
+										<tr><td colspan="2"><strong>Linkedin:</strong><a href="{{ object.linkdin }}">{{ object.linkdin }}</a></td></tr>
+									{% endif %}
+									{% if object.activite_extra %}
+										<tr><td colspan="2"><strong>Activités extra-scolaires: </strong> {{ object.activite_extra }}</td></tr>
+									{% endif %}
+									
+									{% if perms.scolar.fonctionnalite_etudiants_visualisationinfosfamille or is_student_himself %}
+										<tr><td colspan="2">
+											  <a data-toggle="collapse" href="#infospersos" role="button" aria-expanded="false" aria-controls="infospersos">
+											    Plus Infos
+											  </a>
+											<div class="collapse" id="infospersos">
+											  <div class="card card-body">
+													{% if object.n_inscription_bac %}
+													<strong>N° d'Inscription du bac: </strong> {{ object.n_inscription_bac }}<br>
+													{% endif %}
+													 {% if object.serie_bac %}
+													<strong>Série de bac: </strong> {{ object.serie_bac }}<br>
+													{% endif %}
+													{% if object.moyenne_bac %}
+													<strong>Moyenne de bac: </strong> {{ object.moyenne_bac }}<br>
+													{% endif %}
+													{% if object.lycee_bac %}
+													<strong>Lycée de bac: </strong> {{ object.lycee_bac }}<br>
+													{% endif %}													
+													{% if object.prenom_pere %}
+													    <strong> Prénom père:  </strong> {{ object.prenom_pere }}<br>
+													{% endif %}
+													{% if object.fonction_pere %}
+													    <strong> Fonction père:  </strong> {{ object.fonction_pere }}<br>
+													{% endif %}
+													{% if object.nom_mere %}
+													<strong>Nom mère: </strong> {{ object.nom_mere }}<br>
+													{% endif %}	
+													{% if object.prenom_mere %}
+													<strong>Prénom mère: </strong> {{ object.prenom_mere }}<br>
+													{% endif %}
+													{% if object.fonction_mere %}
+													<strong>Fonction mère: </strong> {{ object.fonction_mere }}<br>
+													{% endif %}
+													{% if object.tel_parents %}
+													<strong>Personne à contacter: </strong> {{ object.tel_parents }}<br>
+													{% endif %}
+													{% if object.matricule_progres %}
+													<strong>Matricule Progres: </strong> {{ object.matricule_progres }}<br>
+													{% endif %}	
+											  </div>
+											</div>
+										</td></tr>
+									{% endif %}
+								</table>
+							</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<h5 class="text-center"> <strong>Parcours</strong></h5>
+							{% if doctorant %}
+								{% if perms.scolar.fonctionnalite_postgraduation_gestiondoctorants or perms.scolar.fonctionnalite_etudiants_gestion %}
+									<a href="{% url 'inscription_create' etudiant_pk=object.matricule %}">{% icon 'plus' %} Inscription</a>
+								{% endif %}
+							{% else %}
+								{% if perms.scolar.fonctionnalite_etudiants_gestion %}
+									<a href="{% url 'inscription_create' etudiant_pk=object.matricule %}">{% icon 'plus' %} Inscription</a>
+								{% endif %}
+							{% endif %}
+							{% render_table parcours %}
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					{% if institution.activation_ddc %}
+						<h5 class="text-center"> <strong>Profil</strong></h5>
+						<div class="row">
+							<div class="col-lg-12">
+								{% render_chart profile_chart %}
+							</div>
+						</div>
+					{% endif %}
+					<br><br>
+					{% if user.is_authenticated and absence_chart_list %}
+						<h5 class="text-center"> <strong>Assiduité</strong></h5>
+						{% for chart in absence_chart_list %}
+							<div class="row">
+								<div class="col-lg-12">
+									{% render_chart chart %}
+								</div>
+							</div>
+						{% endfor %}
+						<br><br>
+					{% endif %}
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<br><br>
+	
+{% endblock %}

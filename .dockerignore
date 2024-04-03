@@ -1,0 +1,9 @@
+.git
+.gitignore
+/media
+/root
+/postgres_data
+/secret
+/cache
+/nginx
+/docker_tmp

@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	
+  </head>
+  <body>
+	    {% load dictionary usergroup %}
+  	<table>
+  		<tr>
+  			<td>
+				<table >
+					{% if institution.header %}
+		    			<tr>
+			    			<td colspan="3">
+			        	 		<img src="{{ institution.header.url }}" width="800" alt="Logo ESI" > 
+			    			</td>
+		    			</tr>
+					{% endif %}
+					<tr> 
+					{% with 'ATTESTATION_REINTEGRATION'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+		
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">			{{ autorite.intitule }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p>{{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %}
+					{% endwith %}
+					</tr>
+	    			<tr>
+	    				<td colspan="3">
+	    					<br><br><br><br>
+							<h1 align="center">
+								Attestation de Réintégration
+							</h1>
+							<br><br><br><br>
+						</td>
+	    			</tr>
+	    			<tr>
+						{% with 'ATTESTATION_REINTEGRATION'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+	    				<td colspan="3">
+						{% if autorite %}
+							{{ autorite.titre_responsable }} à {{ institution.nom }} ({{ institution.sigle }}, {{ institution.ville }}) atteste que:
+						{% endif %}
+	    				</td>
+						{% endwith %}
+	    			</tr>
+					<tr>
+						<td style="text-align:left;">M (Melle):<br><br></td> 
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.nom }}</strong><br><br></td>
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.prenom }}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">Né (e) le:<br><br></td>
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong><br><br></td>
+						<td style="text-align:left;"><strong>à : {{inscription.etudiant.lieu_naissance}}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">N° d'inscription:<br><br></td>
+						<td style="text-align:left;"><strong>{{inscription.etudiant.matricule}}</strong><br><br></td>
+						<td style="text-align:left;"><br><br></td>
+					</tr>
+					<tr>	
+						<td style="text-align:left;">Inscrit(e) en:<br><br></td> 
+						<td style="text-align:left;" colspan="2"><strong>{{inscription.formation.programme.titre}}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;" colspan="2">A été réintégré(e) au sein de notre établissement durant l'année universitaire</td>
+						<td> 
+							<strong>{{inscription.formation.annee_univ.annee_suivante.annee_univ}} / {{inscription.formation.annee_univ.annee_suivante.annee_suivante.annee_univ}}</strong>,
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:left;" colspan="3">après avoir bénéficié d'un <strong>{{ raison }}</strong> </td>
+					</tr>
+					<tr>
+						<td style="text-align:left;" colspan="2">durant l'année universitaire </td>
+						<td>
+							<strong>{{inscription.formation.annee_univ.annee_univ}} / {{inscription.formation.annee_univ.annee_suivante.annee_univ}}</strong>. 
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:left;" colspan="3">Cette attestation est délivrée pour servir et valoir ce que de droit.<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:center;" colspan="3">
+							<br><br>
+							Fait à {{ institution.ville }}, le:	<strong>{{date|date:'d/m/Y'}}</strong><br>
+								<br><br><br><br>
+						</td>
+					</tr>
+			    	<tr>
+				    	<td colspan="3">
+				        	 <img src="{{ institution.footer.url }}"  width="800" alt="Logo ESI"> 
+				    	</td>
+			    	</tr>
+  				</table>
+  			</td>
+			<td>
+				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>				
+			</td>
+  			<td>
+				<table >
+	    			<tr>
+		    			<td colspan="3">
+		        	 		<img src="{{ institution.header.url }}" width="800" alt="Logo ESI" > 
+		    			</td>
+	    			</tr>
+					<tr> 
+					{% with 'ATTESTATION_REINTEGRATION'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+		
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">			{{ autorite.intitule }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p>{{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %}
+					{% endwith %}
+					</tr>
+	    			<tr>
+	    				<td colspan="3">
+	    					<br><br><br><br>
+							<h1 align="center">
+								شهادة الإدماج
+							</h1>
+							<br><br><br><br>
+						</td>
+	    			</tr>
+	    			<tr>
+						{% with 'ATTESTATION_REINTEGRATION'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+	    				<td style="text-align:right;" colspan="3">
+							يشهد {{ autorite.titre_responsable_a }} ب{{ institution.nom_a }} بان<br><br>						
+	    				</td>
+						{% endwith %}
+	    			</tr>
+					<tr>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.prenom_a }}</strong><br><br></td>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.nom_a }}</strong><br><br></td>
+						<td style="text-align:right;">السيد / السيدة<br><br></td> 
+					</tr>
+					<tr>
+						<td style="text-align:right;"><strong>ب : {{inscription.etudiant.lieu_naissance_a}}</strong><br><br></td>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong><br><br></td>
+						<td style="text-align:right;">المولود(ة) في<br><br></td>
+						
+						
+					</tr>
+					<tr>
+						<td style="text-align:right;"><br><br></td>
+						<td style="text-align:right;"><strong>{{inscription.etudiant.matricule}}</strong><br><br></td>
+						<td style="text-align:right;">رقم التسجيل<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:right;"><strong>{{inscription.formation.programme.titre_a}}</strong><br><br></td>	
+						<td style="text-align:right;" colspan="2">مسجل (ة) بالمدرسة لمتابعة دراسته (ها) العليا في<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:right;">
+							<strong>{{inscription.formation.annee_univ.annee_suivante.annee_suivante.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante.annee_univ}}</strong>
+						</td> 
+						<td style="text-align:right;" colspan="2">تم إعادة إدماجه (ها) بمؤسستنا خلال السنة الدراسية</td>
+					</tr>
+					<tr>
+						<td style="text-align:right;"><strong> {% if raison|startswith:'M' %}عطلة مرضية{% else %}
+													{{raison|arabic}}{% endif %}</strong><br><br></td>
+						<td style="text-align:right;" colspan="2">بعد استفادته (ها) من </td>  
+					</tr>
+					<tr>
+						<td style="text-align:right;">
+							<strong>{{inscription.formation.annee_univ.annee_suivante.annee_univ}}/{{inscription.formation.annee_univ.annee_univ}}  </strong>   
+						</td>
+						<td style="text-align:right;" colspan="2">خلال الموسم الدراسي </td>
+					</tr>
+					<tr>
+						<td style="text-align:right;" colspan="3">تمنح هذه الشهادة لاستخدامها بما يسمح به القانون<br><br>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:center;" colspan="3">
+							<br><br>
+							{{ institution.ville_a }} في	<strong>{{date|date:'Y/m/d'}}</strong><br>
+							<br><br><br><br>
+						</td>
+					</tr>
+			    	<tr>
+				    	<td colspan="3">
+				        	 <img src="{{ institution.footer.url }}"  width="800" alt="Logo ESI"> 
+				    	</td>
+			    	</tr>
+  				</table>
+  			</td>
+  			<td>
+				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>				
+  			
+  			</td>
+  		</tr>
+  	</table>
+  </body>
+</html> 

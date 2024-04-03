@@ -1,0 +1,22 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% block content %}
+	{% if titre %}
+		<h2>{{titre}}</h2>
+	{% endif %}
+	<br><br>
+	<div>
+		{% crispy form_selection_etudiant %}
+	</div>
+	 <br><br>
+	<div>
+		<h5> Ancien utilisateur : <strong>{% if etudiant.user %}{{ etudiant.user }}{% else %}Non défini{% endif %}</strong></h5>
+		<br>
+		<h4>Utilisateur nouvellement créé : <strong>{{ enregistrement.user }}</strong></h4>
+		<br><br>
+		<span>Nouvelle photo : <strong>{% if not enregistrement.photo %}Aucune{% else %}<img src="{{ enregistrement.photo.url }}" width="180">{% endif %}</strong></span><br><br>
+		{% crispy form %}
+	</div>
+	<br><br>
+	
+{% endblock %}

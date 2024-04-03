@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static dictionary %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-after: always;
+  			}
+		}
+    </style>
+
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+	{% load static dictionary icons usergroup %}
+	<!-- Font Awesome CSS 	-->
+	<link rel="stylesheet" href="{% static 'fonts/css/all.min.css' %}">
+	<link rel="stylesheet" href="{% static 'fonts/css/all.css' %}">
+
+       
+  </head>
+  <body>
+  
+  		<div class="container new-page">
+			{% if institution.header %}
+				<img src="{{ institution.header.url }}" alt="Logo" width="100%">
+			{% endif %}
+			<br><br>
+			<h2 align="center"><strong>Répartition des Surveillants sur les Salles d'Examens </strong></h2>
+			<h3 align="center">
+					<strong>{{formation.programme.titre}}
+					{% if formation.programme.specialite %}
+						<br>{{formation.programme.specialite.intitule}}
+					{% endif %}
+					</strong>
+			</h3> 
+			<h3 align="center">Année Universitaire : <strong>{{formation.annee_univ}}/{{formation.annee_univ.annee_suivante}}</strong></h3>
+			<h4 align="center">Epreuves écrites du : {{date_debut|date:'d/m/Y'}} au {{date_fin|date:'d/m/Y'}}</h3>
+			<br><br>
+			
+			<table width="100%">
+				<thead>
+					<th>Date</th>
+					<th>Heure</th>
+					<th>Module</th>
+					<th>Plan de surveillance</th>
+				</thead>
+				<tbody>
+
+					{% for examen in examen_list %}
+						<tr>
+							<td>{{ examen.date|date:'d/m/Y' }}</td>
+							<td>{{ examen.heure_debut|time:'H:i' }} - {{ examen.heure_fin|time:'H:i' }}</td>
+							<td><strong>{{ examen.activite.module.matiere.code }}</strong></td>
+							<td>
+								<table class="table table-bordered table-striped table-sm">
+									<thead>
+										<th>Salle</th>
+										<th>Max</th>
+										<th>Nb</th>
+										<th>Surveillants</th>
+									</thead>
+									<tbody>
+									{% for salle_ in examen.salles.all %}
+										<tr>
+											<td><strong>{{ salle_.code }} </strong></td>
+											<td>{{ salle_.capacite }}</td>
+											<td> {{ examen.nb_places_reservees_salle|get_value_from_dict:salle_.code }} </td>
+											<td>
+												{% with examen.surveillance_par_salle|get_value_from_dict:salle_.code as surveillance_list %}
+													{% for surveillance_ in surveillance_list %}
+														{{ surveillance_.enseignant }}<br>
+													{% endfor%}
+												{% endwith%}
+											</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
+		</div>
+
+</body>
+</html>

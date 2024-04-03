@@ -1,0 +1,60 @@
+upstream opentalents {
+    server opentalents:8000;
+}
+
+server {
+
+    listen 80;
+    proxy_read_timeout 300;
+    proxy_connect_timeout 300;
+    proxy_send_timeout 300; 
+
+    location / {
+        proxy_pass http://opentalents;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+    }
+
+    location /static/ {
+        alias /opentalents/root/;
+    }
+
+    location /protected/media/photos/ {
+    	internal;
+        root /opentalents;
+    }
+
+    location /protected/media/quittances/ {
+    	internal;
+        root /opentalents;
+    }
+    
+    location /media/admin/ {
+        alias /opentalents/media/admin/;
+    }
+    
+    location /media/tmp/ {
+        alias /opentalents/media/tmp/;
+    }
+    
+    location /media/files/ {
+        alias /opentalents/media/files/;
+    }
+    
+     location /media/loading.gif {
+        alias /opentalents/media/loading.gif;
+    }
+    
+     location /media/duplicata.jpg {
+        alias /opentalents/media/duplicata.jpg;
+    }
+    
+     location /media/duplicata.png {
+        alias /opentalents/media/duplicata.png;
+    }
+    
+     location /media/non_certifie.png {
+        alias /opentalents/media/non_certifie.png;
+    }
+}

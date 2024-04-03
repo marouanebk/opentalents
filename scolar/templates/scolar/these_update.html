@@ -1,0 +1,38 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>Modifier le sujet de thèse</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#these">Sujet de Stage</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#validation">Avis Commission de Validation</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="these" class="container tab-pane active"><br>
+    	<h3>Modification du sujet de thèse</h3>
+    	{% crispy form %}
+    </div>
+    <div id="validation" class="container tab-pane fade"><br>
+    	<h3>Avis et recommendations des membres de la commission</h3>
+    	<br><br>
+    	{% if perms.scolar.fonctionnalitenav_postgraduation_gestionsujets %}
+    		<a href="{% url 'commission_validation_create' pfe_pk=these.sujet.id %}">{% icon 'plus' %} Commission de Validation</a>
+    	{% endif %}
+    	{% render_table these_validation_table %}
+    	
+	</div>
+  </div>
+
+
+
+{% endblock %}
+	
+

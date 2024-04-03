@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static bootstrap4 icons usergroup dictionary %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-before: always;
+  			}
+		}
+    </style>
+    
+  </head>
+  <body>
+	{% include './these_fiche_content.html' %}
+  </body>
+ </html>

@@ -1,0 +1,35 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons %}
+{% block content %}
+	<div class="row">
+		<div class="col-lg-4">
+			<h1>{{ titre }}</h1>
+			<br><br>
+			{% crispy form %}
+		</div>
+		<div class="col-lg-8">
+			{% if groupe %}
+				<br><br>		
+					<h3>EDT du groupe {{ groupe }}</h3>
+					<br>
+			    	{{ groupe.edt|safe }}
+		    {% endif %}
+			
+			{% if inscription_list %}
+				{% for inscription_ in inscription_list %}
+					<br><br>
+						<h3>EDT de {{ inscription_.etudiant }}</h3>
+						<br>
+				    	{{ inscription_.groupe.edt|safe }}
+			    {% endfor %}
+		    {% endif %}
+		
+			{% if enseignant %}
+				<br><br>
+					<h3>EDT de {{ enseignant }}</h3>
+					<br>
+			    	{{ enseignant.edt|safe }}
+		    {% endif %}
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,3 @@
+﻿# Guide de contribution
+
+Pour contribuer au code de ce logiciel, votre contribution doit se conformer aux règles énoncées dans le guide du développeur disponible dans le Wiki de ce projet.

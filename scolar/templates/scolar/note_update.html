@@ -1,0 +1,201 @@
+{% extends 'scolar/index.html' %}
+{% load icons dictionary bootstrap4 crispy_forms_tags %}
+{% block content %}
+
+<script>
+		function update_moy(matricule){
+				var moy=0.0;
+				{% for eval_ in liste_evaluations %}
+					moy += document.getElementById("id_"+matricule+"_{{eval_.id}}").value * {{ eval_.ponderation }}
+				{% endfor %}
+				document.getElementById("id_"+matricule+"_moy").value = moy.toFixed(2)
+				{% if module_.activation_rattrapage %}
+					var moy_rattrapage=0.0;
+					{% for eval_ in liste_evaluations %}
+						moy_rattrapage += document.getElementById("id_"+matricule+"_{{eval_.id}}").value * {{ eval_.ponderation_rattrapage }}
+					{% endfor %}
+					document.getElementById("id_"+matricule+"_moy_rattrapage").value = moy_rattrapage.toFixed(2)
+				{% endif %}
+		}
+
+		function displayOTP() {
+		  var otp = document.getElementById("otp");
+		  var sms = document.getElementById("sms");
+		  if (otp.style.display === "none") {
+		    otp.style.display = "block";
+		    sms.style.display = "none";
+		  }
+		  var req = new XMLHttpRequest();
+		  req.open("GET", "{{url}}?function={{function}}&apikey={{apikey}}&userkey={{userkey}}&message={{message}}&message_priority={{message_priority}}&to={{to}}", true);
+		  {% if sms %}
+		  	req.send();
+		  {% endif %}
+		}
+		
+</script>
+
+{% if sms %}
+<script>
+	window.alert('Munissez vous de votre téléphone\n'+
+	'N° : ******'+'{{ user.enseignant.tel|slice:"6:"}}'+'\n'+
+	'pour recevoir un MOT DE PASSE par SMS.\n'+
+	'Si le numéro est incorrect ou absent, merci de le rectifier \n'+
+	'd\'abord auprès de l\'administration');
+</script>
+{% endif %}
+
+<br>
+
+<h2>Notes du module {{ module_.matiere.code }} ({{module_.matiere.titre}})
+	{% if groupe %}
+		de {{ groupe }} 
+	{% endif %}
+</h2>
+<br>
+<div class="col-md-12">
+
+    <form action="" method="post">
+    	{% csrf_token %}
+    	
+    	
+        <table class="table table-bordered table-sm">
+             <thead class="thead-dark">
+                 <tr>
+                 	<th>Etudiant</th>
+					<th>Situation</th>
+					<th>Acquis</th>
+					{% if module_.activation_rattrapage %}
+						<th>Entrée en rattrapage</th>
+					{% endif %}
+
+                    {% for eval_ in liste_evaluations %}
+                        <th>{{eval_.type}}x{{eval_.ponderation.normalize}}
+						{% if module_.activation_rattrapage %}
+							<br>R:{{ eval_.type }}x{{ eval_.ponderation_rattrapage.normalize }}
+						{% endif %}
+						</th>
+                    {% endfor %}
+					<th> Moyenne </th>
+					{% if module_.activation_rattrapage %}
+						<th>Moy Rattrapage</th>
+					{% endif %}
+                 </tr>
+            </thead>
+			
+            {% for inscrit_ in liste_inscrits %}
+            	<tr>
+
+					<td>
+            			<strong>{{inscrit_.etudiant}}</strong>
+            		</td>
+					<td>{{ decisions_jury|get_value_from_dict:inscrit_.decision_jury }}</td>
+					
+					
+					{% with resultat_list|get_value_from_dict:inscrit_.etudiant.matricule as resultat_ %}
+						{% if perms.scolar.fonctionnalite_etudiants_reinitialisationnotesetacquis %}
+	        				{% with inscrit_.etudiant.matricule|addstr:"_acquis" as key %}
+	        					{% with form|form_field:key as field %}
+	        						<td>{{ field|as_crispy_field }}</td>
+	        					{% endwith %}
+	        				{% endwith %}							
+						{% else %}
+							<td>{% if resultat_.acquis %}<strong>Oui</strong>{% else %}Non{% endif %}</td>
+						{% endif %}
+					{% endwith %}
+					
+					{% if module_.activation_rattrapage %}
+						{% with resultat_list|get_value_from_dict:inscrit_.etudiant.matricule as resultat_ %}
+							{% if perms.scolar.fonctionnalite_pedagogie_modificationnotes %}
+		        				{% with inscrit_.etudiant.matricule|addstr:"_entree_rattrapage" as key %}
+		        					{% with form|form_field:key as field %}
+		        						<td>{{ field|as_crispy_field }}</td>
+		        					{% endwith %}
+		        				{% endwith %}							
+							{% else %}
+								<td>{% if resultat_.entree_rattrapage %}<strong>Oui</strong>{% else %}Non{% endif %}</td>
+							{% endif %}
+						{% endwith %}
+					{% endif %}
+					
+            		{% for eval_ in liste_evaluations %}
+            			<td>
+            				{% with inscrit_.etudiant.matricule|addstr:"_"|addstr:eval_.id as key %}
+            					{% with form|form_field:key as field %}
+            						{{ field|as_crispy_field }}
+            					{% endwith %}
+            				{% endwith %}
+            			</td>
+            		{% endfor %}
+            		<td>
+        				{% with inscrit_.etudiant.matricule|addstr:"_moy" as key %}
+        					{% with form|form_field:key as field %}
+        						{{ field|as_crispy_field }}
+        					{% endwith %}
+        				{% endwith %}
+            		</td>
+					{% if module_.activation_rattrapage %}
+	            		<td>
+	        				{% with inscrit_.etudiant.matricule|addstr:"_moy_rattrapage" as key %}
+	        					{% with form|form_field:key as field %}
+	        						{{ field|as_crispy_field }}
+	        					{% endwith %}
+	        				{% endwith %}
+	            		</td>
+					{% endif %}
+            	</tr>
+            {% endfor %}
+            
+        </table>
+		{% if groupe_ %}
+	        {% with groupe_.id|addstr:"_"|addstr:module_.id as key %}
+				{% with form|form_field:key as field %}
+					{{ field|as_crispy_field }}
+				{% endwith %}
+	        {% endwith %}
+		{% endif %}
+
+        <br><br>
+        {% if sms %}
+			<div class="col-md-6" id="sms">
+				<a href="#" onclick="displayOTP(); return false;" class="btn btn-primary">Envoyer Code Secret par SMS à mon numéro ****** {{user.enseignant.tel|slice:"6:"}}</a>
+				{% if groupe_ %}
+					<a href="{% url 'note_list' groupe_pk=groupe_.id matiere_pk=module_.matiere.id %}" class="btn btn-secondary">Annuler</a>
+				{% endif %}
+				
+				{% if dette %}
+					<a href="{% url 'note_dette_list' module_pk=module_.id %}" class="btn btn-secondary">Annuler</a>
+				{% endif %}
+			</div>
+	        
+			<div class="row" id="otp" style="display:none">
+				{% with form|form_field:'otp' as field %}
+						{{ field|as_crispy_field }}
+				{% endwith %}
+				<br><br>
+				<input type="submit" value="Enregistrer" class="btn btn-primary"/>
+				{% if groupe_ %}
+					<a href="{% url 'note_list' groupe_pk=groupe_.id matiere_pk=module_.matiere.id %}" class="btn btn-secondary">Annuler</a>
+				{% endif %}
+				
+				{% if dette %}
+					<a href="{% url 'note_dette_list' module_pk=module_.id %}" class="btn btn-secondary">Annuler</a>
+				{% endif %}
+			</div>
+        {% else %}
+			<div class="row">
+				<input type="submit" value="Enregistrer" class="btn btn-primary"/>
+				{% if groupe_ %}
+					<a href="{% url 'note_list' groupe_pk=groupe_.id matiere_pk=module_.matiere.id %}" class="btn btn-secondary">Annuler</a>
+				{% endif %}
+				
+				{% if dette %}
+					<a href="{% url 'note_dette_list' module_pk=module_.id %}" class="btn btn-secondary">Annuler</a>
+				{% endif %}
+			</div>
+		{% endif %}
+        
+         
+        
+    </form>
+</div>
+{% endblock %}

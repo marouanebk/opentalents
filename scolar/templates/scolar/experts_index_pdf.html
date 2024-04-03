@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-before: always;
+  			}
+		}
+    </style>
+
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+	
+  </head>
+  <body>
+	{% load dictionary %}
+  	<div class="container">
+		{% if institution.header %}
+			<img src="{{ institution.header.url }}" alt="Logo"  height="150" width="100%">
+		{% endif %}
+		<br><br>
+		<h3 align="center">
+			Index des experts des sujets de PFE:<br>
+			{{annee_univ.annee_univ}}/{{annee_univ.annee_suivante.annee_univ}}
+		</h3>
+		<br><br><br>
+		<table class="table tables-bordered table-striped" width="80%">
+			<thead>
+				<th>Enseignant</th>
+				<th>Liste des sujets expertisés </th>
+			</thead>
+			<tbody>
+				{% for enseignant, pfe_list in experts_index.items %}
+					<tr>
+						<td> {{ enseignant }} </td>
+						<td>
+							{% for pfe in pfe_list %}
+								{{ pfe.groupe }},
+							{% endfor %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% if institution.footer %}
+ 	 	<img src="{{ institution.footer.url }}" alt="Logo" width="100%">
+	{% endif %}	
+	</div>	
+  </body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-after: always;
+  			}
+		}
+    </style>
+
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+	{% load static dictionary icons usergroup %}
+	<!-- Font Awesome CSS 	-->
+	<link rel="stylesheet" href="{% static 'fonts/css/all.min.css' %}">
+	<link rel="stylesheet" href="{% static 'fonts/css/all.css' %}">
+
+       
+  </head>
+  <body>
+  
+  	
+  		<div class="container new-page">
+			{% if institution.header %}
+				<img src="{{ institution.header.url }}" alt="Logo" width="100%">
+			{% endif %}
+			<br><br>
+			<h2 align="center"><strong>Procés Verbal d'une Epreuve Ecrite </strong></h2> 
+			<h3 align="center">Année Universitaire : <strong>{{seance.activite.module.formation.annee_univ}}/{{seance.activite.module.formation.annee_univ.annee_suivante}}</strong> Semestre : <strong>{{seance.activite.module.periode.periode}}</strong></h3>
+			<h4 align="center">Année d'étude : <strong>{{seance.activite.module.formation.programme.titre}}</strong>
+				{% if seance.activite.module.formation.programme.specialite %}
+			 		<br>Spécialité: <strong>{{seance.activite.module.formation.programme.specialite.code}} ({{seance.activite.module.formation.programme.specialite.intitule }})</strong>
+			 	{% endif %}
+			</h4>
+			<h4 align="center">Module : <strong>{{seance.activite.module.matiere.code}} ({{seance.activite.module.matiere.titre}})</strong></h4>
+			<h5 align="center">Le : {{seance.date|date:'d/m/Y'}} de {{seance.heure_debut|time:'H:i'}} à {{seance.heure_fin|time:'H:i'}}</h3>
+			<br><br>
+			
+			<table  width="100%">
+				<thead>
+					<th>Coordinateur du module</th>
+					<th> Remplacé Par</th>
+					<th>Observations</th>
+					<th>Signature</th>
+				</thead>
+				<tbody>
+						<tr>
+							<td>{{seance.activite.module.coordinateur}}</td>
+							<td></td>
+							<td><br><br><br><br></td>
+							<td><br><br></td>
+						</tr>
+				</tbody>
+			</table>
+			<br><br>
+
+			<table  width="100%">
+				<thead>
+					<th>Salle</th>
+					<th>Surveillant</th>
+					<th width="200">Remplacé par</th>
+					<th>Emargement</th>
+					<th>Nombre <br> d'étudiants<br> prévus</th>
+					<th>Nombre de<br> présents</th>
+					<th>Nombre <br>de copies<br> remises</th>
+					<th width="200">Observations</th>
+				</thead>
+				<tbody>
+					{% for salle, reservations in pv_list.items %}
+							<tr>
+								<td rowspan="{{reservations.surveillance_enseignant_list|length}}"><strong>{{salle.code}}</strong></td>
+								{% for surveillance in reservations.surveillance_enseignant_list %}
+										<td>{{surveillance.enseignant}}</td>
+										<td></td>
+										<td><br><br></td>
+										{% if forloop.first %}
+											<td rowspan="{{reservations.surveillance_enseignant_list|length}}">{{ seance.nb_places_reservees_salle|get_value_from_dict:salle.code }}</td>
+											<td rowspan="{{reservations.surveillance_enseignant_list|length}}"><br><br></td>
+											<td rowspan="{{reservations.surveillance_enseignant_list|length}}"></td>
+											<td rowspan="{{reservations.surveillance_enseignant_list|length}}"></td>
+											
+										{% endif %}
+										</tr><tr>
+								{% endfor %}
+							</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+		</div>
+		
+	
+</body>
+</html>

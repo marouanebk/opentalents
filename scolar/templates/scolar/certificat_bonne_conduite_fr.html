@@ -1,0 +1,70 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %}
+{% block signataire %}
+	{% with 'ATTESTATION_BONNE_CONDUITE_FR'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+				
+			<table style="width:100%">
+				<tr> 
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">			{{ autorite.intitule }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p> {{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %}
+				</tr>
+				<tr>
+						<td style =" text-align: left; margin-left: 0em;">
+                            <p align="left">REF/N°:......../{{ institution.reference }}/{{ today|date:'Y' }}</p>
+                        </td>
+                       													
+				</tr></table>
+		{% endwith %}		
+	
+{% endblock %}
+{% block title %} 
+<br><br>
+	ATTESTATION DE BONNE CONDUITE<br><br><br>
+{% endblock %}
+{% block content %}	
+{% with 'ATTESTATION_BONNE_CONDUITE_FR'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+         <p align="left">
+				{% if autorite %}	    			
+					   &emsp;{{ autorite.titre_responsable }}, atteste que:<br><br>					   
+				{% endif %}
+				
+    	</p>
+    		<br>
+    <table>
+    	<tr>
+    		<td>
+    			<p align="justify">    				 
+    				M. (elle) : {{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom}} <br><br> 
+    				{% if inscription.etudiant.date_naissance or inscription.etudiant.lieu_naissance %}Né(e) {% if inscription.etudiant.date_naissance %}le: {{ inscription.etudiant.date_naissance|date:'d/m/Y' }} {% endif %}{% if inscription.etudiant.lieu_naissance %}à {{ inscription.etudiant.lieu_naissance }}{% endif %}{% endif %}<br><br>    				
+    				Est inscrit(e) en : {{inscription.formation.programme.titre }}
+    				{% if inscription.formation.programme.specialite %} 
+    					  {{inscription.formation.programme.specialite.intitule}} 
+    				{% endif %} sous N°: {{ inscription.etudiant.matricule }}. 
+					<br><br>
+					L'étudiant(e) n'a fait l'objet d'aucune sanction disciplinaire.
+					<br><br><br><br><br><br><br><br><br><br>					
+					Fait pour servir et valoir ce que de droit,
+					<br><br>
+    			
+    			</p>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td >
+    			<p align="left">
+					{% if institution.ville %}{{ institution.ville }}, {% endif %}le: {{ today|date:'d/m/Y' }}	    			
+    			</p>
+    			<br><br><br><br><br><br><br><br><br><br><br>
+    			
+    		</td>
+    	</tr>
+	</table>
+{% endwith %}
+{% endblock %}

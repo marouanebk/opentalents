@@ -1,0 +1,72 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% load dictionary %}
+{% block title %} 
+{% with 'ATTESTATION_SOUTENANCES'|autorite_entete_from_document as autorite %}
+
+				<p align="left">			{{ autorite.intitule }}   				</p>
+			
+					<p align="right" style="font-size:19px;">{{ institution.ville }}, le: {{ today|date:'d/m/Y'  }}	  </p>
+			
+	
+	<br><br>
+		<h1 align="center"> <u> Attestation des soutenances </u> </h1>
+		<br><br><br>
+		
+	
+{% endwith %}
+{% endblock %}
+{% block content %}	
+{% with 'ATTESTATION_SOUTENANCES'|autorite_from_document as autorite %}
+<big>
+    <table>
+    	<tr>
+    		<td>    		
+    			<p align="justify">
+					{{ autorite.titre_responsable }} à : {{ institution.nom }} ({{ institution.sigle }}), atteste par la présente que :
+					<br><br>
+					{% if gender %} 
+					M. :   					
+					{% else %} 
+					Mme :
+					{% endif %}
+					{{ enseignant.nom }} {{ enseignant.prenom }}
+					<br><br>
+					Grade : {{ grade}}
+					<br><br>
+					A participé aux soutenances suivantes : 
+					</td>
+				</p>	
+    	</tr>
+
+	</table>
+	<br>
+				{% if pfe_sout %}
+				<h3>Projets de fin d'études</h3>
+					<br>
+					{% render_table soutenancesPFE %}	
+				{% endif %}
+					<br><br>
+				{% if master_sout %}
+					<h3>Mémoires de Master </h3> 
+						<br>					
+					{% render_table soutenancesMaster %}
+						<br><br><br>
+				{% endif %}
+					
+				{% if eqp_sout %}
+					<h3>Autres soutenances (stages pratiques en entreprise, ...)</h3> 
+					<br>					
+					{% render_table soutenancesEQP %}
+					<br><br><br>
+				{% endif %}
+   					<br>
+					La présente attestation lui est délivrée pour servir et valoir ce que de droit. 
+    				
+					<br><br><br><br><br><br><br><br>
+    			
+    			
+    		
+</big>
+{% endwith %}
+{% endblock %}

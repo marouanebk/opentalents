@@ -1,0 +1,386 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+
+{% block content %}
+
+<script>
+	{% for evaluation in liste_evaluations %}
+		function update_{{ evaluation.type }}(){
+			var valeur;
+			{% for inscrit in liste_inscrits %}
+				valeur = 0;
+				{% for competence in evaluation.competence_elements.all %}
+					{% if competence.commune_au_groupe %}
+						{% with 'id_'|addstr:groupe.code|addstr:'_'|addstr:evaluation.id|addstr:'_'|addstr:competence.competence_element.code as key %}
+							valeur += parseFloat(document.getElementById("{{key}}").value)*({{competence.ponderation}}*20.0);
+						{% endwith %}
+					{% else %}
+						{% with 'id_'|addstr:inscrit.etudiant.matricule|addstr:'_'|addstr:evaluation.id|addstr:'_'|addstr:competence.competence_element.code as key %}
+							valeur += parseFloat(document.getElementById("{{key}}").value)*({{competence.ponderation}}*20.0);
+						{% endwith %}
+					{% endif %}
+				{% endfor %}
+				document.getElementById("id_{{inscrit.etudiant.matricule}}_{{evaluation.id}}").value=valeur.toFixed(2);
+				
+				var moy=0.0;
+				var mention;
+				{% for eval_ in liste_evaluations %}
+					moy += document.getElementById("id_{{inscrit.etudiant.matricule}}_{{eval_.id}}").value * {{ eval_.ponderation }}
+				{% endfor %}
+				document.getElementById("id_{{inscrit.etudiant.matricule}}_moy").value = moy.toFixed(2)
+				moy = moy.toFixed(2)
+				if (moy >= 16) {
+					mention = "T";
+				} else if (moy >= 14) {
+					mention = "B";	
+				} else if (moy >= 12) {
+					mention = "A";
+				} else if (moy >= 10) {
+					mention = "P";
+				} else {
+					mention = "F";
+				}
+				{% if not groupe.is_equipe %} document.getElementById("id_{{inscrit.etudiant.matricule}}_mention").value = mention {% endif %}
+			{% endfor %}
+		}
+	{% endfor %}
+
+	function update_moyenne(){
+		var valeur;
+		{% for inscrit in liste_inscrits %}
+			var moy=0.0;
+			var mention;
+			{% for eval_ in liste_evaluations %}
+				moy += document.getElementById("id_{{inscrit.etudiant.matricule}}_{{eval_.id}}").value * {{ eval_.ponderation }}
+			{% endfor %}
+			document.getElementById("id_{{inscrit.etudiant.matricule}}_moy").value = moy.toFixed(2)
+			moy = moy.toFixed(2)
+			if (moy >= 16) {
+				mention = "T";
+			} else if (moy >= 14) {
+				mention = "B";	
+			} else if (moy >= 12) {
+				mention = "A";
+			} else if (moy >= 10) {
+				mention = "P";
+			} else {
+				mention = "F";
+			}
+			{% if not groupe.is_equipe %} document.getElementById("id_{{inscrit.etudiant.matricule}}_mention").value = mention {% endif %}
+		{% endfor %}
+	}
+
+</script>
+
+<h2>Evaluation du {{ groupe.code }}</h2>
+
+<form action="" method="post">
+	{% csrf_token %}
+	<div class="row position-static">
+		{% for inscrit in liste_inscrits %}
+			<div class="col-lg-6">
+			<small>
+				<table class="table table-sm">
+				<tr>
+					<td>
+						{{ inscrit.etudiant.matricule }}<br><br>
+						<a href="{% url "etudiant_detail" pk=inscrit.etudiant.matricule %}" class="btn btn-info" target="_blank">{% icon 'eye' %} Profile </a>
+					</td>
+					<td>
+						<strong>Nom</strong>: {{ inscrit.etudiant.nom }} {{ inscrit.etudiant.nom_a }} <br>
+						<strong>Prenom</strong>: {{ inscrit.etudiant.prenom }} {{ inscrit.etudiant.prenom_a }} <br>
+						<strong>Né(e) le</strong>: {{ inscrit.etudiant.date_naissance|date:'d/m/Y' }}
+					</td>
+					<td>
+						{% if inscrit.etudiant.photo %}
+							<img src="{{ inscrit.etudiant.photo.url }}"  height="120">
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<small>
+						<table class="table table-sm">
+							<thead class="thead-dark">
+								<tr>
+								    {% for evaluation in liste_evaluations %}
+								    	<th>
+										{{ evaluation.type }}
+										</th>
+									{% endfor %}
+									<th>Moyenne</th>
+									{% if not groupe.is_equipe %}<th>Mention</th>{% endif %}
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									
+								    {% for evaluation in liste_evaluations %}
+								    	<td>
+										{% with inscrit.etudiant.matricule|addstr:'_'|addstr:evaluation.id as key %}
+											{{ form|form_field:key|as_crispy_field }}
+										{% endwith %}
+										</td>
+									{% endfor %}
+
+									<td>
+										{% with inscrit.etudiant.matricule|addstr:'_moy' as key %}
+											{{ form|form_field:key|as_crispy_field }}
+										{% endwith %}
+									</td>
+									{% if not groupe.is_equipe %}
+										<td>
+											{% with inscrit.etudiant.matricule|addstr:'_mention' as key %}
+												{{ form|form_field:key|as_crispy_field }}
+											{% endwith %}
+										</td>
+									{% endif %}
+								</tr>
+							</tbody>
+						</table>
+						</small>
+					</td>
+				</tr>
+				</table>
+				</small>
+			</div>
+		{% endfor %}
+	</div>
+	
+<div class="position-relative">
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#admin">Informations sur le Stage</a>
+    </li>
+    {% for evaluation in liste_evaluations %}
+	    <li class="nav-item">
+	      <a class="nav-link" data-toggle="tab" href="#{{evaluation.type}}">{{evaluation.type}}</a>
+	    </li>
+	{% endfor %}
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="admin" class="container tab-pane active"><br>
+		<h3 align="center">Partie réservée à l'administration</h3>
+		<table>
+			<tr>
+				<td><strong>Promotion</strong></td>
+				<td>{{module.formation.annee_univ}}/{{module.formation.annee_univ.annee_suivante}}</td>
+			</tr>
+			<tr>
+				{% if groupe.is_equipe %}
+					<td><strong>Code {{ groupe.section.formation.programme.matiere_equipe.code }}</strong></td>
+					<td>{{groupe.code}}</td>
+				{% else %}
+				<td><strong>Code PFE</strong></td>
+				<td>{{groupe.code}}</td>
+				{% endif %}
+			</tr>
+			<tr>
+				<td colspan="2"><strong>Candidats</strong></td>
+				<td><strong>Option</strong></td>
+			</tr>
+			{% for inscrit in liste_inscrits %}
+				<tr>
+					<td colspan="2">{{inscrit.etudiant}}</td>
+					<td>{{inscrit.formation.programme.specialite.intitule}}</td>
+				</tr>
+			{% endfor %}
+			
+			{% if groupe.is_equipe %}
+				{% with groupe.pfe.id|addstr:'_organisme' as key %}
+						<tr><td colspan="6"><br>{{ form|form_field:key|as_crispy_field }}</td></tr>
+				{% endwith %}
+			{% endif %}	
+			
+			<tr>
+				<td colspan="3"><strong>Intitulé du mémoire/stage</strong></td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					{% with groupe.pfe.id|addstr:'_intitule' as key %}
+						{{ form|form_field:key|as_crispy_field }}
+					{% endwith %}							
+				</td>
+			</tr>
+			{% if not groupe.is_equipe %}
+				<tr>
+					<td colspan="3"><strong>Co-encadrants</strong></td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						{% with groupe.pfe.id|addstr:'_coencadrants' as key %}
+							{{ form|form_field:key|as_crispy_field }}
+						{% endwith %}
+					</td>
+				</tr>
+			{% endif %}
+			<tr>
+				<td colspan="3"><strong>Promoteur</strong></td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					{% with groupe.pfe.id|addstr:'_promoteur' as key %}
+						{{ form|form_field:key|as_crispy_field }}
+					{% endwith %}						
+				</td>
+			</tr>
+			
+			{% if groupe.is_equipe %}
+				<tr>
+					<td colspan="3"><strong>Tél promoteur</strong></td>
+				</tr>
+				<tr>
+				<td colspan="3">
+					{% with groupe.pfe.id|addstr:'_tel_promoteur' as key %}
+						{{ form|form_field:key|as_crispy_field }}
+					{% endwith %}
+				</td>
+				<tr>
+					<td colspan="3"><strong>E-mail promoteur</strong></td>
+				</tr>
+				<tr>
+				<td colspan="3">
+					{% with groupe.pfe.id|addstr:'_email_promoteur' as key %}
+						{{ form|form_field:key|as_crispy_field }}
+					{% endwith %}
+				</td>
+				</tr>
+			{% endif %}
+			<tr>
+				<td><strong>Date de soutenance</strong></td>
+				<td>
+					{% with groupe.soutenance.id|addstr:'_date' as key %}
+						{{ form|form_field:key|as_crispy_field }}
+					{% endwith %}
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3"><strong>Composition du jury</strong></td>
+			</tr>
+			{% if not groupe.is_equipe %}
+				<tr>
+					<td colspan="3">
+						{% with groupe.soutenance.id|addstr:'_president' as key %}
+							{{ form|form_field:key|as_crispy_field }}
+						{% endwith %}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						{% with groupe.soutenance.id|addstr:'_examinateur' as key %}
+							{{ form|form_field:key|as_crispy_field }}
+						{% endwith %}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						{% with groupe.soutenance.id|addstr:'_rapporteur' as key %}
+							{{ form|form_field:key|as_crispy_field }}
+						{% endwith %}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						{% with groupe.soutenance.id|addstr:'_coencadrant' as key %}
+							{{ form|form_field:key|as_crispy_field }}
+						{% endwith %}
+					</td>
+				</tr>
+				
+			{% endif %}
+				<tr>
+					<td colspan="3">
+						{% with groupe.soutenance.id|addstr:'_assesseur1' as key %}
+							{{ form|form_field:key|as_crispy_field }}
+						{% endwith %}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						{% with groupe.soutenance.id|addstr:'_assesseur2' as key %}
+							{{ form|form_field:key|as_crispy_field }}
+						{% endwith %}
+					</td>
+				</tr>
+				{% if not groupe.is_equipe %}
+					<tr>
+						<td colspan="3">
+							{% with groupe.soutenance.id|addstr:'_invite1' as key %}
+								{{ form|form_field:key|as_crispy_field }}
+							{% endwith %}
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							{% with groupe.soutenance.id|addstr:'_invite2' as key %}
+								{{ form|form_field:key|as_crispy_field }}
+							{% endwith %}
+						</td>
+					</tr>
+				{% endif %}
+
+		</table>
+    </div>
+    
+    {% for evaluation in liste_evaluations %}
+	    <div id="{{evaluation.type}}" class="container tab-pane fade"><br>
+			<table class="table table-sm">
+					{% for competence in evaluation.competence_elements.all %}
+						<tr>
+							<td>
+								{{ competence.competence_element.code }}
+							</td>
+							<td>
+								{{ competence.competence_element.intitule }}
+							</td>
+							<td>
+							{% if competence.commune_au_groupe %}
+								{% with groupe.code|addstr:'_'|addstr:evaluation.id|addstr:'_'|addstr:competence.competence_element.code as key %}
+									{{ form|form_field:key|as_crispy_field }}
+								{% endwith %}
+							{% else %}
+								<table>
+									{% for inscrit in liste_inscrits %}
+										<tr><td>
+											{% with inscrit.etudiant.matricule|addstr:'_'|addstr:evaluation.id|addstr:'_'|addstr:competence.competence_element.code as key %}
+												{{ form|form_field:key|as_crispy_field }}
+											{% endwith %}
+										</td></tr>									
+									{% endfor %}
+								</table>
+							{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+			</table>
+	    </div>
+    {% endfor %}
+  </div>
+
+{% with groupe.id|addstr:'_'|addstr:module.id as key %}
+	{{ form|form_field:key|as_crispy_field }}
+{% endwith %}
+
+{% if not groupe.is_equipe %}
+	{% with groupe.soutenance.id|addstr:'_depot_biblio' as key %}
+		{{ form|form_field:key|as_crispy_field }}
+	{% endwith %}
+{% endif %}
+
+
+<br><br>
+<input type="submit" name="submit" value="Enregistrer"  class="btn btn-primary"/>
+<a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
+</div>
+</form>
+
+
+
+{% endblock %}
+	
+

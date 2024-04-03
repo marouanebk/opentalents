@@ -1,0 +1,163 @@
+ {% load static bootstrap4 icons usergroup dictionary %}
+    <table>
+		{% if institution.header %}
+	    	<tr>
+		    	<td class="text-center">
+		    		<br><br>
+		        	 <img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+		    	</td>
+	    	</tr>
+		{% endif %}
+	</table>
+
+	<h2 align="center"> 
+		Formulaire de renseignements du mémoire de fin d’études
+	</h2>
+	<br>
+	{% if pfe.groupe %}
+	<h3 align="center">
+		Année Universitaire : {{ pfe.groupe.section.formation.annee_univ }} / {{ pfe.groupe.section.formation.annee_univ.annee_suivante }} 
+	</h3>
+	{% endif %}
+	<br><br>
+	<h5 align="right">
+		{% if pfe.groupe %}
+			Code Mémoire: {{ pfe.groupe.code }}
+		{% else %}
+			ID: {{ pfe.id }}
+		{% endif %}
+	</h5>
+	<br><br>
+	<h4 align="center"> 
+		<strong>IDENTIFICATION DES INTERVENANTS</strong>
+	</h4>
+	
+	<table class="table table-bordered">
+		<tr>
+			<td><strong> Titre du projet</strong></td>
+			<td>{{ pfe.intitule }}</td>
+		</tr>
+		<tr>
+			<td><strong> Spécialités</strong></td>
+			<td>{% for specialite in pfe.specialites.all %}
+					{{ specialite.intitule }}<br>
+				{% endfor %}
+			</td>
+		</tr>
+		<tr>
+			<td><strong> Stagiaires</strong></td>
+			<td>{% for inscription in pfe.reserve_pour.all %}
+					<strong>Matricule: </strong> {{inscription.etudiant.matricule }}<br>
+					<strong>Nom: </strong> {{inscription.etudiant.nom }}  <strong>Prénom: </strong> {{inscription.etudiant.prenom }}<br>
+					<strong>Email: </strong> {{inscription.etudiant.user.email }}<br><br>
+				{% endfor %} 
+			</td>
+		</tr>
+
+		<tr>
+			<td><strong> Affiliation du promoteur</strong></td>
+			<td>
+				<strong>Organisme: </strong>{{ pfe.organisme.nom }}<br>
+				<strong>Adresse: </strong>{{ pfe.organisme.adresse }}, {{ pfe.organisme.pays }}<br>
+				<strong>Nom et Prénom: </strong>{{ pfe.promoteur }}<br>
+				<strong>Tel: </strong>{{ pfe.tel_promoteur }},  <strong>Email: </strong>{{ pfe.email_promoteur }}<br>
+			</td>
+		</tr>
+		<tr>
+			<td><strong> Co-encadrants</strong></td>
+			<td>{% for coencadrant in pfe.coencadrants.all %}
+					{{ coencadrant }}<br>
+				{% endfor %}
+			</td>
+		</tr>
+
+	</table>
+	
+	<br><br>
+	<h4 align="center"> 
+		<strong>DESCRIPTION DU PROJET DE FIN D'ETUDES</strong>
+	</h4>
+	
+	<table class="table table-bordered">
+		<tr>
+			<td><strong> Résumé</strong></td>
+			<td>{{ pfe.resume }}</td>
+		</tr>
+		<tr>
+			<td><strong> Objectifs</strong></td>
+			<td>{{ pfe.objectifs }}</td>
+		</tr>
+		<tr>
+			<td><strong> Résultats attendus</strong></td>
+			<td>{{ pfe.resultats_attendus }}</td>
+		</tr>
+		<tr>
+			<td><strong> Antécédents du travail demandé</strong></td>
+			<td>{{ pfe.antecedents }}</td>
+		</tr>
+		<tr>
+			<td><strong> Bibliographie</strong></td>
+			<td>{{ pfe.bibliographie }}</td>
+		</tr>
+		
+		<tr>
+			<td><strong> Echéancier</strong></td>
+			<td>{{ pfe.echeancier }}</td>
+		</tr>
+		<tr>
+			<td><strong> Moyens informatiques</strong></td>
+			<td>{{ moyens_informatiques|get_value_from_dict:pfe.moyens_informatiques }}</td>
+		</tr>
+		<tr>
+			<td><strong> Projet de recherche</strong></td>
+			<td>{{ pfe.projet_recherche }}</td>
+		</tr>
+
+	</table>
+	
+	<div class="container new-page">
+	<h5 align="right">
+		{% if pfe.groupe %}
+			Code Mémoire: {{ pfe.groupe.code }}
+		{% else %}
+			ID: {{ pfe.id }}
+		{% endif %}
+	</h5>
+	
+	<br><br>
+	<h4 align="center"> 
+		<strong>VALIDATION DU SUJET</strong>
+	</h4>
+	
+	<table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<th>Membre</th>
+    			<th>Avis</th>
+    			<th>Date</th>
+    			<th>Commentaire</th>
+    			<th>Emargement</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		{% for validation in pfe.validations.all %}
+    			<tr>
+    				<td>{{ validation.expert }}</td>
+    				<td>{{ avis_expert|get_value_from_dict:validation.avis }}</td>
+    				<td>{{ validation.fin|date:'d/m/Y'}}</td>
+    				<td>{{ validation.commentaire }}</td>
+    				<td></td>
+    			</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+	</div>
+	<table>
+		{% if institution.footer %}
+	    	<tr>
+		    	<td class="text-center">
+		        	 <img src="{{ institution.footer.url }}" alt="Logo" width="100%"> 
+		    	</td>
+	    	</tr>
+		{% endif %}
+	</table>

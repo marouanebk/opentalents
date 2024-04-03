@@ -1,0 +1,56 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% load dictionary %}
+{% block title %} 
+{% with 'ATTESTATION_EXPERTISES_PFE'|autorite_entete_from_document as autorite %}
+
+				<p align="left">			{{ autorite.intitule }}   				</p>
+			
+					<p align="right" style="font-size:19px;">{{ institution.ville }}, le: {{ today|date:'d/m/Y'  }}	  </p>
+			
+	
+	<br><br>
+		<h1 align="center"> <u> Attestation des expertises des sujets de PFE </u> </h1>
+		<br><br><br>
+		
+	
+{% endwith %}
+{% endblock %}
+{% block content %}
+{% with 'ATTESTATION_EXPERTISES_PFE'|autorite_from_document as autorite %}	
+<big>
+    <table>
+    	<tr>
+    		<td>    		
+    			<p align="justify">
+					{{ autorite.titre_responsable }} à : {{ institution.nom }} ({{ institution.sigle }}), atteste par la présente que :
+					<br><br>
+					{% if gender %} 
+					M. :   					
+					{% else %} 
+					Mme :
+					{% endif %}
+					{{ enseignant.nom }} {{ enseignant.prenom }}
+					<br><br>
+					Grade : {{ grade}}
+					<br><br>
+					A expertisé les sujets de projets de fin d'études (PFE) suivants :
+					</td>
+    	</tr>
+
+	</table>
+	<br>
+						
+					{% render_table expertisesPFE %}
+			<br><br><br>
+				
+					La présente attestation lui est délivrée pour servir et valoir ce que de droit. 
+    				
+
+   					<br><br><br><br><br><br>
+    			
+    			</p>
+    		
+</big>
+{% endwith %}
+{% endblock %}

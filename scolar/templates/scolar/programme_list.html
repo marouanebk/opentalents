@@ -1,0 +1,92 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+
+{% block content %}
+
+
+  <h2>Nos programmes</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#catalogue">Catalogue des matières</a>
+    </li>
+	{% if institution.activation_ddc %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="modal" data-target="#Modal">Répartition des crédits</a>
+    </li>
+	{% endif %}
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#programmes">Programmes</a>
+    </li>
+
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="catalogue" class="container tab-pane active"><br>
+			<h5><strong>Catalogue des Matières :</strong></h5>
+			<br>
+			<p class="alert alert-info">
+			 Ceci est le catalogue des matières enseignées à l'établissement.
+			 Vous pouvez utiliser le filtre pour restreindre la sélection, par ex. par palier, spécialité, domaine de connaissance ou mot clé.
+			 La répartition des crédits sur les doamines de connaissance se fera en conséquence.
+			</p>
+			<br>
+
+	    	<form action="" method="get" class="form form-inline">
+	    		{% csrf_token %}
+	    		{% bootstrap_form filter_matiere.form layout='inline' %}
+	    		{% bootstrap_button 'Filtrer' %}
+	    	</form>
+			
+			<br>
+			{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %} 
+				<a href="{% url "matiere_create" %}" > {% icon 'plus' %} Matière </a>
+				<br>
+			{% endif %} 
+			
+	    	{% render_table table_matiere %}
+	</div>
+
+    <div id="programmes" class="container tab-pane fade"><br>
+			<h5><strong>Programmes :</strong></h5>
+			<br>
+			<a href="{% url "catalogue_programme" %}" target="_blank" class="btn btn-info"> Catalogue Complet</a>
+			{% render_table table_programme %}
+
+    </div>
+
+  </div>
+  		{% if institution.activation_ddc %}
+  		<!-- Modal -->
+		<div class="modal fade" id="Modal"  role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Répartition des crédits par domaine de connaissance</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="container-fluid">
+					<h5><strong>Répartition des crédits  des matières sélectionnées par domaine</strong></h5>
+					{{ repartition_credits_chart.as_html }}
+		
+				</div> 	
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		{% endif %}		
+		
+  
+
+{% endblock %}

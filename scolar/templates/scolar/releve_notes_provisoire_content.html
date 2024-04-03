@@ -1,0 +1,206 @@
+  {% load dictionary %}
+	{% with 'RELEVE_NOTES_PROVISOIRE'|autorite_entete_from_document_programme:inscription.formation.programme as autorite_entete %}
+	{% with 'RELEVE_NOTES_PROVISOIRE'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+  
+	<div >
+	{% if institution.header %}
+		<img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+	{% endif %}
+	<table class="table table-borderless table-sm" width="100%" >
+				<tr> 
+					<td style =" text-align: left; margin-left: 0em;"> 
+					<p align="left">			{{ autorite_entete.intitule }}</p>
+					</td>
+					<td></td>
+					<td style =" text-align: right; margin-right: 0em;" > 
+					<p>{{ autorite_entete.intitule_a }}</p>
+					</td> 
+				</tr></table>
+	</div>
+		<h3 align="center"> <strong>RELEVE DE NOTES PROVISOIRE {% if inscription.formation.has_semestres %}du{% else %}:{% endif %} {{periode.periodepgm.code}}</strong></h3>
+		<br><br>
+		<table class="table table-borderless table-sm" width="100%">
+			<tr>
+				<td>Matricule : <strong>{{inscription.etudiant.matricule}}</strong></td>
+				<td><strong> Année universitaire : {{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</td>
+				<td><strong> Année d'étude : {{inscription.formation.programme.titre}}</td>
+				{% if inscription.formation.programme.specialite %}
+					<td>Spécialité : <strong> {{inscription.formation.programme.specialite.intitule}} </strong></td>
+				{% endif %}
+			</tr>
+			<tr>
+				<td>Nom : <strong>{{ inscription.etudiant.nom }}</strong> </td>
+				<td> Prénom : <strong>{{ inscription.etudiant.prenom }}</strong> </td>
+				<td> Date de naissance : <strong> {{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong> </td>
+				<td> à : <strong>{{inscription.etudiant.lieu_naissance|default_if_none:""}}</strong> </td>		
+			</tr>
+			<tr>
+				<td colspan="4">Diplôme préparé : <strong>{{inscription.formation.programme.diplome}}</strong></td>
+			</tr>
+		</tr>
+		</table>
+	
+	<br>
+
+    		<table width="100%">
+    			<thead>
+    				<tr>
+    					<th rowspan="2">{% if inscription.formation.has_semestres %}Semestre{% else %}Période{% endif %}</th>
+						{% if inscription.formation.activation_ues %}
+    						<th rowspan="2">Nature</th>
+    						<th rowspan="2">Code</th>
+							{% if inscription.formation.activation_credits %}
+    							<th rowspan="2">Crédits<br>requis</th>
+							{% endif %}
+    						<th rowspan="2">Coef</th>
+						{% endif %}
+    					<th rowspan="2" colspan="2">Intitulé</th>
+						{% if inscription.formation.activation_credits %}
+    						<th rowspan="2">Crédits<br>requis</th>
+						{% endif %}
+    					<th rowspan="2">Coef</th>
+						{% if inscription.formation.activation_credits %}
+    						<th colspan="3">Matières</th>
+						{% else %}
+							<th colspan="2">Matières</th>
+						{% endif %}
+						{% if inscription.formation.activation_ues %}
+							{% if inscription.formation.activation_credits %}
+	    						<th colspan="3">UE</th>
+							{% else %}
+								<th colspan="2">UE</th>
+							{% endif %}
+						{% endif %}
+						{% if inscription.formation.activation_credits %}
+    						<th colspan="3">{% if inscription.formation.has_semestres %}Semestre{% else %}Période{% endif %}</th>
+						{% else %}
+							<th colspan="2">{% if inscription.formation.has_semestres %}Semestre{% else %}Période{% endif %}</th>
+						{% endif %}
+    				</tr>
+    				<tr>
+    					<th>Notes</th>
+						{% if inscription.formation.activation_credits %}
+    						<th>Crédits</th>
+						{% endif %}
+    					<th>Session</th>
+						{% if inscription.formation.activation_ues %}
+	    					<th>Notes</th>
+							{% if inscription.formation.activation_credits %}
+	    						<th>Crédits</th>
+							{% endif %}
+	    					<th>Session</th>
+						{% endif %}
+	
+    					<th>Notes</th>
+						{% if inscription.formation.activation_credits %}
+    						<th>Crédits</th>
+						{% endif %}
+    					<th>Session</th>
+    				</tr>
+    			</thead>
+    			<tbody>
+    				<tr>
+    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.periodepgm.code }}</td>
+						{% for ue in periode.resultat_ues.all %}
+							{% if inscription.formation.activation_ues %}
+								<td style="vertical-align:middle; text-align:left;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ categorie_ue|get_value_from_dict:ue.ue.type }}
+								</td>
+								
+								<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ ue.ue.code }}
+								</td>
+								{% if inscription.formation.activation_credits %}
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+											{{ ue.credits_requis }}
+									</td>
+								{% endif %}
+								<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+										{{ ue.coef_provisoire|converson_reel_vers_entier_si_possible }}
+								</td>
+							{% endif %}
+
+							{% for resultat in ue.resultat_matieres.all %}	
+								{% if resultat.module.periode != periode.periodepgm %}
+									<td><strong>{{ resultat.module.matiere.code }}<sup>(*)</sup> </strong></td>
+								{% else %} 
+									<td><strong>{{ resultat.module.matiere.code }}</strong></td>
+								{% endif %}
+								<td>{{ resultat.module.matiere.titre }}</td>
+								{% if inscription.formation.activation_credits %}
+									<td>{{ resultat.module.matiere.credit }}</td>
+								{% endif %}
+								<td>{{ resultat.coef_provisoire|converson_reel_vers_entier_si_possible }}</td>
+								{% if resultat.module.periode == periode.periodepgm %}
+									<td>{{ resultat.moy }}</td>
+								{% else %}
+									<td style="text-align:center;">/ / / / /</td>
+								{% endif %}
+								{% if inscription.formation.activation_credits %}
+									<td>{{ resultat.credits_obtenus }}</td>
+								{% endif %}
+								<td>{{ periode|session_from_inscription_periode:periode.periodepgm.periode }}</td>
+								{% if forloop.first %}
+									{% if inscription.formation.activation_ues %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+												{{ ue.moyenne_provisoire }}
+										</td>
+										{% if inscription.formation.activation_credits %}
+											<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+													{{ ue.credits_obtenus }}
+											</td>
+										{% endif %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+												{{ periode|session_from_inscription_periode:periode.periodepgm.periode }}
+										</td>
+									{% endif %}
+									{% if forloop.parentloop.counter == 1 %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.moyenne_provisoire }}<sup>(**)</sup></td>
+										{% if inscription.formation.activation_credits %}
+											<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.credits_obtenus }}</td>
+										{% endif %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode|session_from_inscription_periode:periode.periodepgm.periode }}</td>
+									{% endif %}
+   								{% endif %}
+								</tr><tr>
+							{% endfor %}
+
+						{% endfor %}
+					</tr>
+    	    	</tbody>
+  			</table>
+  			<small><strong>
+			{% if inscription.formation.has_semestres %}
+  				(*) 	Cette matière sera suivie durant le prochain semestre <br>
+			{% else %}
+  				(*) 	Cette matière sera suivie durant la prochaine période <br>	
+			{% endif %}		
+			
+  			(**)	Cette moyenne est provisoire, la moyenne définitive figurera dans le relevé de notes annuel définitif
+  			</strong></small>
+	<br><br>
+	<table class="table table-borderless table-sm" width="100%">
+		<tr>
+			<td>Fait le : {{date|date:'d/m/Y'}}</td>
+		</tr>
+	</table>
+	{% if view.kwargs.signature == '1' %}		
+		{% if autorite %}
+			{% if autorite.signature.name %}
+				<img src="{{ autorite.signature.url }}" alt="Signature" height="148" >
+			{% else %}
+				<br>
+			{% endif %}
+		{% endif %}
+	{% else %}
+		<br><br><br>
+	{% endif %}
+	
+	{% if institution.footer %}
+		<div style="text-align: center;">
+			<img src="{{ institution.footer.url }}" alt="Logo" width="60%">
+		</div>
+	{% endif %}
+
+{% endwith %}
+{% endwith %}

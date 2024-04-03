@@ -1,0 +1,98 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>{{ titre }}</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#controle">Nouveaux Sujets (Contrôle Requis)<strong>({{ these_controle_nb }})</strong></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#soumis">Nouveaux Sujets <strong>({{ these_soumis_nb }})</strong></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#validation">En cours de validation <strong>({{ these_attente_validation_nb }})</strong></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#revision_requise">En cours de Révision <strong>({{ these_revision_requise_nb }})</strong></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#revision_terminee">Révision Terminée <strong>({{ these_revision_terminee_nb }})</strong></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#levee_reserve">Levée de Réserve <strong>({{ these_levee_reserve_nb }})</strong></a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#valide_attribue">Sujets Validés Attribués<strong>({{ these_valide_attribue_nb }})</strong></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#valide_non_attribue">Sujets Validés Non Attribués<strong>({{ these_valide_non_attribue_nb }})</strong></a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#non_valide">Sujets Rejetés <strong>({{ these_non_valide_nb }})</strong></a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="controle" class="container tab-pane active"><br>
+    	<h3>Nouveaux sujets (Contrôle Requis)</h3>
+    	<br><br>
+    	{% render_table these_controle_table %}
+    </div>
+
+    <div id="soumis" class="container tab-pane fade"><br>
+    	<h3>Nouveaux sujets (Prêts pour validation)</h3>
+    	<br><br>
+    	{% render_table these_soumis_table %}
+    </div>
+    <div id="validation" class="container tab-pane fade"><br>
+    	<h3>Sujets en cours de Validation</h3>
+    	<br><br>
+    	{% render_table these_attente_validation_table %}
+    </div>
+    <div id="revision_requise" class="container tab-pane fade"><br>
+    	<h3>Sujets en cours de Révision</h3>
+    	<br><br>
+    	{% render_table these_revision_requise_table %}
+    </div>
+    <div id="revision_terminee" class="container tab-pane fade"><br>
+    	<h3>Sujets Révisés</h3>
+    	<br><br>
+    	{% render_table these_revision_terminee_table %}
+    </div>
+    <div id="levee_reserve" class="container tab-pane fade"><br>
+    	<h3>En attente de levée de réserve</h3>
+    	<br><br>
+    	{% render_table these_levee_reserve_table %}
+    </div>
+
+    <div id="valide_attribue" class="container tab-pane fade"><br>
+    	<h3>Sujets Validés Attribués</h3>
+    	<br><br>
+    	{% render_table these_valide_attribue_table %}
+    </div>
+
+    <div id="valide_non_attribue" class="container tab-pane fade"><br>
+    	<h3>Sujets Validés Non Attribués</h3>
+    	<br><br>
+    	{% render_table these_valide_non_attribue_table %}
+    </div>
+
+    <div id="non_valide" class="container tab-pane fade"><br>
+    	<h3>Sujets Non Valides</h3>
+    	<br><br>
+    	{% render_table these_non_valide_table %}
+    </div>
+
+  </div>
+
+
+
+{% endblock %}
+	
+

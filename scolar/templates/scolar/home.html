@@ -1,0 +1,11 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 %}
+{% block content %}
+
+	<h3> Architecture des études </h3>
+    
+	{% if institution.illustration_cursus %}
+		<img src="{{ institution.illustration_cursus.url }}" alt="Architecture des études" width="60%" >
+	{% endif %}
+	
+{% endblock %}

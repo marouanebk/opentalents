@@ -1,0 +1,14 @@
+/root
+.project
+.pydevproject
+__pycache__/
+media/photos
+media/quittances
+media/tmp
+media/admin/sig*
+media/admin/Sig*
+/SMS/settings.py
+/SMSenv
+scolar/migrations
+/scolar/__pycache__/
+

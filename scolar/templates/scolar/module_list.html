@@ -1,0 +1,63 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags usergroup bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+
+{% block content %}
+	<h1 class="text-center" >Evaluation des enseignements par les étudiants</h1>
+    	<br>
+    	<div class="row">
+    	<div class="col-md-9">
+    	<h5>Evaluation par module</h5>
+    	<br><br>
+    	<!--
+    	{% crispy filter.form filter.form.helper %}
+    	-->
+    	<form action="" method="get" class="form form-inline">
+    		{% csrf_token %}
+    		{% bootstrap_form filter.form layout='inline' %}
+    		{% bootstrap_button 'Filtrer' %}
+    	</form>
+    	
+    	<br>
+		{% render_table table %}
+		</div>
+		
+    	<div class="col-md-3">
+    	<h5>Rapport global</h5>
+    	<br>
+    	<table class="table-bordered">
+    	<thead>
+    		<th><strong>Année</strong></th>
+    		{% if perms.scolar.fonctionnalite_pedagogie_visualisationcommentairesfeedbacks %}
+    		<th><strong>Avec commentaires</strong></th>
+    		{% endif %}
+    		<th><strong>Sans commentaires</strong></th>
+    	</thead>
+    	<tbody>
+    	{% for annee_univ_ in annee_univ_list %}
+    		<tr>
+    		<td>
+    			{{ annee_univ_.annee_univ }}
+    		</td>
+    		{% if perms.scolar.fonctionnalite_pedagogie_visualisationcommentairesfeedbacks %}
+    		<td>
+	    	{% for periode_ in periode_list %}
+	    		<a href="{% url "feedback_periode_detail" periode_pk=periode_.id annee_univ_pk=annee_univ_.annee_univ with_comments=1 %}" target="_blank" class="btn btn-info">{{ periode_.code }}</a>
+	    	{% endfor %}
+	    	</td>
+	    	{% endif %}
+    		<td>
+	    	{% for periode_ in periode_list %}
+	    		<a href="{% url "feedback_periode_detail" periode_pk=periode_.id annee_univ_pk=annee_univ_.annee_univ with_comments=0 %}" target="_blank" class="btn btn-secondary">{{ periode_.code }}</a>
+	    	{% endfor %}
+	    	</td>
+    		
+    		</tr>
+    	{% endfor %}
+    	</tbody>
+    	</table>
+    	</div>
+    	</div>
+{% endblock %}
+	

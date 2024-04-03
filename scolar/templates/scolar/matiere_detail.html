@@ -1,0 +1,12 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 icons usergroup %}
+{% block content %}
+	<br><br>
+	<a href="{{request.META.HTTP_REFERER}}">Retour</a>
+	
+	{% if perms.scolar.fonctionnalitenav_pedagogie_gestionprogrammes %}
+		<a href="{% url "matiere_update" pk=object.matiere.id %}">Modifier {% icon 'pencil-alt' %}</a>
+	{% endif %}
+	
+	{% include './matiere_detail_content.html' %}
+{% endblock %}

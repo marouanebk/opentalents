@@ -1,0 +1,149 @@
+ {% load static bootstrap4 icons usergroup dictionary %}
+    <table width="100%">
+		{% if institution.header %}
+	    	<tr>
+		    	<td class="text-center">
+		    		<br><br>
+		        	 <img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+		    	</td>
+	    	</tr>
+		{% endif %}
+
+	</table>
+<br><br>
+
+	<h2 align="center"> 
+		{% if pfe.type == 'P' %}
+			Formulaire de renseignements du mémoire de fin d’études
+		{% elif pfe.type == 'M' %}
+			Formulaire de renseignements du mémoire de Master
+		{% else %}
+			Formulaire de renseignements du mémoire
+		{% endif %}
+	</h2>
+	<br>
+	{% if pfe.groupe %}
+	<h3 align="center">
+		Année Universitaire : {{ pfe.groupe.section.formation.annee_univ }} / {{ pfe.groupe.section.formation.annee_univ.annee_suivante }} 
+	</h3>
+	{% endif %}
+	<br><br>
+	<h5 align="right">
+		{% if pfe.groupe %}
+			Code Mémoire: {{ pfe.groupe.code }}
+		{% else %}
+			ID: {{ pfe.id }}
+		{% endif %}
+	</h5>
+	<br><br>
+	<h4 align="center"> 
+		<strong>IDENTIFICATION DES INTERVENANTS</strong>
+	</h4>
+	
+	<table class="table table-bordered">
+		<tr>
+			<td><strong> Titre du mémoire </strong></td>
+			<td>{{ pfe.intitule }}</td>
+		</tr>
+		<tr>
+			<td><strong> Spécialités</strong></td>
+			<td>{% for specialite in pfe.specialites.all %}
+					{{ specialite.intitule }}<br>
+				{% endfor %}
+			</td>
+		</tr>
+		<tr>
+			<td><strong> Stagiaires</strong></td>
+			<td>{% for inscription_periode_ in pfe.groupe.inscrits_periode.all %}
+					<strong>Matricule: </strong> {{inscription_periode_.inscription.etudiant.matricule }}<br>
+					<strong>Nom: </strong> {{inscription_periode_.inscription.etudiant.nom }}  <strong>Prénom: </strong> {{inscription_periode_.inscription.etudiant.prenom }}<br>
+					<strong>Email: </strong> {{inscription_periode_.inscription.etudiant.user.email }}<br><br>
+				{% endfor %} 
+			</td>
+		</tr>
+
+		<tr>
+			<td><strong> Affiliation du promoteur</strong></td>
+			<td>
+				<strong>Organisme: </strong>{{ pfe.organisme.nom }}<br>
+				<strong>Adresse: </strong>{{ pfe.organisme.adresse }}, {{ pfe.organisme.pays }}<br>
+				<strong>Nom et Prénom: </strong>{{ pfe.promoteur }}<br>
+				<strong>Tel: </strong>{{ pfe.tel_promoteur }},  <strong>Email: </strong>{{ pfe.email_promoteur }}<br>
+			</td>
+		</tr>
+		<tr>
+			<td><strong> Co-encadrants</strong></td>
+			<td>{% for coencadrant in pfe.coencadrants.all %}
+					{{ coencadrant }}<br>
+				{% endfor %}
+			</td>
+		</tr>
+
+	</table>
+	
+	<br><br>
+	<h4 align="center"> 
+		<strong>DESCRIPTION DU PROJET DE FIN D'ETUDES</strong>
+	</h4>
+	
+	<table class="table table-bordered">
+		<tr>
+			<td><strong> Résumé</strong></td>
+			<td>{{ pfe.resume|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Mots clés</strong></td>
+			<td>{{ pfe.keywords|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Objectifs</strong></td>
+			<td>{{ pfe.objectifs|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Résultats attendus</strong></td>
+			<td>{{ pfe.resultats_attendus|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Antécédents du travail demandé</strong></td>
+			<td>{{ pfe.antecedents|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Bibliographie</strong></td>
+			<td>{{ pfe.bibliographie|linebreaks }}</td>
+		</tr>
+		
+		<tr>
+			<td><strong> Echéancier</strong></td>
+			<td>{{ pfe.echeancier|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Moyens informatiques</strong></td>
+			<td>{{ moyens_informatiques|get_value_from_dict:pfe.moyens_informatiques }}</td>
+		</tr>
+		<tr>
+			<td><strong> Projet de recherche</strong></td>
+			<td>{{ pfe.projet_recherche }}</td>
+		</tr>
+
+	</table>
+	
+	<div class="container new-page">
+	<h5 align="right">
+		{% if pfe.groupe %}
+			Code Mémoire: {{ pfe.groupe.code }}
+		{% else %}
+			ID: {{ pfe.id }}
+		{% endif %}
+	</h5>
+	
+	<br><br>
+	</div>
+	<table>
+		{% if institution.footer %}
+	    	<tr>
+		    	<td class="text-center">
+		        	 <img src="{{ institution.footer.url }}" alt="Logo" width="100%"> 
+		    	</td>
+	    	</tr>
+		{% endif %}
+	</table>

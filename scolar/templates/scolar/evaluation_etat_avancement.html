@@ -1,0 +1,46 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags bootstrap4 dictionary %}
+{% block content %}
+	<br>
+	
+<form action="" method="post">
+	{% csrf_token %}
+	
+<br>
+
+{{ form|form_field:'inscription'|as_crispy_field }}
+{{ form|form_field:'these'|as_crispy_field }}
+{{ form|form_field:'directeur'|as_crispy_field }}
+{{ form|form_field:'jury'|as_crispy_field }}
+
+{% for critere, options in critere_list.items %}
+	<p><strong>{{ critere.critere }}</strong></p>
+	<table class="table-sm">
+	<tr>
+	{% for option in options %}
+		{% with 'option'|addstr:'_'|addstr:critere.id|addstr:'_'|addstr:option.id as key %}
+			<td>{{ form|form_field:key|as_crispy_field }}<td>
+		{% endwith %}
+	{% endfor %}
+	</tr>
+	</table>
+	{% if critere.commentaire %}
+		{% with 'commentaire'|addstr:'_'|addstr:critere.id as key %}
+			{{ form|form_field:key|as_crispy_field }}
+		{% endwith %}
+	{% endif %}
+	
+
+{% endfor %}
+
+{{ form|form_field:'avis_directeur'|as_crispy_field }}
+{{ form|form_field:'decision_1'|as_crispy_field }}
+{{ form|form_field:'decision_finale'|as_crispy_field }}
+{{ form|form_field:'final'|as_crispy_field }}
+
+<input type="submit" name="submit" value="Enregistrer"  class="btn btn-primary"/>
+<a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
+</div>
+</form>
+	
+{% endblock %}

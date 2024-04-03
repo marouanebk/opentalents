@@ -1,0 +1,36 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags usergroup icons %}
+{% load dictionary %}
+{% block content %}
+	{% if perms.scolar.fonctionnalite_etudiants_gestion %}
+	<div class="row">
+		<div class="col-lg-6">
+		<h5>Importer des étudiants </h5>
+		<a href="{% url "etudiants_import" %}" class="btn btn-primary" >Importer {% icon 'file-excel' %}</a>
+		<br><br>
+		</div>
+		<div class="col-lg-6">
+		<h5>Importer des affectations aux groupes </h5>
+		<a href="{% url "import_affectation_groupe" %}" class="btn btn-secondary" >Importer {% icon 'file-excel' %}</a>
+		<br><br>
+		</div>
+		
+	</div>
+	{% endif %}
+	
+	<h5>Liste des étudiants :</h5>
+    	<br>
+    	<!--
+    	{% crispy filter.form filter.form.helper %}
+    	-->
+    	<form action="" method="get" class="form form-inline">
+    		{% csrf_token %}
+    		{% bootstrap_form filter.form layout='inline' %}
+    		{% bootstrap_button 'Filtrer' %}
+    	</form>
+    	
+    	<br>
+		{% render_table table %}
+		<br>
+{% endblock %}
+	

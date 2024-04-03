@@ -1,0 +1,354 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags dictionary bootstrap4 icons %}
+
+{% block content %}
+	<h1>{{ titre }}</h1>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#competence_elements">Eléments de Compétences</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#filtre">Filtrer et construire</a>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Matrice de Compétences</a>
+    <div class="dropdown-menu">
+	{% if institution.activation_ddc %}
+      	<a class="dropdown-item" data-toggle="modal" data-target="#ModalDDC">Par Domaines de Connaissances</a>
+	{% endif %}
+	  {% if pgm_list %}
+		<a class="dropdown-item" data-toggle="modal" data-target="#ModalPGM">Par Année d'Etude</a>
+	  {% endif %}
+    </div>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url "competence_family_list" %}" target="_blank" class="btn btn-info">{% icon 'database' %} Base des Compétences</a>
+  </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane container active" id="competence_elements">
+	<h3>Liste des éléments de compétences sélectionnés</h3>
+    <br>
+    <p class="alert alert-info">
+    	Utilisez le filtre pour réduire la sélection et construire une matrice de compétences focalisée sur les éléments sélectionnés.
+    </p>
+    <br>
+	{% render_table table %}
+  
+  </div>
+  
+  <div class="tab-pane container fade" id="filtre">
+		<h3>Filtre de compétences</h3>
+    	<br>
+    	<p class="alert alert-info">
+    		Utilisez ce formulaire pour sélectionner les éléments de compétences autour desquels sera construite la matrice de compétence.
+    		Si vous laissez le champs éléments de compétences vide, tous les éléments de compétences associés à la compétence ou famille de compétence sélectionnés seront sélectionnés par défaut.
+    	</p>
+    	<br>
+    	<div class="col-lg-12">
+    	{% crispy form %}
+    	</div>
+  
+  </div>
+</div>
+    	{% if institution.activation_ddc %}		
+		<!-- Modal -->
+		<div class="modal fade" id="ModalDDC"  role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Matrice de Compétences par Domaine de Connaissance</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="container-fluid">
+		      		<div class="col-lg-12">
+		      			<div class="row">
+		      				<div class="col-lg-8">
+		      					<h5>Familles de Compétences</h5>
+		      					<ul>
+		      						{% for cf_code, cf_ in cf_list.items %}
+		      							<li>
+		      								<strong>{{cf_code}} : </strong>{{ cf_.competence_family.intitule }}
+		      							</li>
+		      						{% endfor %}
+		      					</ul>
+		      				</div>
+		      				<div class="col-lg-4">
+				      			<h5>Niveau de compétence:</h5>
+				      			<table>
+				      				<td class="table-info">Base</td>
+				      				<td class="table-warning">Intermédiaire</td>
+				      				<td class="table-danger">Avancé</td>
+				      			</table>
+				      			<br><br>
+				      			<h5>Type de compétence:</h5>
+				      				<strong>TEC : </strong> Technique, 
+									<strong>MET : </strong> Méthodologique,
+									<strong>MOD : </strong> Modélisation,
+									<strong>OPE : </strong> Opérationnel,   
+				      			<br><br>
+				      		</div>
+			      		</div>
+			      		<div class="row">
+		      			<small><small>
+					    	<table class="table table-bordered table-sm">
+					    		<thead class="thead-dark">
+					    		<tr>
+					    			<th>
+					    				Famille de Compétence
+					    			</th>
+					    			<th>
+					    				Compétence
+					    			</th>
+					    			<th>
+					    				Elément de Compétence
+					    			</th>
+					    			<th>
+					    				Type
+					    			</th>
+					
+					    			{% for ddc_ in ddc_list %}
+					    				<th>
+					    					{{ ddc_.intitule }}
+					    				</th>
+					    			{% endfor %}
+					    			<!--
+					    			<th>
+					    				Objectifs Pédagogiques
+					    			</th>
+					    			-->
+					    		</tr>
+					    		</thead>
+					    		<tbody>
+					    			
+					    			{% for cf_code, cf_ in cf_list.items %}
+					    				<tr>	
+					    				<td rowspan="{{ cf_.nb_ce }}">
+					    					{{ cf_.competence_family.code }}
+					    				</td>
+						    				{% for c_id_, c_ in cf_.c_list.items %}
+						    					
+						    					<td rowspan="{{ c_.nb_ce }}">
+						    						{{ c_.competence.intitule }}
+						    					</td>
+								    			{% for ce_ in c_.ce_list %}
+								    			
+								    				<td>
+								    					{{ ce_.intitule }}
+								    				</td>
+								    				<td>
+								    					{{ ce_.type}}
+								    				</td>
+								    				{% for ddc_ in ddc_list %}
+								    					{% with ce_.id|addstr:'_'|addstr:ddc_.id as key_%}
+								    						{% with ce_ddc_list|get_value_from_dict:key_ as ce_ddc_ %}
+								    							{% if ce_ddc_ %}
+								    								<td class="table-success">
+								    									<table class="table-bordered">
+																		{% for ce_matiere_ in ce_ddc_ %}
+																			{% if ce_matiere_.niveau == 'B' %}
+																				<tr><td class="table-info">
+																				<a href="{% url "matiere_detail" ce_matiere_.matiere.id %}">{{ ce_matiere_.matiere.code }}</a>
+																				</td></tr>
+																			{% elif ce_matiere_.niveau == 'I' %}
+																				<tr><td class="table-warning">
+																				<a href="{% url "matiere_detail" ce_matiere_.matiere.id %}">{{ ce_matiere_.matiere.code }}</a>
+																				</td></tr>
+																			{% else %}
+																				<tr><td class="table-danger">
+																				<a href="{% url "matiere_detail" ce_matiere_.matiere.id %}">{{ ce_matiere_.matiere.code }}</a>
+																				</td></tr>
+																			{% endif %}
+																		{% endfor %}
+																		</table>
+																	</td>    							
+								    							{% else %}
+								    								<td class="table-active">
+								    								</td>
+								    							{% endif %}
+								    						{% endwith %}
+								    					{% endwith %}
+								    				{% endfor %}
+								    				<!--
+								    				<td>
+								    					{{ ce_.objectif }}
+								    				</td>
+								    				-->
+								    				</tr><tr>
+								    			
+								    			{% endfor %}
+								    			
+								    		{% endfor %}
+								    		</tr>
+							    	{% endfor %}
+					    		</tbody>
+					    	</table>   
+					    </small></small>
+					    </div>
+					</div>
+				</div> 	
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>	
+		{% endif %}	
+		
+		
+		<!-- Modal -->
+		<div class="modal fade" id="ModalPGM"  role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Matrice de Compétences par Palier</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="container-fluid">
+		      		<div class="col-lg-12">
+		      			<div class="row">
+		      				<div class="col-lg-8">
+		      					<h5>Familles de Compétences</h5>
+		      					<ul>
+		      						{% for cf_code, cf_ in cf_list.items %}
+		      							<li>
+		      								<strong>{{cf_code}} : </strong>{{ cf_.competence_family.intitule }}
+		      							</li>
+		      						{% endfor %}
+		      					</ul>
+		      				</div>
+		      				<div class="col-lg-4">
+				      			<h5>Niveau de compétence:</h5>
+				      			<table>
+				      				<td class="table-info">Base</td>
+				      				<td class="table-warning">Intermédiaire</td>
+				      				<td class="table-danger">Avancé</td>
+				      			</table>
+				      			<br><br>
+				      			<h5>Type de compétence:</h5>
+				      				<strong>TEC : </strong> Technique, 
+									<strong>MET : </strong> Méthodologique,
+									<strong>MOD : </strong> Modélisation,
+									<strong>OPE : </strong> Opérationnel,   
+				      			<br><br>
+				      		</div>
+			      		</div>
+			      		<div class="row">
+		      			<small><small>
+					    	<table class="table table-bordered table-sm">
+					    		<thead class="thead-dark">
+					    		<tr>
+					    			<th>
+					    				Famille de Compétence
+					    			</th>
+					    			<th>
+					    				Compétence
+					    			</th>
+					    			<th>
+					    				Elément de Compétence
+					    			</th>
+					    			<th>
+					    				Type
+					    			</th>
+					
+					    			{% for pgm_ in pgm_list %}
+					    				<th>
+					    					{{ pgm_.code }}
+					    				</th>
+					    			{% endfor %}
+					    			<!--
+					    			<th>
+					    				Objectifs Pédagogiques
+					    			</th>
+					    			-->
+					    		</tr>
+					    		</thead>
+					    		<tbody>
+					    			
+					    			{% for cf_code, cf_ in cf_list.items %}
+					    				<tr>	
+					    				<td rowspan="{{ cf_.nb_ce }}">
+					    					{{ cf_.competence_family.code }}
+					    				</td>
+						    				{% for c_id_, c_ in cf_.c_list.items %}
+						    					
+						    					<td rowspan="{{ c_.nb_ce }}">
+						    						{{ c_.competence.intitule }}
+						    					</td>
+								    			{% for ce_ in c_.ce_list %}
+								    			
+								    				<td>
+								    					{{ ce_.intitule }}
+								    				</td>
+								    				<td>
+								    					{{ ce_.type}}
+								    				</td>
+								    				{% for pgm_ in pgm_list %}
+								    					{% with ce_.id|addstr:'_'|addstr:pgm_.id as key_%}
+								    						{% with ce_pgm_list|get_value_from_dict:key_ as ce_pgm_ %}
+								    							{% if ce_pgm_ %}
+								    								<td class="table-success">
+								    									<table class="table-bordered">
+																		{% for ce_matiere_ in ce_pgm_ %}
+																			{% if ce_matiere_.niveau == 'B' %}
+																				<tr><td class="table-info">
+																				<a href="{% url "matiere_detail" ce_matiere_.matiere.id %}">{{ ce_matiere_.matiere.code }}</a>
+																				</td></tr>
+																			{% elif ce_matiere_.niveau == 'I' %}
+																				<tr><td class="table-warning">
+																				<a href="{% url "matiere_detail" ce_matiere_.matiere.id %}">{{ ce_matiere_.matiere.code }}</a>
+																				</td></tr>
+																			{% else %}
+																				<tr><td class="table-danger">
+																				<a href="{% url "matiere_detail" ce_matiere_.matiere.id %}">{{ ce_matiere_.matiere.code }}</a>
+																				</td></tr>
+																			{% endif %}
+																		{% endfor %}
+																		</table>
+																	</td>    							
+								    							{% else %}
+								    								<td class="table-active">
+								    								</td>
+								    							{% endif %}
+								    						{% endwith %}
+								    					{% endwith %}
+								    				{% endfor %}
+								    				<!--
+								    				<td>
+								    					{{ ce_.objectif }}
+								    				</td>
+								    				-->
+								    				</tr><tr>
+								    			
+								    			{% endfor %}
+								    			
+								    		{% endfor %}
+								    		</tr>
+							    	{% endfor %}
+					    		</tbody>
+					    	</table>   
+					    </small></small>
+					    </div>
+					</div>
+				</div> 	
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>		
+		
+
+{% endblock %}

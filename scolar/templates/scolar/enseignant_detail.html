@@ -1,0 +1,223 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% block content %}
+<br><br>
+<div class="row">
+		<div class="col-lg-4" >
+			<div class="row">
+				<h3 class="text-center" >
+				<strong>		 </strong>
+				</h3>							
+		
+				<div class="col-lg-12"  alt"Photo" >
+					{% if object.photo %}
+					<center><img src="{{ object.photo.url }}" width="180"></center>
+					{% endif %}
+					<p></p>
+					</div>
+					{% if user.is_authenticated %}
+			
+						{% if perms.scolar.fonctionnalite_enseignants_documents %}	
+							<div class="col-lg-12">
+								<center><a href="{% url "enseignant_documents" pk=object.id %}" class="btn btn-info">{% icon 'folder-open' %} Documents</a></center>
+							</div>
+						{% endif %}
+					{% endif %}
+				</div>
+				
+			
+			<div class="row">
+				<div class="col-lg-12"  >
+					    {% if edit %}
+							<center>
+								<a href="{% url "enseignant_update_photo" pk=object.id %}" class="btn btn-danger">Modifier la photo</a> 
+								<a href="{% url "enseignant_update" pk=object.id %}" class="btn btn-danger">Modifier le profil</a><br><br>
+							</center>
+						{% endif %}
+						<table class="table table-sm table-striped">
+							<tr>
+								<td><strong> Nom :  </strong> {{ object.nom }} 
+								<td><strong> Prénom :  </strong> {{ object.prenom }} 
+							</tr>
+							{% if not private %}
+								<tr>
+									{% if object.tel %}
+										<td colspan="2"><strong> Tel :  </strong> {{ object.tel }}</td>
+									{% endif %}	
+								</tr>
+							{% endif %}
+							<tr>
+								<td colspan="2"><strong>Grade :</strong> {{ grade }}</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2"><strong>Institution :</strong> {{ institution.nom }}</td>
+							</tr>	
+							<tr>
+								<td colspan="2"><strong>Adresse de l'institution :</strong> {{ institution.adresse }}</td>
+							</tr>
+							{% if institution.tel  %}	
+								<tr>
+									<td colspan="2"><strong>Tél de l'institution :</strong> {{ institution.tel }}</td>
+								</tr>
+							{% endif %}
+							{% if object.organisme  %}
+								<tr>
+									<td colspan="2"><strong>Affiliation :</strong> {{ object.organisme }}</td>
+								</tr>
+							{% endif %}	
+							{% if object.bureau  %}
+							<tr>
+								<td colspan="2"><strong>Bureau :</strong> {{ object.bureau }}</td>
+							</tr>	 {% endif %}						
+							<tr>
+								<td colspan="2"><strong>Email:</strong> {{ object.user.email }}</td>
+							</tr>							
+                           {% if publications %} 
+								<tr>
+									<td colspan="2"><strong> Publications :  </strong> 
+									{% for type, lien in publications.items %}
+										<br>- {{ type }} : <a href="{{ lien }}"target="_blank">{{ lien }}</a>
+									{% endfor %}
+									</td>
+								</tr>  
+							{% endif %} 
+							{% if object.webpage %} <tr>
+									<td colspan="2"><strong> Page personnelle :  </strong> <a href="{{ object.webpage }}"target="_blank">{{ object.webpage }}</a></td>
+							</tr>  {% endif %}              
+						   {% if object.bio %} 
+							<tr>
+									<td colspan="2"><strong> Biographie :  </strong> {{ object.bio }}</td>
+							</tr>	{% endif %} 
+							
+							<tr>
+									<td colspan="2"><strong> Profil Talents :  </strong> <a href="{{ protocole_host }}{{ canonical_profile_url }}">{{ protocole_host }}{{ canonical_profile_url }}</a></td>
+							</tr>	
+							
+							</table>
+				</div>		
+			</div>
+		</div>
+	<div class="col-lg-8" >
+			<ul class="nav nav-tabs" role="tablist">
+		    <li class="nav-item">
+		      <a class="nav-link active" data-toggle="tab" href="#enseignements">Enseignements</a>
+		    </li>
+		{% if pfe_encadr or  master_encadr %}
+		    <li class="nav-item">
+		      <a class="nav-link" data-toggle="tab" href="#encadrements">Encadrements</a>
+		    </li> 
+		 {% endif %}   
+			{% if object.publications %}	
+				{% if DBLP %} 
+					 <li class="nav-item">
+			    		  <a class="nav-link" data-toggle="tab" href="#publications">{% icon 'share-alt' %} DBLP</a>
+			  		  </li> 
+				{% endif %} 
+			{% endif %}
+		{% if projets_recherche %}
+		    <li class="nav-item">
+		      <a class="nav-link" data-toggle="tab" href="#projets">Projets de recherche</a>
+		    </li> 
+		 {% endif %}
+		{% if equipe_recherche %}
+		    <li class="nav-item">
+		      <a class="nav-link" data-toggle="tab" href="#equiperecherche">Équipe de recherche</a>
+		    </li> 
+		 {% endif %} 
+		   
+		  </ul>
+		<!-- Tab panes -->
+		<div class="tab-content">
+		    <div id="enseignements" class="container tab-pane active"><br>
+		    	  <div class="row">
+		    	  	<div class="col-lg-6">
+		    	  		<h5><strong>Enseignements</strong></h5>
+		    	  	</div>		    	  	
+								<div class="col-lg-12">
+									<br>
+									{% render_table modules %}									
+								</div>				
+					
+		    	  </div>
+			      
+		    </div>
+			<div id="encadrements" class="container tab-pane fade"><br>
+			    	  {% if pfe_encadr  %}
+						<div class="row">
+							
+				    	  	<div class="col-lg-6">
+				    	  		<h5> <strong>Encadrements PFE</strong></h5>
+				    	  	</div>				
+							<div class="col-lg-12">
+							<br>
+								{% render_table encadrementsPFE %}	
+								<br>								
+							</div>	
+						 </div>		
+					{% endif %}
+					{% if master_encadr %}	
+						 <div class="row">
+							<div class="col-lg-6">
+				    	  		<h5> <strong>Encadrements Master</strong></h5>
+				    	  	</div>
+							<div class="col-lg-12">
+							<br>
+									
+							{% render_table encadrementsMaster %}
+							
+							</div>					
+			    	  </div>
+				{% endif %}				      
+			   </div>
+		
+			 {% if DBLP %}
+				<div id="publications" class="container tab-pane fade"><br>
+			   	 	  <div class="row">
+							<br>
+							<iframe src="{{ DBLP }}" class="col-lg-12" height="800" frameborder="0" scrolling="yes"></iframe>	 				
+			    	  </div>
+				      
+			   </div>
+				{% endif %}
+				
+			 {% if projets_recherche %}
+				<div id="projets" class="container tab-pane fade"><br>
+					<div class="row">
+						
+			    	  	<div class="col-lg-6">
+			    	  		<h5> <strong>Projets de recherche</strong></h5>
+			    	  	</div>				
+						<div class="col-lg-12">
+						<br>
+							{% render_table projetsRecherche %}	
+							<br>								
+						</div>	
+					 </div>		
+				      
+			   </div>
+				{% endif %}
+				
+			 {% if equipe_recherche %}
+				<div id="equiperecherche" class="container tab-pane fade"><br>
+					<div class="row">
+						
+			    	  	<div class="col-lg-6">
+			    	  		<h5> <strong>Équipe de recherche</strong></h5>
+			    	  	</div>				
+						<div class="col-lg-12">
+						<br>
+							{% render_table equipeRecherche %}	
+							<br>								
+						</div>	
+					 </div>		
+				      
+			   </div>
+				{% endif %}
+			
+		       
+		    </div>
+		</div>						
+</div>
+		
+{% endblock %}

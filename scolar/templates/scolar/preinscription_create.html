@@ -1,0 +1,87 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup %}
+{% block content %}
+ 	<br><br>
+	<h2>Vos informations personnelles actuelles</h2>
+	<h3 class="text-center"> <strong>Matricule: </strong>{{ user.etudiant.matricule }} </h3>
+	<div class="row">
+		
+		<div class="col-lg-4 offset-lg-3">
+			<div class="col-lg-12">
+			<table class="table table-sm table-striped table-responsive" width="100%">
+				<tr>
+					<td><strong> Nom :  </strong> {{ user.etudiant.nom }} {{ user.etudiant.nom_a|default_if_none:"" }}</td>
+					<td><strong> Prénom :  </strong> {{ user.etudiant.prenom }} {{ user.etudiant.prenom_a|default_if_none:"" }}</td>
+				</tr>
+				<tr>
+					<td><strong> Né(e) le :  </strong> {{ user.etudiant.date_naissance|date:'d/m/Y' }}</td>
+					<td><strong> à :  </strong> {{ user.etudiant.lieu_naissance|default_if_none:"" }} {{ user.etudiant.lieu_naissance_a|default_if_none:"" }}</td>
+				</tr>
+					{% if user.etudiant.wilaya_residence %}
+					<tr>
+						<td colspan="2"><strong> Adresse :  </strong> {{ user.etudiant.addresse_principale|default_if_none:"" }}</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong> Wilaya  </strong> {{ user.etudiant.wilaya_residence|default_if_none:"" }}</td>
+					</tr>
+					<tr>
+						<td colspan="2"><strong> Commune  </strong> {{ user.etudiant.commune_residence|default_if_none:"" }}</td>
+					</tr>
+					{% endif %}
+				<tr>
+					<td><strong> Interne :  </strong> {% if user.etudiant.interne %} Oui {% else %} Non {% endif %} </td>
+					<td>
+					{% if user.etudiant.interne %}
+						<strong> Résidence U :  </strong> {{ user.etudiant.residence_univ|default_if_none:"" }}
+					{% endif %}
+					</td>
+				</tr>
+				{% if user.etudiant.tel %}
+					<tr>
+						<td colspan="2"><strong> Tel :  </strong> {{ user.etudiant.tel }}</td>
+					</tr>
+				{% endif %}
+				{% if user.etudiant.tuteur %}
+					<tr>
+						<td colspan="2"><strong>Tuteur:</strong> {{ user.etudiant.tuteur }}</td>
+					</tr>
+				{% endif %}
+				<tr>
+					<td colspan="2"><strong>Email:</strong> {{ user.etudiant.user.email }}</td>
+				</tr>
+					{% if user.etudiant.github %}
+						<tr><td colspan="2"><strong>Github:</strong> <a href="{{ user.etudiant.github }}">{{ user.etudiant.github }}</a></td></tr>
+					{% endif %}
+					{% if user.etudiant.linkdin %}
+						<tr><td colspan="2"><strong>Linkedin:</strong><a href="{{ user.etudiant.linkdin }}">{{ user.etudiant.linkdin }}</a></td></tr>
+					{% endif %}
+					{% if object.activite_extra %}
+						<tr><td colspan="2"><strong>Activités extra-scolaires: </strong> {{ user.etudiant.activite_extra }}</td></tr>
+					{% endif %}
+				</table>
+			</div>
+		</div>
+		{% if user.etudiant.photo.name %}
+		<div class="col-lg-2" alt"Photo">
+			<img src="{{ user.etudiant.photo.url }}" width="180" height="230">
+		</div>
+		{% endif %}
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h2 class="text-center"> <strong>Mise à jour de vos informations personnelles</strong></h2>
+			<p class="alert alert-info">
+				Merci d'utiliser ce formulaire pour actualiser vos informations personnelles en vue de votre ré-inscription.
+			</p>
+			<p class="alert alert-warning">
+				N'oubliez pas de charger une photo de la quittance de payement des frais d'inscription.
+			</p>
+			{% crispy form %}
+		</div>
+	</div>
+				
+				
+			
+	<br><br>
+	
+{% endblock %}

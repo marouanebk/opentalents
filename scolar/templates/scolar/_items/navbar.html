@@ -1,0 +1,81 @@
+{% load icons usergroup %}
+<style>
+.nombre-notification{
+    background:red;
+    border-radius:50%;
+    height: 26px;
+    width: 26px;
+    line-height: 26px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 6px;
+}
+
+.custombgcolor {
+	background-color: {{ institution.color }};
+}
+
+</style>
+
+<script>
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+</script>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top custombgcolor">
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+       		<span class="navbar-toggler-icon">				
+				{% if user.has_one_or_more_trace_as_cible %}
+	                {% if user.nb_notifications_unseen %}<span class="nombre-notification" style="background:rgb(255,0,0, 0.7)"><strong>{{ user.nb_notifications_unseen }}</strong></span>{% endif %}
+				{% endif %}
+			</span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url "home" %}">Accueil</a>
+            </li>
+        </ul>
+        {% if user.is_authenticated %}
+			<ul class= "navbar-nav mr-left">
+			     <li class="nav-item" style="margin-right:0.5em;">
+                    <a class="nav-link my-2 my-sm-1">Connecté(e) en tant que {{ user.username }}</a>
+                </li>
+			</ul>
+            <ul class="navbar-nav mr-right d-flex flex-row">
+				{% if user.has_one_or_more_trace_as_cible %}
+	                <li class="nav-item">
+	                	<a class="btn btn-outline-light my-2 my-sm-1" href="{% url 'notifications' %}">{% icon 'bell' %}{% if user.nb_notifications_unseen %}<span class="nombre-notification"><strong>{{ user.nb_notifications_unseen }}</strong></span>{% endif %}</a>
+	                </li>
+				{% endif %}
+                {% if perms.scolar.fonctionnalite_tracabilite_visualisation %}
+                <li class="nav-item">
+                	<a class="btn btn-outline-light my-2 my-sm-1" data-toggle="tooltip" data-placement="bottom" title="Traces" href="{% url 'trace_list' %}">{% icon 'clock' %}</a>
+                </li>
+                {% endif %}
+                {% if perms.scolar.fonctionnalite_configurationetablissement_visualisation %}
+                <li class="nav-item">
+                	<a class="btn btn-outline-light my-2 my-sm-1" data-toggle="tooltip" data-placement="bottom" title="Configuration de l'établissement" href="{% url 'settings' %}">{% icon 'cog' %}</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                	<a class="btn btn-outline-light my-2 my-sm-1" data-toggle="tooltip" data-placement="bottom" title="Paramètres de sécurité" href="{% url 'mon_compte' %}">{% icon 'fa fa-user-lock' %}</a>
+                </li>
+				<li>
+					<a class="btn btn-outline-light my-2 my-sm-1" href="/accounts/logout" data-toggle="tooltip" data-placement="bottom" title="Déconnexion" style="color:rgb(255, 128, 128); margin-left:1em;">{% icon 'fa fa-sign-out-alt' %}</a>
+				</li>
+            </ul>
+        {% else %}
+            <ul class="navbar-nav mr-right">
+                <li class="nav-item">
+                	<a class="btn btn-outline-light my-2 my-sm-1" href="/accounts/login">Connexion</a>
+                </li>
+            </ul>
+        {% endif %}
+    </div>
+</nav>

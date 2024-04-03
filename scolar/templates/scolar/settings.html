@@ -1,0 +1,165 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 static icons %}
+
+{% block content %}
+	<br><br>
+	<h2>{{ titre }}</h2>
+	
+	
+	
+    
+    
+      <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#institution">Institution</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#residences">Résidences Universitaires</a>
+    </li>
+{% if institution.activation_charges %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#charges">Charges</a>
+    </li>
+{% endif %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'pays_list' %}">Pays</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'wilaya_list' %}">Wilayas</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'commune_list' %}">Communes</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#groups-droits-acces">Rôles et droits d'accès</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#autorites">Autorités</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'user_list' %}">Utilisateurs</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'personnel_list' %}">Personnel</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="institution" class="container tab-pane active"><br>
+    	<h5>Informations sur l'institution</h5>
+    	<br><br>
+		{% if perms.scolar.fonctionnalite_configurationetablissement_modification %}
+    		<a href='{% url "settings_update_view" pk=institution.id %}' class='btn btn-warning' >Modifier</a>
+		{% endif %}
+		{% crispy form %}
+    	
+    </div>
+    <div id="residences" class="container tab-pane fade"><br>
+    	<h5>Résidences Universitaires</h5>
+    	<br><br>
+		{% if perms.scolar.fonctionnalite_configurationetablissement_modification %}
+    		<a href="{% url 'residenceuniv_create' %}">{% icon 'plus' %}Résidence Universitaire</a>
+		{% endif %}
+    	<br>
+    	{% render_table residence_univ_table %}
+    </div>
+{% if institution.activation_charges %}
+    <div id="charges" class="container tab-pane fade"><br>
+    	<h5>Configuration des charges</h5>
+    	<br><br>
+		{% if perms.scolar.fonctionnalite_configurationetablissement_modification %}
+    		<a href="{% url 'activite_charge_config_create' %}">{% icon 'plus' %}Configuration</a>
+		{% endif %}
+    	<br>
+    	{% render_table activite_charge_config_table %}
+    </div>
+{% endif %}
+
+    <div id="groups-droits-acces" class="container tab-pane fade"><br>
+		{% if perms.scolar.fonctionnalite_configurationetablissement_modification %}
+			<a href="{% url "role_create" %}" > {% icon 'plus' %} Rôle </a>
+			<br><br>
+		{% endif %} 
+		<h5>Liste des rôles</h5>
+		<table class="table" style="border: 2px solid black;">	
+			<tr>
+				<th style="text-align: center; background-color:rgb(225, 228, 220);">Rôle</th>
+				<th style="text-align: center; background-color:rgb(225, 228, 220);">Nombre d'utilisateurs</th>
+				<th style="background-color:rgb(225, 228, 220);">Action</th>
+			</tr>
+			{% for group, group_names_et_nb_users in groups_et_nb_users.items %}
+				<tr>
+					<td style="text-align: center;">{{ group_names_et_nb_users.0 }}</td>
+					<td style="text-align: center;">{{ group_names_et_nb_users.1 }}</td>
+					<td>
+						<a href='{% url "role_user_list" group_id=group %}' class='btn btn-info' >Liste des utilisateurs</a>
+						{% if perms.scolar.fonctionnalite_configurationetablissement_modification %}
+							{% if group_names_et_nb_users.0 != 'etudiant' and group_names_et_nb_users.0 != 'enseignant' and group_names_et_nb_users.0 != 'partenaire' and group_names_et_nb_users.0 != 'doctorant' %} <a href='{% url "role_delete" pk=group %}' class='btn btn-danger' >Supprimer</a> {% endif %}
+						{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+		
+		</table>
+		<br>
+
+    	<h5>Liste des droits d'accès</h5>
+		{% if perms.scolar.fonctionnalite_configurationetablissement_modification %}
+        	<a href="{% url 'permissions_update' %}" class="btn btn-primary">Modifier les droits d'accès</a> 
+		{% endif %}
+		<a href="{% url 'permissions_user_choice' %}" class="btn btn-success">Rôles et accès supplémentaires par utilisateurs</a>
+		<br><br>
+		
+		<table class="table table-bordered" style="border: 2px solid black; ">	
+		
+			{% for fonctionnalite, permissions_par_fonctionnalite_et_cpt in access_table.items %}
+				<tr>
+					<th style="text-align: center; background-color:rgb(225, 228, 220);">Liste permissions<br>- {{ permissions_par_fonctionnalite_et_cpt.1 }} permission(s)</th>
+					<th colspan="{{ groups_count }}"style="text-align: center; background-color:rgb(225, 228, 220);">Bloc : <strong>{{ fonctionnalite }}</strong></th>	
+				</tr>
+				<tr style="background-color:rgb(244, 236, 236);">
+				<td></td>
+					{% for group_name in group_names %}
+						<td style="font-size:14px; text-align: center; font-weight:bold;">{{ group_name }}</td>
+					{% endfor %}
+				</tr>
+					{% for code_et_nom_et_groups in permissions_par_fonctionnalite_et_cpt.0 %}
+						<tr>
+						<td>{% if code_et_nom_et_groups.3 %}<strong>NAV </strong>{% endif %}{{ code_et_nom_et_groups.1 }}</td>
+						{% for group, permission_du_group in code_et_nom_et_groups.2.items %}
+							<td style="font-size:20px; text-align:center;">{% if permission_du_group %}<span style="color:rgb(0, 128, 0)">&#10004;</span> {% else %}<span style="color:rgb(255, 0, 0)">&#10060;</span>{% endif %}</td>
+						{% endfor %}
+						</tr>
+					{% endfor %}
+				
+				
+			{% endfor %}
+		</table>
+
+    
+    </div>
+
+    <div id="autorites" class="container tab-pane fade"><br>
+			<h5><strong>Autorités :</strong></h5>
+				{% if perms.scolar.fonctionnalite_configurationetablissement_modification %} 
+					<a href="{% url "autorite_create" %}" > {% icon 'plus' %} Autorité </a>
+					<a href='{% url "documents_config_update" %}' class='btn btn-warning' >Configurer les documents et signatures</a>
+				{% endif %}
+				<br>
+    			{% render_table table_autorite %}
+
+    </div>
+
+  </div>
+
+
+    
+{% endblock %}

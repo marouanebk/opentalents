@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+	<style>
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	</style>
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-before: always;
+  			}
+		}
+    </style>
+	
+  </head>
+  <body>
+{% if institution.header %}
+  	<img src="{{ institution.header.url }}" alt="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " width="100%"> 
+{% endif %}  
+<h1 align="center"> {{titre}} </h1>
+  <br><br>
+  <table id="#top" align="center" class="table">
+  	<thead>
+  		<tr>
+  			<th> Programme </th>
+  			<th> Titre </th>
+  			<th> Spécialité </th>
+  			<th> Diplôme </th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		{% for programme in pgm_list %}
+  			<tr>
+  				<td> <a href="#{{programme.code}}">{{programme.code}}</a> </td>
+  				<td> {{programme.titre}} </td>
+  				<td> {{programme.specialite.intitule}} </td>
+  				<td> {{programme.diplome.intitule}} </td>
+  			</tr>
+  		{% endfor %}		
+  	</tbody>
+  </table>
+  <br><br>
+  
+  {% for object in pgm_list %}
+  	<div class="container new-page" id="{{object.code}}">
+  		{% include './programme_detail_content.html' %}
+  		<br><br>
+  		<a href="#top">Retour</a>
+  		<br><br>
+  	</div>
+  {% endfor %}
+  
+  	{% for key, object in matiere_list.items %}
+  		<div class="container new-page" id="{{object.matiere.id}}">
+  			{% include './matiere_detail_content.html'%}
+  			<br><br>
+  			<a href="#top">Retour</a>
+  		</div>
+  	{% endfor %}
+
+  </body>
+</html>

@@ -1,0 +1,155 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags usergroup icons dictionary usergroup %}
+{% block content %}
+	{% if request.user|has_group:"direction" %}
+		<a href="{% url "import_deliberation" %}" class="btn btn-primary" >Importer {% icon 'file-excel' %}</a>
+		<a href="{% url "note_eliminatoire_update" formation_pk=formation.id %}" class="btn btn-primary">Calculer Notes Eliminatoires</a>
+	{% endif %}
+	<a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Retour</a>
+	<br><br>
+	<h2>Procès Verbal de délibération de la formation {{ formation }}:</h2>
+	<table class="table table-bordered table-sm">
+		<thead class="thead-dark">
+			{% if detailed %}
+				<tr>
+					<th>
+					</th>
+					<th>
+					</th>
+	
+					{% for periode in formation.programme.periodes.all %}
+						{% for ue in periode.ues.all %}
+							<th colspan="{{ue.matieres.all.count|add:1}}">
+								{{ ue.code }}
+							</th>
+						{% endfor %}
+						<th></th>
+						<th></th>
+					{% endfor %}
+					<th>
+					</th>
+					<th>
+					</th>
+					<th>
+					</th>
+					<th>
+					</th>
+				</tr>
+			{% endif %}
+			<tr>
+				<th>Matricule</th>
+				<th>Nom & Prénom</th>
+				{% for periode in formation.programme.periodes.all %}
+					{% if detailed %}
+						{% for ue in periode.ues.all %}
+							{% for matiere in ue.matieres.all %}
+								<th>
+									{{ matiere.code }}
+								</th>
+							{% endfor %}
+							<th>
+								Moy
+							</th>
+						{% endfor %}
+					{% endif %}
+
+					<th>
+						<strong>Moy {{ periode.periode.code }}</strong>
+					</th>
+					<th>
+						<strong>Ne {{ periode.periode.code }}</strong>
+					</th>
+				{% endfor %}
+				<th>
+					Moy
+				</th>
+				<th>
+					Rang
+				</th>
+				<th>
+					<strong>Decision</strong>
+				</th>
+				<th>
+					<strong>Rachat</strong>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for inscription in inscription_list %}
+			<tr>
+			<td>
+				<a href="{% url "etudiant_detail" pk=inscription.etudiant.matricule %}">{{ inscription.etudiant.matricule }}</a>
+			</td>
+			<td>
+				{{ inscription.etudiant.nom|addstr:' '|addstr:inscription.etudiant.prenom }}
+			</td>
+
+			{% for periode in formation.programme.periodes.all %}
+				{% if detailed %}
+					{% for ue in periode.ues.all %}
+						{% for matiere in ue.matieres.all %}
+							{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.code|addstr:'_'|addstr:ue.id|addstr:'_'|addstr:matiere.code as key %}
+								{% with resultat_list|get_value_from_dict:key as resultat %}
+									{% if resultat %}
+										{% if resultat.moy_post_delib < resultat.module.note_eliminatoire %}
+											<td class="table-danger">{{ resultat.moy_post_delib }} < {{ resultat.module.note_eliminatoire }}</td>
+										{% elif resultat.moy < resultat.module.note_eliminatoire %}
+											<td class="table-warning">{{ resultat.moy }} {% icon 'arrow-right' %} {{ resultat.moy_post_delib }} </td>
+										{% else %}
+											<td>{{ resultat.moy }}</td>
+										{% endif %}
+									{% else %}
+										<td class="table-active"> </td>
+									{% endif %}
+								{% endwith %}
+							{% endwith%}
+						{% endfor %}
+						{% with inscription.etudiant.matricule|addstr:'_'|addstr:ue.id|addstr:'_moy' as key %}
+							{% with resultat_list|get_value_from_dict:key as note %}
+								{% if note %}
+									<td>{{ note }}</td>
+								{% else %}
+									<td class="table-active"></td>
+								{% endif %}
+							{% endwith %}
+						{% endwith%}
+					{% endfor %}
+				{% endif %}
+				{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.code|addstr:'_moy' as key %}
+					{% with resultat_list|get_value_from_dict:key as note %}
+						<td class="table-info">{{ note }}</td>
+					{% endwith %}
+				{% endwith%}
+				{% with inscription.etudiant.matricule|addstr:'_'|addstr:periode.periode.code|addstr:'_ne' as key %}
+					{% with resultat_list|get_value_from_dict:key as nb %}
+						{% if nb > 0 %}
+							<td class="table-danger">{{ nb }}</td>
+						{% else %}
+							<td class="table-info">{{ nb }}</td>
+						{% endif %}
+					{% endwith %}
+				{% endwith%}
+
+			{% endfor %}
+			{% with inscription.etudiant.matricule|addstr:'_moy' as key %}
+				{% with resultat_list|get_value_from_dict:key as note %}
+					<td>{{ note }}</td>
+				{% endwith %}
+			{% endwith%}
+			<td>
+				{{ inscription.rang }}
+			</td>			
+			<td>
+				{{ decisions_jury|get_value_from_dict:inscription.decision_jury }}
+			</td>
+			<td>
+				{% if request.user|has_group:"direction" %}
+					<a href="{% url "releve_notes_update" inscription_pk=inscription.id %}" >{% icon 'pencil-alt' %}</a>
+				{% endif %}
+			</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
+	

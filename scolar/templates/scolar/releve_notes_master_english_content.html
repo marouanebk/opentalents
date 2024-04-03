@@ -1,0 +1,226 @@
+{% load bootstrap4 icons usergroup dictionary %}
+	<div style="text-align: center;">
+	{% if institution.header %}
+		<img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+	{% endif %}
+	</div>
+		<br><br>
+		<h3 align="center"> <strong>TRANSCRIPT OF MASTER'S COMPLEMENTARY PROGRAM</strong></h3>
+		<br><br>
+
+		<table class="table table-borderless table-sm" width="100%">
+			<tr>
+				<td><strong> Academic year : {{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</td>
+				<td><strong> Program : {{inscription.formation.programme.titre}}</td>
+			</tr>
+			<tr>
+				<td> Last name : <strong>{{ inscription.etudiant.nom }}</strong> </td>
+				<td> First name : <strong>{{ inscription.etudiant.prenom }}</strong> </td>
+				<td> Date of birth : <strong> {{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong> </td>
+				<td> At : <strong>{{inscription.etudiant.lieu_naissance}}</strong> </td>		
+			</tr>
+			<tr>
+				<td>Registration N° : <strong>{{inscription.etudiant.matricule}}</strong>
+				<td>Domain : <strong>{% if inscription.formation.programme.diplome.domaine|english %}{{inscription.formation.programme.diplome.domaine|english}}{% else %}{{inscription.formation.programme.diplome.domaine_en}}{% endif %}</strong>
+				<td>Faculty : <strong>{% if inscription.formation.programme.diplome.filiere|english %}{{inscription.formation.programme.diplome.filiere|english}}{% else %}{{inscription.formation.programme.diplome.filiere_en}}{% endif %}</strong>
+				<td>Speciality : <strong>{{inscription.formation.programme.specialite.title}}</strong>
+			</tr>
+			<tr>
+				<td colspan="4">Prepared diploma : <strong>{% if inscription.formation.programme.diplome.intitule|english %}{{inscription.formation.programme.diplome.intitule|english}}{% else %}{{inscription.formation.programme.diplome.intitule_en}}{% endif %}</strong></td>
+			</tr>
+		</tr>
+		</table>
+
+    		<table width="100%">
+    			<thead>
+    				<tr>
+    					<th rowspan="2">{% if inscription.formation.has_semestres %}Semester{% else %}Period{% endif %}</th>
+    					<th rowspan="2">Unit Nature</th>
+    					<th rowspan="2">Code</th>
+    					{% if credits %}
+    					<th rowspan="2">Required<br>Credits</th>
+    					{% endif %}
+    					<th rowspan="2">Weight</th>
+    					<th rowspan="2" colspan="2">Title</th>
+    					{% if credits %}
+    					<th rowspan="2">Required<br>Credits</th>
+    					{% endif %}
+    					<th rowspan="2">Weight</th>
+    					{% if credits %}
+    					<th colspan="3">Subjects</th>
+    					{% else %}
+    					<th colspan="2">Subjects</th>
+    					{% endif %}
+    					{% if credits %}
+    					<th colspan="3">Teaching Unit</th>
+    					{% else %}
+    					<th colspan="2">Teaching Unit</th>
+    					{% endif %}
+    					{% if credits %}
+    					<th colspan="3">{% if inscription.formation.has_semestres %}Semester{% else %}Period{% endif %}</th>
+    					{% else %}
+    					<th colspan="2">{% if inscription.formation.has_semestres %}Semester{% else %}Period{% endif %}</th>
+    					{% endif %}
+    				</tr>
+    				<tr>
+    					<th>Grades/20</th>
+    					{% if credits %}
+    					<th>Credits</th>
+    					{% endif %}
+    					<th>Session</th>
+    					<th>Grades/20</th>
+    					{% if credits %}
+    					<th>Credits</th>
+    					{% endif %}
+    					<th>Session</th>
+    					<th>Grades/20</th>
+    					{% if credits %}
+    					<th>Credits</th>
+    					{% endif %}
+    					<th>Session</th>
+    				</tr>
+    			</thead>
+    			<tbody>
+					{% for periode in inscription.inscription_periodes.all|dictsort:'periodepgm.periode.code' %}
+    				<tr>
+    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.periodepgm.code }}</td>
+						{% for ue in periode.resultat_ues.all|dictsort:'ue.code' %}
+							<td style="vertical-align:middle; text-align:left;" rowspan="{{ ue.resultat_matieres.count }}">
+								{{ categorie_ue|get_value_from_dict:ue.ue.type|english }}
+							</td>
+							
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+								{{ ue.ue.code }}
+								{% if perms.scolar.fonctionnalite_etudiants_reinitialisationnotesetacquis %}
+									<a href="{% url 'resultat_ue_delete' pk=ue.id inscription_pk=inscription.id %}">{% icon 'trash' %}</a>
+								{% endif %}
+							</td>
+							{% if credits %}
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ ue.credits_requis }}
+							</td>
+							{% endif %}
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ ue.ue.coef|converson_reel_vers_entier_si_possible }}
+							</td>
+
+							{% for resultat in ue.resultat_matieres.all|dictsort:'module.matiere.code' %}	
+								{% if pdf %}
+									<td><strong>{{ resultat.module.matiere.code }}</strong></td>
+								{% else %}
+									<td><a href="{% url "matiere_detail" resultat.module.matiere.id %}">{{ resultat.module.matiere.code }}</a></td>
+								{% endif %}
+								<td>{{ resultat.module.matiere.titre_en }}</td>
+								{% if credits %}
+								<td style="text-align:center;">{{ resultat.module.matiere.credit }}</td>
+								{% endif %}
+								<td style="text-align:center;">{{ resultat.module.matiere.coef|converson_reel_vers_entier_si_possible }}</td>
+								{% if resultat.moy < resultat.moy_post_delib %}
+									<td style="text-align:center;">
+										{{ resultat.moy }} --> <strong>{{ resultat.moy_post_delib }} </strong>
+									</td>
+								{% else %}
+									<td style="text-align:center;">{{ resultat.moy }}</td>
+								{% endif %}
+								{% if credits %}
+								<td style="text-align:center;">{{ resultat.credits_obtenus }}</td>
+								{% endif %}
+								{% if resultat.module.matiere.pfe %}
+									<td style="text-align:center;">{{ periode.groupe.soutenance.date|nom_mois|english }}</td>
+								{% else %}
+									<td style="text-align:center;">{{ periode|session_from_inscription_periode:periode.periodepgm.periode|english }}</td>
+								{% endif %}
+								{% if forloop.first %}
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+										{% if ue.moyenne < ue.moyenne_post_delib %}
+											{{ ue.moyenne }} --> <strong>{{ ue.moyenne_post_delib }}</strong>
+										{% else %}
+											{{ ue.moyenne }}
+										{% endif %}
+									</td>
+									{% if credits %}
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+											{{ ue.credits_obtenus }}
+									</td>
+									{% endif %}
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+										{% if resultat.module.matiere.pfe %}
+											{{ periode.groupe.soutenance.date|nom_mois|english }}
+										{% else %}
+											{{ periode|session_from_inscription_periode:periode.periodepgm.periode|english }}
+										{% endif %}
+									</td>
+									{% if forloop.parentloop.counter == 1 %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">
+											{% if periode.moyenne < periode.moyenne_post_delib and inscription.decision_jury == 'AR' or periode.moyenne < periode.moyenne_post_delib and inscription.decision_jury == 'CR' %}
+												<table class="table table-bordered">
+													<tr><td> {{ periode.moyenne }} </td></tr>
+													<tr><td><strong>{{ periode.moyenne_post_delib }}</strong></td></tr>
+												</table>
+											{% else %}
+												{{ periode.moyenne }}
+											{% endif %}
+										</td>
+										{% if credits %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.credits_obtenus }}</td>
+										{% endif %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">
+											{% if resultat.module.matiere.pfe %}
+												{{ periode.groupe.soutenance.date|nom_mois|english }}
+											{% else %}
+												{{ periode|session_from_inscription_periode:periode.periodepgm.periode|english }}
+											{% endif %}
+										</td>
+									{% endif %}
+   								{% endif %}
+								</tr><tr>
+							{% endfor %}
+						{% endfor %}
+					</tr>
+    				{% endfor %}
+    	    	</tbody>
+  			</table>
+  			<br>
+
+	<table class="table table-borderless table-sm" width="100%">
+		<tr>
+			{% if inscription.decision_jury == 'AR' and inscription.moyenne == inscription.moyenne_post_delib %}
+				<td></td>
+			{% else %}
+				<td>Master's Complementary Program Overall Average: <strong>{{inscription.moyenne}} /20 </strong></td>
+			{% endif %}
+			{% if inscription.decision_jury == 'AR' or inscription.decision_jury == 'CR' %}
+				<td>Overall Average with Board's Grace : <strong>{{inscription.moyenne_post_delib}} /20 </strong></td>
+			{% endif %}
+			{% if credits %}
+			<td>Total cumulated credits during academic year : <strong>{{inscription.credits_obtenus}}</strong></td>
+			<td>Total cumulated credits during curriculum : <strong>{{inscription.credits_cursus}}</strong></td>
+			{% endif %}
+		</tr>
+		<tr>
+			<td>Established on: <strong>{{ date|date:'d/m/Y'}}</strong></td>
+			<td>Jury decision : <strong>{{decision_jury|get_value_from_dict:inscription.decision_jury|english}}<strong></td>
+			<td>
+				{% if inscription.rang > 0 %}
+					Rank : <strong>{{inscription.rang}}</strong> among <strong>{{inscription.nb_inscrits}}</strong>
+				{% endif %}
+			</td>
+		</tr>
+	</table>
+
+	<br><br><br><br><br><br><br><br><br>
+	<div style="text-align: center;">
+	<small> 
+		<strong>
+			This document is delivered only once. 
+		</strong>
+
+		<strong>
+			لا تمنح الا نسخة واحدة من هذه الوثيقة
+		</strong>
+	</small>
+	<br>
+	{% if institution.footer %}
+		<img src="{{ institution.footer.url }}" alt="Logo" width="60%">
+	{% endif %}
+	</div>

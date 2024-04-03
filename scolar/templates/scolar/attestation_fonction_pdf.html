@@ -1,0 +1,56 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %}
+{% block title %} 
+{% with 'ATTESTATION_FONCTION'|autorite_entete_from_document as autorite %}
+
+				<p align="left">			{{ autorite.intitule }}   				</p>
+			
+					<p align="right" style="font-size:19px;">{{ institution.ville }}, le: {{ today|date:'d/m/Y'  }}	  </p>
+			
+	
+	<br><br>
+		<h1 align="center"> <u> Attestation de fonction </u> </h1>
+		<br><br><br>
+		
+	
+{% endwith %}
+{% endblock %}
+{% block content %}	
+{% with 'ATTESTATION_FONCTION'|autorite_from_document as autorite %}
+<big>
+    <table>
+    	<tr>
+    		<td>    		
+    			<p align="justify">
+					{{ autorite.titre_responsable }} à : {{ institution.nom }} ({{ institution.sigle }}), atteste par la présente que :
+					<br><br>
+					{% if gender %} 
+					M. :   					
+					{% else %} 
+					Mme :
+					{% endif %}
+					{{ enseignant.nom }} {{ enseignant.prenom }}
+					<br><br>
+					{% if gender %}  
+					Né le : 
+					{% else %} 
+					Née le : 
+					{% endif %}
+					{{ enseignant.date_naissance|date:'d/m/Y' }}
+					<br><br>
+					Grade : {{ grade }}
+					<br><br>
+					Fait partie de l’établissement depuis le :  {% if enseignant.date_embauche %}{{ enseignant.date_embauche|date:'d/m/Y' }}{% else %}DATE INDÉFINIE{% endif %} à ce jour.
+					<br><br>
+					La présente attestation lui est délivrée pour servir et valoir ce que de droit. 
+    				
+   					<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    			
+    			</p>
+    		</td>
+    	</tr>
+
+	</table>
+</big>
+{% endwith %}
+{% endblock %}

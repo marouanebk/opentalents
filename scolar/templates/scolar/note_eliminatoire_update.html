@@ -1,0 +1,79 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 icons dictionary %}
+{% block content %}
+
+
+	<br><br>
+	<h2> Calcul des notes éliminatoires des modules de la formation {{ formation }} </h2>
+    <br>
+    <div class="row">
+    	<div class="col-md-12">
+    	<form action="" method="post">
+    		{% csrf_token %}
+			<div class="row">
+			{% for periode in formation.programme.periodes.all %}
+				<div class="col-md-6">
+				<h3> {{ periode.periode.code }}</h3>
+				<a href="{% url 'notes_eliminatoires_pv_pdf' formation_pk=formation.id periode_pk=periode.id %}">PV {% icon 'file-pdf'%}</a>
+				<a href="{% url 'notes_eliminatoires_pv_provisoire_pdf' formation_pk=formation.id periode_pk=periode.id %}">PV Provisoire {% icon 'file-pdf'%}</a>
+				<table class="table table-sm table-bordered">
+					<thead>
+						<th><strong>Module</strong></th>
+						<th><strong>NE Calculée</strong></th>
+						<th><strong>NE Effective</strong></th>
+						<th><strong>Etudiants avec NE</strong></th>
+						<th><strong>Différence</strong></th>						
+						<th><strong>NE Nouvelle</strong></th>
+						<th><strong>Enregistrer Nouvelle NE</strong></th>
+					</thead>
+					<tbody>
+						{% for module in module_list %}
+							{% if module.periode == periode %}
+								<tr>
+									<td> {{ module.matiere.code }} </td>
+									<td> {{ module.calcul_note_eliminatoire }} </td>
+									<td> {{ module.note_eliminatoire }} </td>
+									<td> {{ module.nb_etudiants_avec_ne }} </td>
+
+									{% with module.nb_etudiants_avec_ne|sub:module.nb_etudiants_avec_ne_calculee as diff %} </td>
+										{% if diff <= 0 %}
+											<td class="table-success">
+												{% icon 'arrow-down' %} {{ diff }}
+											</td>
+										{% else %}
+											<td class="table-danger">
+												{% icon 'arrow-up' %} {{ diff }}
+											</td>
+										{% endif %}
+									{% endwith %}
+									
+									<td>	
+										{% with 'calcul_ne_'|addstr:module.id as key_ %}
+											{% with form|form_field:key_ as field %}
+												{{ field|as_crispy_field }}
+											{% endwith %}
+										{% endwith %} 
+									</td>
+								
+									<td>
+										{% with 'select_module_'|addstr:module.id as key_ %}
+											{% with form|form_field:key_ as field %}
+												{{ field|as_crispy_field }}
+											{% endwith %}
+										{% endwith %} 
+									</td>
+								</tr> 
+							{% endif %}
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endfor %}
+		</div>
+		<input type="submit" name="submit" value="Enregistrer"  class="btn btn-primary"/>
+    	<a href="{% url "deliberation_detail" formation_pk=formation.id %}" class="btn btn-secondary">Délibérations</a>
+		</form>
+		</div>
+
+	</div>
+{% endblock %}

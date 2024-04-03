@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	
+  </head>
+  <body>
+	    {% load dictionary usergroup %}
+  	<table>
+  		<tr>
+  			<td>
+				<table >
+					{% if institution.header %}
+		    			<tr>
+			    			<td colspan="3">
+			        	 		<img src="{{ institution.header.url }}" width="800" alt="Logo" > 
+			    			</td>
+		    			</tr>
+					{% endif %}
+					<tr> 
+					{% with 'CERTIFICAT_CONGES'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">{{ autorite.intitule }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p>{{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %}
+					{% endwith %}
+					</tr>
+	    			<tr>
+	    				<td colspan="3">
+	    					<br><br><br>
+							<h1 align="center">
+								Attestation
+							</h1>
+							<br><br><br>
+						</td>
+	    			</tr>
+					{% with 'CERTIFICAT_CONGES'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+	    			<tr>
+	    				<td colspan="3">
+							{% if autorite %}
+								{{ autorite.titre_responsable }} à {{ institution.nom }} ({{ institution.sigle }}, {{ institution.ville }}) atteste que:
+							{% endif %}
+	    					<br><br>
+	    				</td>
+	    			</tr>
+					<tr>
+						<td style="text-align:left;">M (Melle):<br><br></td> 
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.nom }}</strong><br><br></td>
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.prenom }}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">Né (e) le:<br><br></td>
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong><br><br></td>
+						<td style="text-align:left;"><strong>à : {{inscription.etudiant.lieu_naissance|default_if_none:""}}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">N° d'inscription:<br><br></td>
+						<td style="text-align:left;"><strong>{{inscription.etudiant.matricule}}</strong><br><br></td>
+						<td style="text-align:left;"><br><br></td>
+					</tr>
+					<tr>	
+						<td style="text-align:left;">Est inscrit(e) en:<br><br></td> 
+						<td style="text-align:left;" colspan="2"><strong>{{inscription.formation.programme.titre}}</strong><br><br></td>
+					</tr>
+					{% if inscription.formation.programme.specialite %}
+					<tr>	
+						<td style="text-align:left;">Option:<br><br></td> 
+						<td style="text-align:left;" colspan="2"><strong>{{inscription.formation.programme.specialite.intitule}}</strong><br><br></td>
+					</tr>
+					{% endif %}
+					<tr>
+						<td style="text-align:left;">Bénéficie d'un  <br><br></td>
+						<td style="text-align:left;" colspan="2"><strong>{{raison}}</strong><br><br></td>
+					</tr>
+
+					<tr>
+						<td style="text-align:left;">Durant l'année universitaire: <br><br></td>
+						<td style="text-align:left;" colspan="2"><strong>{{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;" colspan="3">Cette attestation est délivrée pour servir et valoir ce que de droit.<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:center;" colspan="3">
+							<br>
+							Fait à {{ institution.ville }}, le:	<strong>{{date|date:'d/m/Y'}}</strong><br>
+					{% if view.kwargs.signature == '1' or signature == 1 %}
+						{% if autorite %}
+							{% if autorite.signature.name %}
+								<img src="{{ autorite.signature.url }}" alt="Signature" height="160" >
+								<br><br>
+							{% endif %}
+						{% endif %}
+					{% else %}
+						<br><br><br><br><br><br>
+					{% endif %}
+						</td>
+					</tr>
+					{% endwith %}
+					{% if institution.footer %}
+				    	<tr>
+					    	<td colspan="3">
+					        	 <img src="{{ institution.footer.url }}"  width="800" alt="Logo"> 
+					    	</td>
+				    	</tr>
+					{% endif %}
+  				</table>
+  			</td>
+			<td>
+				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>				
+			</td>
+  			<td>
+				<table >
+					{% if institution.header %}
+		    			<tr>
+			    			<td colspan="3">
+			        	 		<img src="{{ institution.header.url }}" width="800" alt="Logo" > 
+			    			</td>
+		    			</tr>
+					{% endif %}
+					<tr> 
+					{% with 'CERTIFICAT_CONGES'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">			{{ autorite.intitule }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p>{{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %}
+					{% endwith %}
+					</tr>
+	    			<tr>
+	    				<td colspan="3">
+	    					<br><br><br>
+							<h1 align="center">
+								شهادة
+							</h1>
+							<br><br><br>
+						</td>
+	    			</tr>
+					{% with 'CERTIFICAT_CONGES'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+	    			<tr>
+		    		<td style="text-align:right;" colspan="3">
+						{% if autorite %}
+								يشهد {{ autorite.titre_responsable_a }} ب{{ institution.nom_a }} بان<br><br><br>
+						{% endif %}
+					</td>
+	    			</tr>
+					<tr>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.prenom_a|default_if_none:"" }}</strong><br><br></td>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.nom_a|default_if_none:"" }}</strong><br><br></td>
+						<td style="text-align:right;">السيد / السيدة<br><br></td> 
+					</tr>
+					<tr>
+						<td style="text-align:right;"><strong>ب : {{inscription.etudiant.lieu_naissance_a|default_if_none:""}}</strong><br><br></td>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong><br><br></td>
+						<td style="text-align:right;">المولود(ة) في<br><br></td>
+						
+						
+					</tr>
+					<tr>
+						<td style="text-align:right;"><br><br></td>
+						<td style="text-align:right;"><strong>{{inscription.etudiant.matricule}}</strong><br><br></td>
+						<td style="text-align:right;">رقم التسجيل<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:right;"><strong>{{inscription.formation.programme.titre_a}}</strong><br><br></td>	
+						<td style="text-align:right;" colspan="2">مسجل (ة) بالمدرسة لمتابعة دراسته (ها) العليا في<br><br></td>
+					</tr>
+					{% if inscription.formation.programme.specialite %}
+					<tr>	
+						<td style="text-align:right;" colspan="2"><strong>{{inscription.formation.programme.specialite.intitule_a|default_if_none:""}}</strong><br><br></td>
+						<td style="text-align:right;">فرع<br><br></td> 
+					</tr>
+					{% endif %}
+					<tr>						
+						<td style="text-align:right;"><strong> {% if raison|startswith:'M' %}عطلة مرضية{% else %}
+													{{raison|arabic}}{% endif %}</strong><br><br></td>
+						<td style="text-align:right;"colspan="2">يستفيد من<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:right;" colspan="2"><strong>{{inscription.formation.annee_univ.annee_suivante}}/{{inscription.formation.annee_univ}}</strong><br><br></td>
+						<td style="text-align:right;">خلال السنة الجامعية<br><br></td>
+						
+					</tr>
+					<tr>
+						<td style="text-align:right;" colspan="3">تمنح هذه الشهادة لاستخدامها بما يسمح به القانون<br><br>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:center;" colspan="3">
+							<br>
+							{{ institution.ville_a }} في	<strong>{{date|date:'Y/m/d'}}</strong><br>
+					{% if view.kwargs.signature == '1' or signature == 1 %}
+						{% if autorite %}
+							{% if autorite.signature.name %}
+								<img src="{{ autorite.signature.url }}" alt="Signature" height="160" >
+								<br><br>
+							{% endif %}
+						{% endif %}
+					{% else %}
+						<br><br><br><br><br><br>
+					{% endif %}
+						</td>
+					</tr>
+					{% endwith %}
+					{% if institution.footer %}
+				    	<tr>
+					    	<td colspan="3">
+					        	 <img src="{{ institution.footer.url }}"  width="800" alt="Logo"> 
+					    	</td>
+				    	</tr>
+					{% endif %}
+  				</table>
+  			</td>
+  			<td>
+				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>				
+  			
+  			</td>
+  		</tr>
+  	</table>
+  </body>
+</html> 

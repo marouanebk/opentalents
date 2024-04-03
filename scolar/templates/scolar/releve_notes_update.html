@@ -1,0 +1,145 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 icons dictionary %}
+{% block content %}
+
+<script>
+	function recalculer(){
+		var annee_moy=0;
+		var annee_sum_coef = 0;
+		{% for periode in inscription.inscription_periodes.all %}
+			var periode_moy = 0;
+			var periode_sum_coef=0;
+			{% for ue in periode.resultat_ues.all %}
+					var ue_moy=0;
+					var ue_sum_coef=0;
+					{% for resultat_ in ue.resultat_matieres.all %}
+							ue_moy += document.getElementById("id_{{ resultat_.module.matiere.code }}").value * {{ resultat_.module.matiere.coef }};
+							ue_sum_coef += {{ resultat_.module.matiere.coef }};
+					{% endfor %}
+					ue_moy = ue_moy / ue_sum_coef;
+					periode_sum_coef += {{ ue.ue.coef }};
+					periode_moy += ue_moy*{{ ue.ue.coef }};
+			{% endfor %}
+			
+			annee_moy += periode_moy;
+			annee_sum_coef += periode_sum_coef;
+			
+			periode_moy = periode_moy/periode_sum_coef;
+			document.getElementById("id_{{ periode.periodepgm.code }}").value = periode_moy.toFixed(2)
+			
+		{% endfor %}
+		annee_moy = annee_moy/annee_sum_coef;
+		document.getElementById("id_moyenne").value = annee_moy.toFixed(2)
+	}
+	
+</script>
+
+<form action="" method="post">
+	{% csrf_token %}
+	<br><br>
+	<strong>Nom : </strong> {{ inscription.etudiant.nom }} {{ inscription.etudiant.nom_a }}<br>
+	<strong>Prénom : </strong> {{ inscription.etudiant.prenom }} {{ inscription.etudiant.prenom_a }}<br>
+	<strong>Né(e) le : </strong> {{ inscription.etudiant.date_naissance }} <strong> à : </strong> {{ inscription.etudiant.lieu_naissance }} {{ inscription.etudiant.lieu_naissance_a }}<br>
+	
+		{% for periode in inscription.inscription_periodes.all %}
+        <div class="row">
+    		<table class="table table-bordered">
+    			<thead>
+    				<tr>
+    					<th>Periode</th>
+    					<th>Résultats</th>
+    					<th>Moyenne</th>
+    				</tr>
+    			</thead>
+    			<tbody>
+    				<tr>
+    					<td>{{ periode.periodepgm.code }}</td>
+    					<td>
+    						<table>
+    							<thead>
+									<tr>
+										{% if inscription.formation.activation_ues %}
+   											<th>UE</th>
+   											<th>Moy</th>
+										{% endif %}
+   										<th>Matière</th>
+   										<th>Intitulé</th>
+   										<th>Note</th>
+   										<th>Note Rachat</th>
+										{% if inscription.formation.activation_rattrapage %}
+											<th>Entrée en rattrapage</th>
+										{% endif %}
+										{% if inscription.formation.activation_dettes %}
+											<th>Dette</th>
+										{% endif %}
+   										<th>Coef</th>
+									</tr>
+								</thead>
+								<tbody>
+    								{% for ue in periode.resultat_ues.all %}
+	    									<tr>
+											{% if inscription.formation.activation_ues %}
+		    									<td rowspan={{ ue.resultat_matieres.all.count }}>
+		    										{{ ue.ue.code }}
+		    									</td>
+												<td rowspan={{ ue.resultat_matieres.all.count }}>
+	       												{{ ue.moy }}
+												</td>
+											{% endif %}
+	    									{% for resultat in ue.resultat_matieres.all %}		
+	   												<td>{{ resultat.module.matiere.code }}</td>
+			       									<td>{{ resultat.module.matiere.titre }}</td>
+		       											{% if resultat.moyenne_finale < resultat.module.note_eliminatoire %}
+		       												<td class="table-danger">
+		       													{{ resultat.moyenne_finale }} < {{ resultat.module.note_eliminatoire }}
+		       												</td>
+		       											{% else %}
+		       												<td>
+		       													{{ resultat.moyenne_finale }}
+		       												</td>
+		       											{% endif %}
+			       									<td>
+			       										{{ form|form_field:resultat.module.matiere.code}}
+			       									</td>
+													{% if resultat.activation_rattrapage %}
+														<td>
+														{% with 'rattrapage_'|addstr:resultat.module.matiere.code as key %}
+															{{ form|form_field:key|as_crispy_field }}
+														{% endwith %}
+														</td>
+													{% endif %}
+													{% if resultat.activation_dettes %}
+														<td>
+														{% with 'dette_'|addstr:resultat.module.matiere.code as key %}
+															{{ form|form_field:key|as_crispy_field }}
+														{% endwith %}
+														</td>
+													{% endif %}
+			       									<td>
+			       										{{ resultat.module.matiere.coef }}
+			       									</td>
+	   												</tr><tr>
+											{% endfor %}
+											</tr>
+									{% endfor %}
+								</tbody>
+    						</table>
+    					</td>
+    					<td>
+							{{ form|form_field:periode.periodepgm.code|as_crispy_field }}
+    					</td>
+    				</tr>
+    			</tbody>
+  			</table>
+    	</div>
+    	{% endfor %}
+
+    	{{ form|form_field:'moyenne'|as_crispy_field }}	
+    	{{ form|form_field:'proposition_decision_jury'|as_crispy_field }}
+    	{{ form|form_field:'observation'|as_crispy_field }}	
+    <br><br>
+    <input type="submit" name="submit" value="Enregistrer"  class="btn btn-primary"/>
+    <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
+</form>
+<br><br><br><br>
+{% endblock %}

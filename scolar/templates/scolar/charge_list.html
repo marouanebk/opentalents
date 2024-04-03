@@ -1,0 +1,101 @@
+{% extends 'scolar/index.html' %}
+{% load icons dictionary bootstrap4 crispy_forms_tags %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+
+{% block content %}
+	<br><br>
+	<h1 align="center">{{titre}}</h1>
+    <br><br>
+    	{% if form %}
+    		{% crispy form %}
+    	{% endif %}
+		<br><br>
+    	<small>
+    	<table class="table table-bordered table-sm">
+    		<thead class="thead-dark">
+				<tr>
+					<th>Enseignant</th>
+					{% for periode_ in periode_list  %}
+						<th class="text-center">Charge {{ periode_.code }}</th>
+						<th class="text-center">VH Sem {{ periode_.code }}</th>
+						<th class="text-center">Tot. {{ periode_.code }}</th>
+					{% endfor %}
+            		<th class="text-center"> Moy Sem </th>
+            		<th class="text-center"> Tot An </th>
+            		<th class="text-center"> Tot % </th>
+            		<th class="text-center"> Charge Statut </th>
+            		<th class="text-center"> Détail </th>
+				</tr>
+			</thead>
+    		<tbody>
+				{% for enseignant_ in enseignant_list  %}
+					<tr>
+						<td>
+							<strong>{{ enseignant_ }} ( {{ enseignant_.grade }}) </strong>
+						</td>
+						{% for periode_ in periode_list  %}
+							
+								{% with enseignant_.id|addstr:"_detail_"|addstr:periode_.code as key %}
+									{% with charge_list|get_value_from_dict:key as valeur_ %}
+											<td class="text-center">
+											{{ valeur_|safe }}
+											</td>
+									{% endwith %}
+								{% endwith %}
+								{% with enseignant_.id|addstr:"_semaine_"|addstr:periode_.code as key %}
+									{% with charge_list|get_value_from_dict:key as valeur_ %}
+											<td class="text-center">
+											{{ valeur_ }}
+											</td>
+									{% endwith %}
+								{% endwith %}
+								{% with enseignant_.id|addstr:"_tot_"|addstr:periode_.code as key %}
+									{% with charge_list|get_value_from_dict:key as valeur_ %}
+											<td class="text-center">
+											{{ valeur_ }}
+											</td>
+									{% endwith %}
+								{% endwith %}
+							
+						{% endfor %}
+						{% with enseignant_.id|addstr:"_moy_semaine" as key %}
+							{% with charge_list|get_value_from_dict:key as valeur_ %}
+									<td class="text-center">
+										{{ valeur_ }}
+									</td>
+							{% endwith %}
+						{% endwith %}
+						{% with enseignant_.id|addstr:"_tot_an_prv" as key %}
+							{% with charge_list|get_value_from_dict:key as valeur_ %}
+									<td class="text-center">
+										{{ valeur_ }}
+									</td>
+							{% endwith %}
+						{% endwith %}
+						{% with enseignant_.id|addstr:"_tot_ratio" as key %}
+							{% with charge_list|get_value_from_dict:key as valeur_ %}
+									<td class="text-center">
+										{{ valeur_ }}%
+										
+									</td>
+							{% endwith %}
+						{% endwith %}
+
+						{% with enseignant_.id|addstr:"_tot_statut" as key %}
+							{% with charge_list|get_value_from_dict:key as valeur_ %}
+									<td class="text-center">
+										{{ valeur_ }}
+									</td>
+							{% endwith %}
+						{% endwith %}
+						
+						<td> <a href="{% url "charge_enseignant_detail" enseignant_pk=enseignant_.id %}"> {% icon 'eye' %}</a> </td>
+						
+					</tr>
+				{% endfor %}
+    		</tbody>
+		</table>
+		</small>    
+    
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends 'scolar/emails/base.html' %}
+{% block content %}
+<p>Bonjour {{ nom }},<br>Votre mot de passe a été modifié à votre demande.</p>
+<p>Si vous n'êtes pas à l'origine de cette modification, veuillez modifier votre mot de passe ainsi que signaler l'incident.</p>
+<p>Bien cordialement.<br>{{ signature }}</p>       
+{% endblock %}

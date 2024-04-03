@@ -1,0 +1,14 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags usergroup icons %}
+{% block content %}
+	<br><br>
+	{% if perms.scolar.fonctionnalite_pedagogie_modificationnotes %}
+		<h5>Importer des notes </h5>
+		<a href="{% url "import_notes" %}" class="btn btn-primary" ></a>
+		<br><br>
+	{% endif %}
+	
+	<h5> Notes durant l'année universitaire en cours :</h5>
+    <br><br>
+    {% render_table table %}
+{% endblock %}

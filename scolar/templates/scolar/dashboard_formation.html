@@ -1,0 +1,188 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>Dashboard Formations</h2>
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#overview">Aperçu</a>
+    </li>
+    {% for item in annee_univ_list %}
+	    <li class="nav-item">
+	      <a class="nav-link" data-toggle="tab" href="#_{{item.annee_univ.annee_univ}}">{{item.annee_univ.annee_univ}}</a>
+	    </li>
+    {% endfor %}
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+
+
+    <div id="overview" class="container tab-pane active"><br>
+    	
+    	<div class="row align-items-center" >
+    		<h3>Répartition des ratios moyens des décisions de jurys par formation </h3>
+    		<div class="col-lg-4">
+		    	<p class="alert alert-info">
+		    		Les statistiques affichées sur ce graphique et le tableau plus bas sont des moyennes calculées sur l'ensemble des promotions introduites dans la base.<br>
+		    		Le détail par promotion est affiché sur l'onglet de l'année correspondante.
+		    	</p>
+		    </div>
+	    	<div class="col-lg-8">
+	    	{{ programme_avg_chart.as_html }}
+	    	</div>
+	    </div>
+	    <div class="row">
+	    <h3> Détails des répartitions moyennes </h3>
+	    	<div class="col-lg-8">
+	    		<table class="table table-bordered table-sm">
+	    			<thead>
+	    				<tr>
+	    				<th>Programme</th>
+	    				{% for decision in decision_list %}
+	    					{% with 'success echec refaire total' as list %}
+							{% if decision in list.split %}	    				
+	    						<th class="table-active">{{ decision }}</th>
+	    					{% else %}
+	    						<th> {{ decision }}</th>
+	    					{% endif %}
+	    					{% endwith %}
+	    				{% endfor %}
+	    				<tr>
+	    			</thead>
+	    			<tbody>
+	    				{% for programme in programme_list %}
+	    				{% if programme.aggregate_avg_decision_jury %}
+	    				<tr>
+	    					<td>{{programme.code}}</td>
+		    				{% for decision in decision_list %}
+		    					{% with programme.aggregate_avg_decision_jury as aggregate %}
+			    					{% with 'success echec refaire' as list  and aggregate|get_value_from_dict:decision as value%}
+										{% if decision in list.split %}	    				
+				    						<td class="table-active">{{ value }}%</td>
+				    					{% elif decision == "total" %}
+				    						<td> {{ value }}</td>
+				    					{% else %}
+				    						<td> {{ value }}%</td>
+				    					{% endif %}
+				    				{% endwith %}
+			    				{% endwith %}
+		    				{% endfor %}
+		    			</tr>
+		    			{% endif %}
+	    				{% endfor %}
+	    			</tbody>
+	    		</table>
+	    	</div>
+    	</div>
+    </div>
+	{% for item in annee_univ_list %}
+    <div id="_{{item.annee_univ.annee_univ}}" class="container tab-pane fade"><br>
+    	<h3>Répartition des effectifs par décision de jury</h3>
+		{% for element in item.formation_list %}
+		<div class="row">
+			<h4>{{element.formation.programme.code}}</h4>
+			<div class="col-lg-6">
+				
+				{{ element.chart.as_html }}
+			</div>
+			<div class="col-lg-4">
+				<small>
+				{% with element.formation.aggregate_decision_jury as stats %}
+					<strong>Total Inscrits :</strong>{{ stats.total_inscrits }}
+					<table class="table table-bordered table-sm">
+						<thead>
+							<tr>
+								<th colspan="6">Passent à l'année suivante</th>
+							</tr>
+							<tr>
+								<th colspan="2">Admis</th>{% if element.formation.activation_rattrapage %}<th>Rattrapage</th>{% endif %}{% if element.formation.activation_dettes %}<th>Dettes</th>{% endif %}<th colspan="2">Rachat</th><th>Total</th><th>Pourcentage<br>Scolarisés</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								{% with stats.admis as admis and stats.admis_rattrapage as admis_rattrapage and stats.admis_dettes as admis_dettes and stats.admis_rachat as admis_rachat and stats.success as success and stats.scolarise as scolarise %}
+										<td colspan="2">{{ stats.admis }}</td>{% if element.formation.activation_rattrapage %}<td>{{ stats.admis_rattrapage }}</td>{% endif %}{% if element.formation.activation_dettes %}<td>{{ stats.admis_dettes }}</td>{% endif %}<td colspan="2">{{ stats.admis_rachat }}</td><td>{{ admis|add:admis_rachat }}</td><td>{{ success|as_percentage_of:scolarise }}%</td>
+								{% endwith %}
+							</tr>
+							<tr>
+							    <th>F</th><th>G</th><th>F</th><th>G</th>
+							</tr>
+							<tr>    
+								{% with stats.admis_fille as admis_fille and stats.admis_garcon as admis_garcon and stats.admisrachat_fille as admisrachat_fille and stats.admisrachat_garcon as admisrachat_garcon %}
+										<td>{{ stats.admis_fille }}</td><td>{{ stats.admis_garcon}}</td><td>{{ stats.admisrachat_fille}}</td><td>{{ stats.admisrachat_garcon}}</td>
+								{% endwith %}
+							</tr>
+							
+						</tbody>
+					</table>	
+					<table class="table table-bordered table-sm">
+						<thead>
+							<tr>
+								<th colspan="4">Echec</th>
+							</tr>
+							<tr>
+								<th>Redoublants</th><th>Non Admis</th><th>Total</th><th>Pourcentage<br>Scolarisés</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								{% with stats.redouble as redouble and stats.non_admis as non_admis and stats.redouble_nonadmis as redouble_nonadmis and stats.scolarise as scolarise %}
+										<td>{{ stats.redouble }}</td><td>{{ stats.non_admis }}</td><td>{{ redouble_nonadmis }}</td><td>{{ redouble_nonadmis|as_percentage_of:scolarise }}%</td>
+								{% endwith %}
+							</tr>
+						</tbody>
+					</table>
+					
+					<table class="table table-bordered table-sm">
+						<thead>
+							<tr>
+								<th colspan="5">Maladie et Abandons</th>
+							</tr>
+							<tr>
+								<th>Maladies</th><th>Abandons</th><th>Total</th><th>Pourcentage<br>Inscrits</th>
+							</tr>							
+						</thead>
+						<tbody>
+							<tr>
+								{% with stats.maladie as maladie and stats.abandon as abandon and stats.maladie_abandon as maladie_abandon and stats.total_inscrits as total_inscrits %}
+											<td>{{ stats.maladie }}</td><td>{{ stats.abandon }}</td><td>{{ maladie_abandon }}</td><td>{{ maladie_abandon|as_percentage_of:total_inscrits}}%</td>
+								{% endwith %}
+							</tr>
+						</tbody>	
+					</table>	
+					
+					<table class="table table-bordered table-sm">
+						<thead>
+							<tr>
+								<th colspan="5">Non Inscrits et Transferts</th>
+							</tr>
+							<tr>
+								<th>Non Inscrits</th><th>Transferts</th><th>Total</th><th>Pourcentage</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								{% with stats.non_inscrit as non_inscrit and stats.transfert as transfert and stats.sortants as sortants and stats.total as total %}
+											<td>{{ stats.non_inscrit }}</td><td>{{ stats.transfert }}</td><td>{{ sortants}}</td><td>{{ sortants|as_percentage_of:total}}%</td>
+								{% endwith %}
+							</tr>
+						</tbody>	
+					</table>					
+				{% endwith %}
+				</small>
+			</div>
+			
+		</div>
+		{% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+
+
+{% endblock %}
+	
+

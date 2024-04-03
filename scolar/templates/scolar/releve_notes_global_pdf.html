@@ -1,0 +1,103 @@
+  {% load dictionary %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-before: always;
+  			}
+		}
+    </style>
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+    
+  </head>
+  <body>
+  	{% for cycle in cycle_list %}
+		<div class="new-page">
+			{% if institution.header %}
+		    	<img src="{{ institution.header.url }}" alt="Logo" >
+			{% endif %}
+		    <br>
+{% with 'RELEVE_NOTES_GLOBAL'|autorite_entete_from_document_diplome:diplome as autorite %}
+<table class="table table-borderless table-sm" width="100%" >
+				<tr> 
+					<td style =" text-align: left; margin-left: 0em;"> 
+					<p align="left">			{{ autorite.intitule }}</p>
+					</td>
+					<td></td>
+					<td style =" text-align: right; margin-right: 0em;" > 
+					<p>{{ autorite.intitule_a }}</p>
+					</td> 
+				</tr></table>
+{% endwith %}
+			<h3 align="center"> 
+				<strong>RELEVE DE NOTES GLOBAL : {{ cycle.intitule }}</strong>
+			</h3>
+			<table class="table table-borderless table-sm" width="100%">
+				<tr>
+				<td>Nom : <strong>{{ etudiant.nom }}</strong> </td>
+				<td> Prénom : <strong>{{ etudiant.prenom }}</strong> </td>
+				<td>Matricule : <strong>{{ etudiant.matricule}}</strong></td>
+				<td> Date de naissance : <strong> {{ etudiant.date_naissance|date:'d/m/Y' }}</strong> </td>
+				<td> à : <strong>{{ etudiant.lieu_naissance}}</strong> </td>				
+				</tr>
+			</table>
+			{% for inscription in inscription_list %}
+				{% if inscription.formation.programme.cycle == cycle %}
+					<br>
+					{% if not inscription.formation.programme.inclut_pfe_only %}
+					 	{% include './releve_notes_content_min.html' %}
+					{% else %}
+						{% include './releve_notes_PFE_content_min.html' %}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+			Fait le: {{ date|date:'d/m/Y'}}
+			<br><br><br><br><br>			
+		<tr>
+			<td colspan="2">
+				<div style="text-align: center;">
+					<small>
+					    <strong>
+							Il n'est délivré qu'un seul exemplaire de ce document. 
+						</strong>
+					
+						<strong>
+							لا تمنح الا نسخة واحدة من هذه الوثيقة
+						</strong>
+						<br>						
+						<SPAN STYLE="text-decoration:overline">
+	          	  			{{institution.nom}}  {{ institution.nom_a }} - {{ institution.adresse }}.{% if institution.tel %} Tél : {{ institution.tel }} ;{% endif %}{% if institution.fax %} Fax : {{ institution.fax }} ;{% endif %}{% if institution.web %} {{ institution.web }}{% endif %}
+						</SPAN>
+					</small>
+				</div>
+			</td>
+		</tr>	
+		</div>
+	{% endfor %}
+  </body>
+ </html>

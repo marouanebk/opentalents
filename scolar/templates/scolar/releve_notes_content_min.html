@@ -1,0 +1,168 @@
+{% load bootstrap4 icons dictionary %}
+	
+    		<table width="98%">
+    			<thead>
+    				<tr>
+    					{% if inscription.formation.activation_credits %}
+    						<th colspan="12">
+    					{% else %}
+    						<th colspan="9">
+    					{% endif %}
+    							<strong>
+    								{{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}       		
+									{{inscription.formation.programme.titre}}
+									{% if inscription.formation.programme.specialite %}
+											      {{ inscription.formation.programme.specialite.intitule }}
+									{% endif %}
+								</strong>
+    						</th>
+    				</tr>
+    				<tr>
+    					<th rowspan="2">{% if inscription.formation.has_semestres %}Semestre{% else %}Période{% endif %}</th>
+						{% if inscription.formation.activation_ues %}
+						    <th style="vertical-align:middle; text-align:center;" colspan="2">Unité</th>	    					
+						{% endif %}    					
+    					{% if inscription.formation.activation_credits %}
+    					<th  style="vertical-align:middle; text-align:center;"colspan="5">Matières</th>
+    					{% else %}
+    					<th  style="vertical-align:middle; text-align:center;"colspan="4">Matières</th>
+    					{% endif %}
+						{% if inscription.formation.activation_ues %}
+	    					{% if inscription.formation.activation_credits %}
+	    					<th colspan="2">UEnseignement</th>
+	    					{% else %}
+	    					<th colspan="1">UEnseignement</th>
+	    					{% endif %}
+						{% endif %}
+    					{% if inscription.formation.activation_credits %}
+    					<th colspan="2">{% if inscription.formation.has_semestres %}Semestre{% else %}Période{% endif %}</th>
+    					{% else %}
+    					<th colspan="1">{% if inscription.formation.has_semestres %}Semestre{% else %}Période{% endif %}</th>
+    					{% endif %}
+    				</tr>
+    				<tr>
+    				    <th>Nature</th>
+    				    <th>Code</th>
+    				    <th style="vertical-align:middle; text-align:center;" colspan="2">Codes et Intitulés</th>
+    					<th>Coef</th>
+    					<th>Moy</th>
+    					{% if inscription.formation.activation_credits %}
+    					<th>Crédits</th>
+    					{% endif %}
+						{% if inscription.formation.activation_ues %}
+	    					<th>Moy</th>
+	    					{% if inscription.formation.activation_credits %}
+	    					<th>Crédits</th>
+	    					{% endif %}
+						{% endif %}
+    					<th>Moy</th>
+    					{% if inscription.formation.activation_credits %}
+    					<th>Crédits</th>
+    					{% endif %}
+    				</tr>
+    			</thead>
+    			<tbody>
+					{% for periode in inscription.inscription_periodes.all|dictsort:'periodepgm.periode.code' %}
+    				<tr>
+    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.periodepgm.code }}</td>
+						{% for ue in periode.resultat_ues.all|dictsort:'ue.code' %}
+							{% if inscription.formation.activation_ues %}
+								<td style="vertical-align:middle; text-align:left;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ categorie_ue|get_value_from_dict:ue.ue.type }}
+								</td>
+								
+								<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ ue.ue.code }}
+								</td>
+							{% endif %}
+
+							{% for resultat in ue.resultat_matieres.all|dictsort:'module.matiere.code' %}	
+								<td><strong>{{ resultat.module.matiere.code }}</strong></td>
+								<td><strong>{{ resultat.module.matiere.titre }}</strong></td>
+								<td style="vertical-align:middle; text-align:center;">{{ resultat.module.matiere.coef|converson_reel_vers_entier_si_possible }}</td>
+								{% if not resultat.activation_rattrapage or resultat.activation_rattrapage and not resultat.entree_rattrapage %}
+									{% if resultat.rachete %}
+										<td style="vertical-align:middle; text-align:center;"> {{ resultat.moy }} <strong> &rarr; {{ resultat.moy_post_delib }}</strong></td>
+									{% else %}
+										<td style="vertical-align:middle; text-align:center;">{{ resultat.moy }}</td>
+									{% endif %}
+								{% else %}
+										<td> <strong>N: </strong>{{ resultat.moy }} - <strong>R: </strong>{{ resultat.moy_rattrapage }} {% if resultat.rachete %}<strong> &rarr; {{ resultat.moy_post_delib }} </strong>{% endif %}</td>
+								{% endif %}
+								{% if inscription.formation.activation_credits %}
+								<td style="vertical-align:middle; text-align:center;">{{ resultat.credits_obtenus }}</td>
+								{% endif %}
+								{% if forloop.first %}
+									{% if inscription.formation.activation_ues %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+											{% if ue.moyenne < ue.moyenne_post_delib %}
+												{{ ue.moyenne }} <strong> &rarr; {{ ue.moyenne_post_delib }}</strong>
+											{% else %}
+												{{ ue.moyenne }}
+											{% endif %}
+										</td>
+										{% if inscription.formation.activation_credits %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+												{{ ue.credits_obtenus }}
+										</td>
+										{% endif %}
+									{% endif %}
+									{% if forloop.parentloop.counter == 1 %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">
+
+										    {% if periode.moyenne < periode.moyenne_post_delib and inscription.decision_jury == 'AR' or periode.moyenne < periode.moyenne_post_delib and inscription.decision_jury == 'CR' %}
+
+												<strong>{{ periode.moyenne_post_delib }}</strong><br>
+												<strong> &uarr; </strong><br>
+												{{ periode.moyenne }}
+											{% else %}
+												{{ periode.moyenne }}
+											{% endif %}
+										</td>
+										{% if inscription.formation.activation_credits %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.credits_obtenus }}</td>
+										{% endif %}
+									{% endif %}
+   								{% endif %}
+								</tr><tr>
+							{% endfor %}
+						{% endfor %}
+					</tr>
+    				{% endfor %}
+    				<tr>
+							{% if inscription.decision_jury == 'AR' and inscription.moyenne == inscription.moyenne_post_delib %}
+								<td colspan="100%">&nbsp&nbsp&nbsp&nbsp
+							{% else %}
+								<td colspan="100%">Moyenne annuelle : <strong>{{inscription.moyenne}} /20 </strong>&nbsp&nbsp&nbsp&nbsp
+							{% endif %}
+							{% if inscription.decision_jury == 'AR' or inscription.decision_jury == 'CR' %}
+								<!-- Moyenne rachat : <strong>{{inscription.moyenne_post_delib}} /20 </strong>&nbsp&nbsp&nbsp&nbsp -->
+								{% if inscription.moy_ra != 0 %}
+					               Moyenne rachat : <strong>{{inscription.moy_ra}} /20 </strong>&nbsp&nbsp&nbsp&nbsp
+				                {% else %}
+					               Moyenne rachat : <strong>{{inscription.moyenne_post_delib}} /20 </strong>&nbsp&nbsp&nbsp&nbsp
+					            {% endif %}
+							{% endif %}
+							{% if inscription.decision_jury == 'SR' %}
+								Moyenne rattrapage : <strong>{{inscription.moyenne_post_delib}} /20 </strong>&nbsp&nbsp&nbsp&nbsp
+							{% endif %}
+							{% if inscription.formation.activation_credits %}
+								Crédits Annuels : <strong>{{inscription.credits_obtenus}}</strong>&nbsp&nbsp&nbsp&nbsp
+							{% endif %}
+							Décision du Conseil :	<strong>
+														{% if inscription.decision_jury|startswith:'M' %}
+															Maladie
+														{% else %}
+															{{decision_jury|get_value_from_dict:inscription.decision_jury}}
+														{% endif %}
+													</strong> &nbsp&nbsp&nbsp&nbsp
+							{% if inscription.rang > 0 %}
+								Rang : <strong>{{inscription.rang}}</strong> sur <strong>{{inscription.nb_inscrits}}</strong> &nbsp&nbsp&nbsp&nbsp
+							{% endif %}
+							{% if inscription.mention != 'X' %}
+								Mention : <strong> {{ mention|get_value_from_dict:inscription.mention }} </strong>
+							{% endif %}
+							</td>
+					</tr>
+    	    	</tbody>
+  			</table>

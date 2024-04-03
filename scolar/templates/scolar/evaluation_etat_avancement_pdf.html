@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+{% load crispy_forms_tags bootstrap4 dictionary %}
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-before: always;
+  			}
+		}
+    </style>
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	th, td {
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+    
+  </head>
+  <body>
+	<div class="new-page">
+		{% if institution.header %}
+	   		<img src="{{ institution.header.url }}" alt="Logo" width="100%">
+		{% endif %}
+	    <br><br><br>
+		<center><h3>EVALUATION DE L’ÉTAT D’AVANCEMENT D’UNE THÈSE DE DOCTORAT</h3></center>
+		<br>
+		<form action="" method="post">
+			{% csrf_token %}
+			
+		<br>
+		
+		{{ form|form_field:'inscription'|as_crispy_field }}
+		{{ form|form_field:'these'|as_crispy_field }}
+		{{ form|form_field:'directeur'|as_crispy_field }}
+		{{ form|form_field:'jury'|as_crispy_field }}
+		
+		{% for critere, options in critere_list.items %}
+			<p><strong>{{ critere.critere }}</strong></p>
+			<table class="table-sm">
+			<tr>
+			{% for option in options %}
+				{% with 'option'|addstr:'_'|addstr:critere.id|addstr:'_'|addstr:option.id as key %}
+					<td>{{ form|form_field:key|as_crispy_field }}<td>
+				{% endwith %}
+			{% endfor %}
+			</tr>
+			</table>
+			{% if critere.commentaire %}
+				{% with 'commentaire'|addstr:'_'|addstr:critere.id as key %}
+					{{ form|form_field:key|as_crispy_field }}
+				{% endwith %}
+			{% endif %}
+			
+		
+		{% endfor %}
+		
+		{{ form|form_field:'avis_directeur'|as_crispy_field }}
+		{{ form|form_field:'decision_1'|as_crispy_field }}
+		{{ form|form_field:'decision_finale'|as_crispy_field }}
+		
+		</div>
+		</form>
+
+
+
+		{% if institution.footer %}
+		   	<div style="text-align: center;">
+				<img src="{{ institution.footer.url }}" alt="Logo" width="100%">
+			</div> 	
+		{% endif %}		
+	</div>
+  </body>
+ </html>

@@ -1,0 +1,86 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %} 
+{% block signataire%}
+{% with 'ATTESTATION_BONNE_CONDUITE'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+<table style="width:100%">
+				<tr> 
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">			{{ autorite.intitule }}</p>
+						</td>
+						
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p>{{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %}
+				</tr>
+				
+				<tr>
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p>			{% if institution.ville_a %}{{ institution.ville_a }}, {% endif %}في: {{ today|date:'Y/m/d' }}</p>
+						</td>
+						<td style="dir: rtl;text-align: right;margin-right: 0em;">
+                            <p>&emsp;&emsp;المرجع رقم </p>
+                        </td>
+													
+				</tr>
+				</table>
+{% endwith %}
+{% endblock %}
+
+{% block title %} 
+	<br>
+	<p><strong>شهادة حسن السيرة و السلوك </strong></p>
+	 <br><br>
+{% endblock %}
+{% block content %}	
+{% with 'ATTESTATION_BONNE_CONDUITE'|autorite_from_document_programme:inscription.formation.programme as autorite %}
+<big>
+    <table class="table table-borderless table-sm" width="100%">
+			
+    	<tr>
+    		<td style ="text-align: right; margin-right: 0em;">
+    			
+					{% if autorite %}						
+						  :يشهد {{ autorite.titre_responsable_a }}, بالمدرسة الوطنية العليا للاعلام الالي بان &emsp;&emsp; 					
+					{% endif %}	
+					<br><br>					
+    		    			
+    		</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">{{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom}} &emsp;-&emsp;{% if inscription.etudiant.nom_a and inscription.etudiant.prenom_a %}  الطالب(ة) :&emsp;{{ inscription.etudiant.nom_a }} {{ inscription.etudiant.prenom_a }} {% endif %}<br><br></td>   				
+    		
+    	</tr>
+    	<tr>    			
+    		  <td style="text-align:right;margin-right: 0em;">
+    		      <p align="right">
+    				  {{ inscription.etudiant.date_naissance|date:'Y/m/d' }}&emsp;:المولود(ة) بتاريخ<br><br>
+    				  مكان الازدياد :&emsp;{{ inscription.etudiant.lieu_naissance_a }}
+    		          <br>
+    		      </p>    
+    		  </td>  
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">    			
+    			 <p align="right">    			 
+    			      					
+    				{% if inscription.formation.programme.titre_a %} المسجل(ة) في :&emsp;{{inscription.formation.programme.titre_a }}{% if inscription.formation.programme.specialite %}&emsp;&emsp; {{inscription.formation.programme.specialite.intitule_a}} {% endif %}{% else %} - في المسجل(ة){% endif %} <br><br>
+    				{{ inscription.etudiant.matricule }}  &emsp;:رقم التسجيل
+    				
+    				<br><br>
+					 .لم يتلق / تتلق اية عقوبة تأديبية خلال دراسته(ها) بمؤسستنا 
+						<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+					 .تمنح هذه الشهادة لاستخدامها بما يسمح به القانون
+					<br><br>
+					
+    			</p>
+    		</td>
+    	</tr>
+    	
+	</table>
+	</big>
+	
+
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,157 @@
+ {% load static bootstrap4 icons usergroup dictionary %}
+    <table width="100%">
+		{% if institution.header %}
+	    	<tr>
+		    	<td class="text-center">
+		    		<br><br>
+		        	 <img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+		    	</td>
+	    	</tr>
+		{% endif %}
+
+	</table>
+<br><br>
+
+	<h2 align="center"> 
+		Formulaire de renseignement d'un sujet de thèse
+	</h2>
+
+	<br><br>
+	<h5 align="right">
+		ID: {{ these.id }}
+	</h5>
+	<br><br>
+	<h4 align="center"> 
+		<strong>INFORMATIONS GÉNÉRALES</strong>
+	</h4>
+	
+	<table class="table table-bordered">
+		<tr>
+			<td><strong> Année de dépôt du sujet de thèse </strong></td>
+			<td>{{ these.annee_univ }} </td>
+		</tr>
+		<tr>
+			<td><strong> Intitulé de la thèse </strong></td>
+			<td>{{ pfe.intitule }}</td>
+		</tr>
+
+		<tr>
+			<td><strong> Doctorant</strong></td>
+			<td>
+					<strong>Nom: </strong> {{ these.doctorant.nom }}  <strong>Prénom: </strong> {{ these.doctorant.prenom }}<br>
+					<strong>Email: </strong> {{ these.doctorant.user.email }}<br>
+					<strong>Organisme : </strong>{{ these.doctorant.organisme }}<br><br>
+
+			</td>
+		</tr>
+
+		<tr>
+			<td><strong> Directeur de thèse </strong></td>
+			<td>
+				<strong>Organisme: </strong>{{ these.directeur.user.institution.nom }}<br>
+				<strong>Adresse: </strong>{{ these.directeur.user.institution.adresse }}<br>
+				<strong>Nom et Prénom: </strong>{{ these.directeur }}<br>
+				<strong>Grade: </strong>{{ LISTE_GRADES|get_value_from_dict:these.directeur.grade }}<br>
+				<strong>Organisme : </strong>{{ these.directeur.organisme }}<br>
+				<strong>Email: </strong>{{ these.directeur.user.email }}<br>
+			</td>
+		</tr>
+		{% if these.codirecteur %}
+			<tr>
+				<td><strong> Co-directeur de thèse </strong></td>
+				<td>
+					<strong>Organisme: </strong>{{ these.codirecteur.user.institution.nom }}<br>
+					<strong>Adresse: </strong>{{ these.codirecteur.user.institution.adresse }}, {{ these.codirecteur.user.institution.ville }}<br>
+					<strong>Nom et Prénom: </strong>{{ these.codirecteur }}<br>
+					<strong>Grade: </strong>{{ LISTE_GRADES|get_value_from_dict:these.codirecteur.grade }}<br>
+					<strong>Organisme : </strong>{{ these.codirecteur.organisme }}<br>
+					<strong>Email: </strong>{{ these.codirecteur.user.email }}<br>
+				</td>
+			</tr>
+		{% endif %}
+		{% if these.codirecteur_externe %}
+			<tr>
+				<td><strong> Co-directeur de thèse (externe) </strong></td>
+				<td>
+					{{ these.codirecteur_externe }}<br>
+				</td>
+			</tr>
+		{% endif %}
+
+
+
+	</table>
+	
+	<br><br>
+	<h4 align="center"> 
+		<strong>DESCRIPTION DE LA THÈSE</strong>
+	</h4>
+	
+	<table class="table table-bordered">
+		<tr>
+			<td><strong> Résumé</strong></td>
+			<td>{{ pfe.resume|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Objectifs</strong></td>
+			<td>{{ pfe.objectifs|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Résultats attendus</strong></td>
+			<td>{{ pfe.resultats_attendus|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Antécédents du travail demandé</strong></td>
+			<td>{{ pfe.antecedents|linebreaks }}</td>
+		</tr>
+		<tr>
+			<td><strong> Bibliographie</strong></td>
+			<td>{{ pfe.bibliographie|linebreaks }}</td>
+		</tr>
+		
+		<tr>
+			<td><strong> Echéancier</strong></td>
+			<td>{{ pfe.echeancier|linebreaks }}</td>
+		</tr>
+
+
+	</table>
+	
+	<div class="container new-page">
+	<h5 align="right">
+			ID: {{ these.id }}
+	</h5>
+	
+	<br><br>
+	<h4 align="center"> 
+		<strong>VALIDATION DU SUJET</strong>
+	</h4>
+	
+	<table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<th>Avis</th>
+    			<th>Date</th>
+    			<th>Commentaire</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		{% for validation in pfe.validations.all %}
+    			<tr>
+    				<td>{{ avis_expert|get_value_from_dict:validation.avis }}</td>
+    				<td>{{ validation.fin|date:'d/m/Y'}}</td>
+    				<td>{{ validation.commentaire|linebreaks }}</td>
+    			</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+	</div>
+	<table>
+		{% if institution.footer %}
+	    	<tr>
+		    	<td class="text-center">
+		        	 <img src="{{ institution.footer.url }}" alt="Logo" width="100%"> 
+		    	</td>
+	    	</tr>
+		{% endif %}
+	</table>

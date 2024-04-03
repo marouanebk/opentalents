@@ -1,0 +1,90 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 dictionary %}
+{% block content %}
+	<br><br>
+	<h1 class="text-center"> Configuration du PV de délibération d'une période pour {{ formation }}</h1>
+	<h2 class="text-center"> Période : {{ periode.code }}</h2>
+    <br>
+	<form action="" method="post">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-lg-6">
+				<h3 class="text-center">
+					Sélection pour affichage sur le PV
+				</h3>
+				{% for periode in formation.programme.periodes.all %}
+					{% with 'matieres_affichage_'|addstr:periode.periode.code as key %}
+						{% with form|form_field:key as field %}
+							<strong>{{ field.label }}:</strong><br> 
+							{% for option in field %}
+								<div class="form-check-inline">
+									{{option}}
+								</div>
+							{% endfor %}
+							<br>
+						{% endwith %}
+					{% endwith %}
+				{% endfor %}
+			</div>
+			<div class="col-lg-6">
+				<h3 class="text-center">
+					Sélection pour calcul de la moyenne provisoire
+				</h3>
+				{% for periode in formation.programme.periodes.all %}
+					{% with 'matieres_moyenne_'|addstr:periode.periode.code as key %}
+						{% with form|form_field:key as field %}
+							<strong>{{ field.label }}:</strong><br> 
+							{% for option in field %}
+								<div class="form-check-inline">
+									{{option}}
+								</div>
+							{% endfor %}
+							<br>
+						{% endwith %}
+					{% endwith %}
+				{% endfor %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+					<h3 class="text-center">Autres Options</h3>
+				<div class="row">
+					<div class="col-lg-2">
+						{{form.photo|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.sort|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.anonyme|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.ne|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.rang|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.affichage_decisions_jury|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.conges|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.xlsx|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.xlsxemail|as_crispy_field}}
+					</div>
+					<div class="col-lg-2">
+						{{form.signatures|as_crispy_field}}
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<input type="submit" name="submit" value="Générer"  class="btn btn-primary"/>
+		<a href="{% url "deliberation_detail" formation_pk=formation.id %}" class="btn btn-secondary">Délibérations</a>
+	</form>
+	
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 jchart dictionary %}
+{% block content %}
+
+  <h2>{{ titre }}</h2>
+  <br>
+  
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+     </li>
+    
+  </ul>
+ 
+  <div class="tab-content">
+
+    	{% crispy candidature_form %}
+		{% if cv %}
+			<h4><br>CV : <a href="{{cv.url}}"><strong>{{ cv|filename }}</strong></a></h4>
+		{% endif %}
+		{% if fichiers %}
+			{% for fichier in fichiers %}
+				<h4><br>Pièce jointe : <a href="{{fichier.url}}"><strong>{{ fichier|filename }}</strong></a></h4>
+			{% endfor %}
+		{% endif %}
+		{% if candidature.acces_profil %}
+			{% if candidature.user.is_etudiant %}
+				<br>
+				<a href="{% url "etudiant_detail" pk=candidature.user.etudiant.matricule %}" class="btn btn-info" role="button"> Profil étudiant</a>
+			{% endif %}
+			{% if candidature.user.is_enseignant %}
+			   <a href="{% url "enseignant_detail" pk=candidature.user.enseignant.id %}" class="btn btn-danger" role="button"> Profil enseignant</a>
+			{% endif %}
+		{% endif %}
+    </div>
+    
+  </div>
+{% endblock %}
+	

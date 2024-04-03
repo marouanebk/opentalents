@@ -1,0 +1,43 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+
+{% block content %}
+	<h1>{{ titre }}</h1>
+	<br>
+    	{% if import_url %}
+    		<a href="{{ import_url }}" class="btn btn-info">{% icon 'plus'%} {{ import_btn }} {% icon 'file-excel' %} </a>
+    	{% endif %}
+
+    	{% if create_url %}
+    		<a href="{{ create_url }}" class="btn btn-primary">{% icon 'plus'%} {{ create_btn }} </a>
+    	{% endif %}
+
+		{% if export_url %}
+    		<a href="{{ export_url }}" class="btn btn-success">{% icon 'file-excel'%} {{ export_btn }} </a>
+    		
+    	{% endif %}
+    	
+		{% for btn, link in btn_list.items %}
+			<a href="{{ link }}" class="btn btn-info">{{ btn }}</a>
+		{% endfor %}
+		
+    	<br><br>
+    	<!--
+    	{% crispy filter.form filter.form.helper %}
+    	-->
+    	<form action="" method="get" class="form form-inline">
+    		{% csrf_token %}
+    		{% bootstrap_form filter.form layout='inline' %}
+    		{% bootstrap_button 'Filtrer' %}
+    	</form>
+
+
+    	<br>
+		{% render_table table %}
+		<br>
+		<a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Retour</a>
+		<br><br><br><br>
+{% endblock %}
+	

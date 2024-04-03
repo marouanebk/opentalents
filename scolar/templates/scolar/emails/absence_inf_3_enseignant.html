@@ -1,0 +1,6 @@
+{% extends 'scolar/emails/base.html' %}
+{% block content %}
+<p>Cher(e) collègue,<br>Nous espérons que vous allez bien!</p>
+<p>Nous vous informons qu'une absence au module {{ instance.seance.activite.module.matiere.code }} a été signalée.<br>Veuillez vous rapprocher du département afin de planifier la séance de remplacement si ce n'est pas encore fait.</p>                                 
+<p>Bien cordialement.<br>{{ signature }}</p>
+{% endblock %}

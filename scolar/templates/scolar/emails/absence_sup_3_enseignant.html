@@ -1,0 +1,8 @@
+{% extends 'scolar/emails/base.html' %}
+{% block content %}
+<p>Nom & Prénom: {{ instance.enseignant.nom }} {{ instance.enseignant.prenom }}<br>Email: {{ instance.enseignant.get_email }}<br>Tel: {{ instance.enseignant.tel }}<p><br>
+<p>Cher(e) collègue,<br>Nous espérons que vous allez bien!</p>
+<p>Nous vous informons que {{ instance.nb_absences }} absences au {{ instance.seance.activite }} ont été signalées.<br>Veuillez vous rapprocher du département afin de planifier la séance de remplacement si ce n'est pas encore fait.</p>
+<p>Par ailleurs, voudriez vous vous rapprocher de la direction des études afin de discuter de vos absences fréquentes et trouver ensemble les aménagements possibles afin de les éviter.</p>
+<p>Bien cordialement.<br>{{ signature }}</p>
+{% endblock %}

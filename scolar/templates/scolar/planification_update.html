@@ -1,0 +1,97 @@
+{% extends 'scolar/index.html' %}
+{% load icons dictionary bootstrap4 %}
+{% block content %}
+	<br><br>
+	<h5>Planification de la Formation {{ formation.programme.code }} Semestre {{ periode.periode.code }} :</h5>
+    <br><br>
+    {% if perms.scolar.fonctionnalite_planification_gestionactivites %}
+    <a href="{% url "module_create" formation_pk=formation.id periode_pk=periode.id %}" class="btn btn-primary">{% icon 'plus' %} Module</a>
+   {% endif %}
+    <br><br>
+    <div class="row">
+    <div class="col-lg-12">
+    	<small>
+    	<table class="table table-bordered table-sm">
+    		<thead class="thead-dark">
+				<tr>
+					<th>Groupe</th>
+					{% for module in module_periode_list  %}
+					  
+						<th class="text-center">{{ module.matiere.code }} <a href="{% url "module_update" pk=module.id formation_pk=module.formation.id periode_pk=module.periode.id %}">
+						{% if perms.scolar.fonctionnalite_planification_gestionactivites %}{% icon 'pencil-alt' %}</a>{% endif %}
+						 <a href="{% url "module_delete" pk=module.id formation_pk=module.formation.id periode_pk=module.periode.id %}">
+						 {% if perms.scolar.fonctionnalite_planification_gestionactivites %}{% icon 'trash' %}</a>{% endif %}
+						<br>{% if module.coordinateur %}
+								{{module.coordinateur}}
+							{% endif %}
+						</th>
+						
+						
+					{% endfor %}
+				</tr>
+			</thead>
+    		<tbody>
+				{% for groupe_ in groupe_list  %}
+					<tr>
+						<td>
+							<strong>{{ groupe_.section }} </strong>
+							{% if groupe_.code %}
+								<strong>{{ groupe_.code }}</strong>
+							{% endif %}
+						</td>
+						{% for module in module_periode_list  %}
+							{% with groupe_.id|addstr:"_"|addstr:module.id as key %}
+								{% with module_suivi_list|get_value_from_dict:key as module_suivi %}
+									{% if module_suivi %}
+										{% with activite_list|get_value_from_dict:key as module_activite_list %}
+											{% if module_activite_list %}
+												<td class="table-success text-center">
+												{% if perms.scolar.fonctionnalite_planification_gestionactivites %}
+												<a href="{% url "activite_create" groupe_pk=groupe_.id module_pk=module.id %}" >{% icon 'plus' %}</a>
+												{% endif %}<br>
+												{% for activite_ in module_activite_list %}
+													<table>
+														<tr><td>
+															{{ activite_.type }} {{ activite_.module.matiere.code }}
+															{% for enseignant_ in activite_.assuree_par.all %}
+																<br>
+																{{ enseignant_.nom }}
+															{% endfor %}
+															<a href="{% url "activite_update" pk=activite_.id formation_pk=module_suivi.module.formation.id periode_pk=module_suivi.module.periode.id %}" >
+															{% if perms.scolar.fonctionnalite_planification_gestionactivites %}{% icon 'pencil-alt' %}</a>{% endif %}
+			                                        		<a href="{% url "activite_delete" pk=activite_.id formation_pk=module_suivi.module.formation.id periode_pk=module_suivi.module.periode.id %}" >
+			                                        		{% if perms.scolar.fonctionnalite_planification_gestionactivites %}{% icon 'trash' %}</a>{% endif %}
+															
+														</td></tr>
+													</table>
+												{% endfor %}
+												</td>
+	                						{% else %}
+	                							<td class="table-warning text-center">
+	                							{% if perms.scolar.fonctionnalite_planification_gestionactivites %}
+	                    						<a href="{% url "activite_create" groupe_pk=groupe_.id module_pk=module.id %}" >{% icon 'plus' %}</a>
+	                    						<a href="{% url "module_suivi_delete" pk=module_suivi.id formation_pk=module_suivi.module.formation.id periode_pk=module_suivi.module.periode.id %}" >{% icon 'minus' %}</a>
+	                    						{% endif %}
+	                    						</td>
+											{% endif %}
+										{% endwith %}
+									{% else %}
+										<td class="table-active">
+										{% if perms.scolar.fonctionnalite_planification_gestionactivites %}
+											<a href="{% url "module_suivi_create" module_pk=module.id groupe_pk=groupe_.id %}" >{% icon 'plus' %}</a>
+										{% endif %}	
+	                    				</td>
+									{% endif %}
+								{% endwith %}
+							{% endwith %}
+						{% endfor %}
+					</tr>
+				{% endfor %}
+    		</tbody>
+		</table>
+		</small>    
+	</div>
+	</div>
+	<a href="{% url "planification_list"%}" class="btn btn-secondary">Retour</a>
+    
+{% endblock %}
