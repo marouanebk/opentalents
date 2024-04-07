@@ -106,60 +106,30 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers
 
-from .models import  Etudiant, Module, AnneeUniv , Programme , PeriodeProgramme , UE , Matiere
+from .models import  Etudiant, Module, AnneeUniv
 from django.http import JsonResponse
 
 
-
-@login_required
-def pv(request): 
-    if request.method == 'POST':
-        # anne_univ_id = request.POST.get('anneUniversitaire')
-        programme_id = request.POST.get('program')
-        print("post method")
-
-        # Now you can use these ids to get the actual AnneUniv and Programme instances
-        # anne_univ = AnneeUniv.objects.get(annee_univ=anne_univ_id)
-        programme = Programme.objects.get(code=programme_id)
-
-        anne_univ=AnneeUniv.objects.get(encours=True).annee_univ
-
-        periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
-
-        ues = UE.objects.filter(periode__in=periode_programmes)
-
-        matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
-
-        formations = Formation.objects.filter(programme=programme)
-
-        inscriptions = Inscription.objects.filter(formation__in=formations)
-
-        etudiants = Etudiant.objects.filter(inscriptions__in=inscriptions).distinct()
-
-        print(etudiants )
-   
-        context = {
-            'matieres' : matieres,
-            'etudiants' : etudiants,
-        }
-
-        return render(request, 'stage/pv.html' , context)
-
+def get_students_by_level(request):
+    level_id = request.GET.get('level_id', None)
+    if level_id is not None:
+        students = Etudiant.objects.filter(level_id=level_id).values('id', 'name')
+        students_list = list(students)
+        return JsonResponse(students_list, safe=False)
     else:
-        return redirect('gestion_cp')
-
-@login_required
-def gestion_cp(request): 
-    programmes = Programme.objects.all()
+        return JsonResponse({'error': 'Missing level_id parameter'}, status=400)
+def pv(request): 
+    modules = Module.objects.all()
+    etudiants = Etudiant.objects.all()
     anneUnivs = AnneeUniv.objects.all()
-    print(programmes , anneUnivs)
 
     context = {
-        'programmes': programmes,
+        'modules': modules,
+        'etudiants': etudiants,
         'anneUnivs': anneUnivs,
     }
 
-    return render(request, 'stage/gestion_cp.html' , context)
+    return render(request, 'stage/pv.html', context)
 def send_email(context):
     context_default = {
     "cc" : [],

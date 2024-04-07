@@ -110,45 +110,85 @@ from .models import  Etudiant, Module, AnneeUniv , Programme , PeriodeProgramme 
 from django.http import JsonResponse
 
 
+def get_students_by_level(request):
+    level_id = request.GET.get('level_id', None)
+    if level_id is not None:
+        students = Etudiant.objects.filter(level_id=level_id).values('id', 'name')
+        students_list = list(students)
+        return JsonResponse(students_list, safe=False)
+    else:
+        return JsonResponse({'error': 'Missing level_id parameter'}, status=400)
+# def pv(request): 
+#     modules = Module.objects.all()
+#     etudiants = Etudiant.objects.all()
+#     anneUnivs = AnneeUniv.objects.all()
 
-@login_required
+#     context = {
+#         'modules': modules,
+#         'etudiants': etudiants,
+#         'anneUnivs': anneUnivs,
+#     }
+
+#     return render(request, 'stage/pv.html', context)
+
 def pv(request): 
     if request.method == 'POST':
-        # anne_univ_id = request.POST.get('anneUniversitaire')
+        anne_univ_id = request.POST.get('anneUniversitaire')
         programme_id = request.POST.get('program')
         print("post method")
 
         # Now you can use these ids to get the actual AnneUniv and Programme instances
-        # anne_univ = AnneeUniv.objects.get(annee_univ=anne_univ_id)
+        anne_univ = AnneeUniv.objects.get(annee_univ=anne_univ_id)
         programme = Programme.objects.get(code=programme_id)
 
-        anne_univ=AnneeUniv.objects.get(encours=True).annee_univ
-
+        # Get all PeriodeProgramme instances for this programme
         periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
+ 
 
+        # Get all UE instances for these PeriodeProgramme instances
         ues = UE.objects.filter(periode__in=periode_programmes)
 
+
+        # Get all Matiere instances for these UE instances
         matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
 
+        # Now matieres contains all Matiere instances for the given programme
+
+        # Get all Formation instances for this programme
         formations = Formation.objects.filter(programme=programme)
 
+        # Get all Inscription instances for these Formation instances
         inscriptions = Inscription.objects.filter(formation__in=formations)
 
+        # Get all Etudiant instances for these Inscription instances
         etudiants = Etudiant.objects.filter(inscriptions__in=inscriptions).distinct()
 
-        print(etudiants )
+        # Now etudiants contains all Etudiant instances for the given programme
+        print(etudiants , "etudiants ")
    
         context = {
             'matieres' : matieres,
             'etudiants' : etudiants,
         }
 
+        # ... rest of your code ...
         return render(request, 'stage/pv.html' , context)
 
     else:
-        return redirect('gestion_cp')
+        # This is for GET requests
+        modules = Module.objects.all()
+        etudiants = Etudiant.objects.all()
+        anneUnivs = AnneeUniv.objects.all()
 
-@login_required
+        context = {
+            'modules': modules,
+            'etudiants': etudiants,
+            'anneUnivs': anneUnivs,
+        }
+
+        return render(request, 'stage/pv.html', context)
+
+
 def gestion_cp(request): 
     programmes = Programme.objects.all()
     anneUnivs = AnneeUniv.objects.all()

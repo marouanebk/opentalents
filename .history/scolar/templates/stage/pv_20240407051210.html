@@ -61,11 +61,11 @@
 
         <br>
 
-        <label for="s1date">1er cp:</label><br>
+        <label for="s1date">S1 Date:</label><br>
         <input type="datetime-local" id="s1date" name="s1date">
         <button type="button" id="generate-pv1">Generate PV1</button><br>
         
-        <label for="s2date">2eme cp:</label><br>
+        <label for="s2date">S2 Date:</label><br>
         <input type="datetime-local" id="s2date" name="s2date">
         <button type="button" id="generate-pv2">Generate PV2</button><br>
 
@@ -110,30 +110,66 @@
 
     <script>
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Create a string with all student options
-    const studentOptions = Array.from(document.querySelector('.delegate-select select').options)
-        .map(option => `<option value="${option.value}">${option.textContent}</option>`)
-        .join('');
-
-    document.getElementById('add-delegate').addEventListener('click', function() {
-        const delegateContainer = document.getElementById('delegate-container');
-        const newDelegateSelect = document.createElement('div');
-        newDelegateSelect.className = 'delegate-select';
-        newDelegateSelect.innerHTML = `
-            <select name="delegue">
-                ${studentOptions}  <!-- Add all student options -->
-            </select>
-            <button class="remove-delegate">Remove</button>
-        `;
-        delegateContainer.appendChild(newDelegateSelect);
-    });
-
-    document.getElementById('delegate-container').addEventListener('click', function(e) {
-        if (e.target.className === 'remove-delegate') {
-            e.target.parentElement.remove();
-        }
-    });
-});
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpTableBody = document.getElementById('cp-table').getElementsByTagName('tbody')[0];
+        
+            function addModuleSelect(row) {
+                const select = document.createElement('select');
+                select.name = 'module[]';
+                select.required = true;
+                select.innerHTML = `
+                    <option value="Module 1">Module 1</option>
+                    <option value="Module 2">Module 2</option>
+                    <!-- Add more options as needed -->
+                `;
+                const cell = row.cells[1];
+                cell.appendChild(select);
+                addDeleteButton(cell);
+            }
+        
+            function addDelegueSelect(row) {
+                const select = document.createElement('select');
+                select.name = 'delegue[]';
+                select.required = true;
+                select.innerHTML = `
+                    <option value="Délégué 1">Délégué 1</option>
+                    <option value="Délégué 2">Délégué 2</option>
+                    <!-- Add more options as needed -->
+                `;
+                const cell = row.cells[2];
+                cell.appendChild(select);
+                addDeleteButton(cell);
+            }
+        
+            function addDeleteButton(parentElement) {
+                const deleteButton = document.createElement('span');
+                deleteButton.className = 'delete-button';
+                deleteButton.textContent = 'x';
+                deleteButton.addEventListener('click', function() {
+                    parentElement.parentElement.remove();
+                });
+                parentElement.appendChild(deleteButton);
+            }
+        
+            document.querySelector('.add-module').addEventListener('click', function() {
+                const newRow = cpTableBody.insertRow(-1);
+                newRow.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                `;
+                addModuleSelect(newRow);
+            });
+        
+            document.querySelector('.add-delegue').addEventListener('click', function() {
+                const newRow = cpTableBody.insertRow(-1);
+                newRow.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                `;
+                addDelegueSelect(newRow);
+            });
+        });
         </script>
 {% endblock %}

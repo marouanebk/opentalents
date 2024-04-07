@@ -114,15 +114,13 @@ from django.http import JsonResponse
 @login_required
 def pv(request): 
     if request.method == 'POST':
-        # anne_univ_id = request.POST.get('anneUniversitaire')
+        anne_univ_id = request.POST.get('anneUniversitaire')
         programme_id = request.POST.get('program')
         print("post method")
 
         # Now you can use these ids to get the actual AnneUniv and Programme instances
-        # anne_univ = AnneeUniv.objects.get(annee_univ=anne_univ_id)
+        anne_univ = AnneeUniv.objects.get(annee_univ=anne_univ_id)
         programme = Programme.objects.get(code=programme_id)
-
-        anne_univ=AnneeUniv.objects.get(encours=True).annee_univ
 
         periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
 

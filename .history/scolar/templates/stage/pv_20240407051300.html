@@ -61,11 +61,11 @@
 
         <br>
 
-        <label for="s1date">1er cp:</label><br>
+        <label for="s1date">S1 Date:</label><br>
         <input type="datetime-local" id="s1date" name="s1date">
         <button type="button" id="generate-pv1">Generate PV1</button><br>
         
-        <label for="s2date">2eme cp:</label><br>
+        <label for="s2date">S2 Date:</label><br>
         <input type="datetime-local" id="s2date" name="s2date">
         <button type="button" id="generate-pv2">Generate PV2</button><br>
 
@@ -110,30 +110,24 @@
 
     <script>
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Create a string with all student options
-    const studentOptions = Array.from(document.querySelector('.delegate-select select').options)
-        .map(option => `<option value="${option.value}">${option.textContent}</option>`)
-        .join('');
+document.getElementById('add-delegate').addEventListener('click', function() {
+    const delegateContainer = document.getElementById('delegate-container');
+    const newDelegateSelect = document.createElement('div');
+    newDelegateSelect.className = 'delegate-select';
+    newDelegateSelect.innerHTML = `
+        <select name="delegue">
+            <option value="">Select a student</option>
+            <!-- Add options dynamically -->
+        </select>
+        <button class="remove-delegate">Remove</button>
+    `;
+    delegateContainer.appendChild(newDelegateSelect);
+});
 
-    document.getElementById('add-delegate').addEventListener('click', function() {
-        const delegateContainer = document.getElementById('delegate-container');
-        const newDelegateSelect = document.createElement('div');
-        newDelegateSelect.className = 'delegate-select';
-        newDelegateSelect.innerHTML = `
-            <select name="delegue">
-                ${studentOptions}  <!-- Add all student options -->
-            </select>
-            <button class="remove-delegate">Remove</button>
-        `;
-        delegateContainer.appendChild(newDelegateSelect);
-    });
-
-    document.getElementById('delegate-container').addEventListener('click', function(e) {
-        if (e.target.className === 'remove-delegate') {
-            e.target.parentElement.remove();
-        }
-    });
+document.getElementById('delegate-container').addEventListener('click', function(e) {
+    if (e.target.className === 'remove-delegate') {
+        e.target.parentElement.remove();
+    }
 });
         </script>
 {% endblock %}

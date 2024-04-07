@@ -106,60 +106,30 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers
 
-from .models import  Etudiant, Module, AnneeUniv , Programme , PeriodeProgramme , UE , Matiere
+from .models import  Etudiant, Module, AnneeUniv
 from django.http import JsonResponse
 
 
-
-@login_required
-def pv(request): 
-    if request.method == 'POST':
-        # anne_univ_id = request.POST.get('anneUniversitaire')
-        programme_id = request.POST.get('program')
-        print("post method")
-
-        # Now you can use these ids to get the actual AnneUniv and Programme instances
-        # anne_univ = AnneeUniv.objects.get(annee_univ=anne_univ_id)
-        programme = Programme.objects.get(code=programme_id)
-
-        anne_univ=AnneeUniv.objects.get(encours=True).annee_univ
-
-        periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
-
-        ues = UE.objects.filter(periode__in=periode_programmes)
-
-        matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
-
-        formations = Formation.objects.filter(programme=programme)
-
-        inscriptions = Inscription.objects.filter(formation__in=formations)
-
-        etudiants = Etudiant.objects.filter(inscriptions__in=inscriptions).distinct()
-
-        print(etudiants )
-   
-        context = {
-            'matieres' : matieres,
-            'etudiants' : etudiants,
-        }
-
-        return render(request, 'stage/pv.html' , context)
-
+def get_students_by_level(request):
+    level_id = request.GET.get('level_id', None)
+    if level_id is not None:
+        students = Etudiant.objects.filter(level_id=level_id).values('id', 'name')
+        students_list = list(students)
+        return JsonResponse(students_list, safe=False)
     else:
-        return redirect('gestion_cp')
-
-@login_required
-def gestion_cp(request): 
-    programmes = Programme.objects.all()
+        return JsonResponse({'error': 'Missing level_id parameter'}, status=400)
+def pv(request): 
+    modules = Module.objects.all()
+    etudiants = Etudiant.objects.all()
     anneUnivs = AnneeUniv.objects.all()
-    print(programmes , anneUnivs)
 
     context = {
-        'programmes': programmes,
+        'modules': modules,
+        'etudiants': etudiants,
         'anneUnivs': anneUnivs,
     }
 
-    return render(request, 'stage/gestion_cp.html' , context)
+    return render(request, 'stage/pv.html', context)
 def send_email(context):
     context_default = {
     "cc" : [],
@@ -14794,37 +14764,36 @@ class UEUpdateView(LoginRequiredMixin, SuccessMessageMixin, PermissionRequiredMi
         self.success_url = reverse('programme_detail',kwargs={'pk': str(self.kwargs.get('programme_pk'))})
         return form
 
-# @receiver(m2m_changed, sender=UE.matieres.through)
-# def update_modulessuivis_resultats(sender, instance, action, **kwargs):
-#     print("print add ")
-#     if action=="post_add" :
-#         try:
-#             with transaction.atomic():
-#                 # déclencher les signaux qui permettent de synchroniser ModulesSuivis par les groupes
-#                 # qui suivent ce programme qui vient d'être modifié
-#                 groupe_list_=Groupe.objects.filter(section__formation__programme=instance.periode.programme)
-#                 for groupe_ in groupe_list_:
-#                     # déclencher la mise à jour de MosulesSuivis par le groupe
-#                     # Attention ceci ne déclenche pas les modules optionnels. Pour ce faire il faut modifier le groupe et supprimer et ajouter la nouvelle UE pour déclencher le m2m_changed du groupe
-#                     groupe_.save()
+@receiver(m2m_changed, sender=UE.matieres.through)
+def update_modulessuivis_resultats(sender, instance, action, **kwargs):
+    if action=="post_add" :
+        try:
+            with transaction.atomic():
+                # déclencher les signaux qui permettent de synchroniser ModulesSuivis par les groupes
+                # qui suivent ce programme qui vient d'être modifié
+                groupe_list_=Groupe.objects.filter(section__formation__programme=instance.periode.programme)
+                for groupe_ in groupe_list_:
+                    # déclencher la mise à jour de MosulesSuivis par le groupe
+                    # Attention ceci ne déclenche pas les modules optionnels. Pour ce faire il faut modifier le groupe et supprimer et ajouter la nouvelle UE pour déclencher le m2m_changed du groupe
+                    groupe_.save()
             
-#                 inscription_periode_list_=InscriptionPeriode.objects.filter(periodepgm=instance.periode)
+                inscription_periode_list_=InscriptionPeriode.objects.filter(periodepgm=instance.periode)
              
-#                 for inscription_periode_ in inscription_periode_list_:
-#                     # déclencher la mise à jour des résultats 
-#                     inscription_periode_.save()
-#         except Exception as e:
-#             if settings.DEBUG:
-#                 raise Exception
-#             else:
-#                 if activation_emails():
-#                     email = EmailMessage('[Talents] Erreur lors de la modification de l\'UE '+str(instance),
-#                                          'Bonjour,\n'+ 
-#                                          'Une erreur s\'est produite lors de la modification de l\'UE '+ str(instance)+'\n'+
-#                                          'Bien cordialement.\n'+
-#                                          signature_emails()+'\n'+
-#                                          str(e), to=email_webmaster() )
-#                     email.send(fail_silently=True)
+                for inscription_periode_ in inscription_periode_list_:
+                    # déclencher la mise à jour des résultats 
+                    inscription_periode_.save()
+        except Exception as e:
+            if settings.DEBUG:
+                raise Exception
+            else:
+                if activation_emails():
+                    email = EmailMessage('[Talents] Erreur lors de la modification de l\'UE '+str(instance),
+                                         'Bonjour,\n'+ 
+                                         'Une erreur s\'est produite lors de la modification de l\'UE '+ str(instance)+'\n'+
+                                         'Bien cordialement.\n'+
+                                         signature_emails()+'\n'+
+                                         str(e), to=email_webmaster() )
+                    email.send(fail_silently=True)
             
         
 class ResultatUEDeleteView(LoginRequiredMixin, SuccessMessageMixin, PermissionRequiredMixin, DeleteView):

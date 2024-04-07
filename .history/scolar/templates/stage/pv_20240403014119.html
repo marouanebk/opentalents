@@ -1,0 +1,131 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+
+{% block content %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin-bottom: 2em;
+        }
+        label {
+            font-weight: bold;
+        }
+        select, input[type="date"], input[type="submit"], button {
+            margin: 0.5em 0;
+            padding: 0.5em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #f2f2f2;
+            padding: 1em;
+            text-align: left;
+        }
+        .delete-button {
+            color: red;
+            cursor: pointer;
+        }
+    </style>
+
+    <h2>Gestion du CP</h2>
+
+    <form id="cp-form">
+        <!-- Your form fields here -->
+    </form>
+
+    <table id="cp-table">
+        <thead>
+            <tr>
+                <th>Enseignants</th>
+                <th>Modules</th>
+                <th>Délégués</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="delegue-row">
+                <td>Sample Enseignant</td>
+                <td>Sample Module</td>
+                <td>Sample Délégué</td>
+                <td>
+                    <button type="button" class="add-module">Add Module</button>
+                    <button type="button" class="add-delegue">Add Délégué</button>
+                    <span class="delete-button">x</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpTableBody = document.getElementById('cp-table').getElementsByTagName('tbody')[0];
+
+            function addModuleSelect(row) {
+                const select = document.createElement('select');
+                select.name = 'module[]';
+                select.required = true;
+                select.innerHTML = `
+                    <option value="Module 1">Module 1</option>
+                    <option value="Module 2">Module 2</option>
+                    <!-- Add more options as needed -->
+                `;
+                const cell = row.insertCell(1);
+                cell.appendChild(select);
+            }
+
+            function addDelegueSelect(row) {
+                const select = document.createElement('select');
+                select.name = 'delegue[]';
+                select.required = true;
+                select.innerHTML = `
+                    <option value="Délégué 1">Délégué 1</option>
+                    <option value="Délégué 2">Délégué 2</option>
+                    <!-- Add more options as needed -->
+                `;
+                const cell = row.insertCell(2);
+                cell.appendChild(select);
+            }
+
+            function addDeleteButton(row) {
+                const cell = row.insertCell(3);
+                const deleteButton = document.createElement('span');
+                deleteButton.className = 'delete-button';
+                deleteButton.textContent = 'x';
+                deleteButton.addEventListener('click', function() {
+                    row.remove();
+                });
+                cell.appendChild(deleteButton);
+            }
+
+            document.querySelector('.add-module').addEventListener('click', function() {
+                const newRow = cpTableBody.insertRow();
+                newRow.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                `;
+                addModuleSelect(newRow);
+                addDeleteButton(newRow);
+            });
+
+            document.querySelector('.add-delegue').addEventListener('click', function() {
+                const newRow = cpTableBody.insertRow();
+                newRow.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                `;
+                addDelegueSelect(newRow);
+                addDeleteButton(newRow);
+            });
+        });
+    </script>
+{% endblock %}

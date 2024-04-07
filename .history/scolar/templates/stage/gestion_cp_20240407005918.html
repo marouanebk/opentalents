@@ -1,0 +1,70 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    form {
+        margin-bottom: 2em;
+    }
+    label {
+        font-weight: bold;
+    }
+    select, input[type="date"], input[type="submit"], button {
+        margin: 0.5em 0;
+        padding: 0.5em;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th {
+        background-color: #f2f2f2;
+        padding: 1em;
+        text-align: left;
+    }
+    .delete-button {
+        color: red;
+        cursor: pointer;
+    }
+</style>
+
+    <h2>Gestion du CP</h2>
+    <form id="cp-form" action="{% url 'pv' %}" method="post">
+        {% csrf_token %}
+        <label for="anneUniversitaire">Anne Universitaire:</label><br>
+        <select id="anneUniversitaire" name="anneUniversitaire">
+            {% for anneUniv in anneUnivs %}
+            <option value="{{ anneUniv.id }}">{{ anneUniv }}</option>
+        {% endfor %}
+        </select><br>
+    
+        <label for="program">Program:</label><br>
+        <select id="program" name="program">
+            {% for programme in programmes %}
+            <option value="{{ programme.id }}">{{ programme }}</option>
+        {% endfor %}
+        </select><br>
+    
+        <input type="submit" value="Enregister">
+    </form>
+
+    <h2>Existing CPs</h2>
+    <ul id="cp-list">
+        <li>
+            <span>CP 1</span>
+            <a href="/cp/1/">View Details</a>
+        </li>
+        <li>
+            <span>CP 2</span>
+            <a href="/cp/2/">View Details</a>
+        </li>
+        <!-- Add more list items as needed -->
+    </ul>
+
+    <!-- ... same script as before ... -->
+{% endblock %}

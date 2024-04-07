@@ -122,8 +122,6 @@ def pv(request):
         # anne_univ = AnneeUniv.objects.get(annee_univ=anne_univ_id)
         programme = Programme.objects.get(code=programme_id)
 
-        anne_univ=AnneeUniv.objects.get(encours=True).annee_univ
-
         periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
 
         ues = UE.objects.filter(periode__in=periode_programmes)

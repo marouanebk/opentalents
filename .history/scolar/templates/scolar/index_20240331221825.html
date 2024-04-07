@@ -618,20 +618,6 @@
 			</ul>
 		{% endif %}
 
-		{% if request.user %}
-		<ul class="nav list-group">
-			<li>
-				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_cp">{% icon 'list' %} CP</button>
-			</li>
-			<div id="menu_cp" class="collapse">
-				<li>
-					<a class="list-group-item" href="{% url "gestion_cp" %}">{% icon 'list' %} Gestion CP</a>
-				</li>
-			</div>
-			
-		</ul>
-	{% endif %}
-
 		{% if institution.activation_offres %}
 			<ul class="nav list-group">
 				<li>
