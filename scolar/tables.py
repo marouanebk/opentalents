@@ -2666,4 +2666,11 @@ class GoogleCalenderTable(tables.Table):
         model= GoogleCalendar
         fields = ('code', 'calendarId')
         template_name= "django_tables2/bootstrap4.html"
-        
+
+
+class CPTable(tables.Table):
+   
+    class Meta:
+        model = CP
+        fields=('formation','periode', 'date_debut_semester','date_fin_semester')
+        template_name= "django_tables2/bootstrap4.html"

@@ -3359,3 +3359,16 @@ class Candidature(models.Model):
     
     def __str__(self):
         return f"{self.user} : {self.offre}"
+
+
+class CP(models.Model):
+    formation=models.ForeignKey(Formation, on_delete=models.SET_NULL, null=True, blank=True)
+    periode=models.ForeignKey(Periode, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    date_debut_semester=models.DateField(null=True, blank=True)
+    date_fin_semester=models.DateField(null=True, blank=True)
+    pv=models.FileField(upload_to='files/cps/pvs', null=True, blank=True) 
+    enseignants=models.ManyToManyField(Enseignant, blank=True)
+    delegues=models.ManyToManyField(Etudiant, blank=True)
+    def __str__(self):
+        return f"{self.formation.programme.titre} {self.formation.annee_univ.annee_univ} {self.periode.code}" 

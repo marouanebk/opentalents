@@ -549,6 +549,7 @@ urlpatterns = [
     re_path(r'^googlecalendar_update/(?P<pk>\d+)/$', views.GoogleCalendarUpdateView.as_view(), name='googlecalendar_update'),
     re_path(r'^googlecalendar_delete/(?P<pk>\d+)/$', views.GoogleCalendarDeleteView.as_view(), name='googlecalendar_delete'),
 
-
-
+    path('comite_pedagogique', views.CPListView.as_view(), name='comite_pedagogique_list'),
+    path('comite_pedagogique_create', views.CPCreateView.as_view(), name='comite_pedagogique_create'),
+    
 ]

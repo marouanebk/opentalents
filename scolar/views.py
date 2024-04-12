@@ -19,7 +19,7 @@ from scolar.tables import OrganismeTable, OrganismeFilter, PFETable, PFEFilter, 
     SurveillanceFilter, SurveillanceTable, EnseignementsTable,EncadrementsTable,EncadrementsAttestationTable, SoutenancesAttestationTable, ProgresFormationTable, TraceTable, TraceFilter,\
     NotificationsTable, UserTable, ExportTable, DoctorantTable, DoctorantFilter, TheseFilter, TheseTable, ProjetFilter, ProjetTable, ProjetsEnseignantTable, CritereTable, OptionCritereTable, FormationDoctoratTable, InscriptionDoctoratAvancementTable, SeminairesFilter, SeminairesTable, \
     DomaineConnaissanceTable, PosteTable, PosteFilter, ProgrammeDetteTable, DetteFilter, DetteTable, UserFilter, PersonnelTable, PaysTable, WilayaTable, CommuneTable, SurveillancesEnseignantFilter, EnregistrementEtudiantTable, EnregistrementEtudiantFilter, EquipeRechercheFilter, EquipeRechercheTable, EquipeRechercheEnseignantTable, ExpertisesPFEAttestationTable, OffreFilter, OffreTable, CandidatureTable, \
-    GoogleCalenderTable, GoogleCalenderFilter
+    GoogleCalenderTable, GoogleCalenderFilter,CPTable
     
 from functools import reduce
 from django.contrib.messages.views import SuccessMessageMixin
@@ -9007,6 +9007,7 @@ class PublicEtudiantListView(TemplateView):
         if not self.request.user.is_authenticated:
             private=True
         else :
+
             private= not self.request.user.has_perm('scolar.fonctionnalite_etudiants_visualisationsensible') 
         exclude_=[]
         if private:
@@ -23230,3 +23231,69 @@ class GoogleCalendarDeleteView(LoginRequiredMixin, SuccessMessageMixin, Permissi
  
     def get_success_url(self):
         return reverse('googlecalendar_list')   
+
+class CPCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, CreateView):
+    model = CP
+    fields = [ 'formation','periode','date_debut_semester','date_fin_semester','enseignants','delegues']
+    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
+    template_name = 'scolar/create.html'
+    success_message = "La Comité Pédagogique a été créé avec succès"
+    
+    def test_func(self):
+        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
+        try:
+         
+            form.fields['formation']=forms.ModelChoiceField(queryset=Formation.objects.all())
+            form.fields['periode']=forms.ModelChoiceField(queryset=Periode.objects.all())
+            form.fields['date_debut_semester']=forms.DateField(label=u"Date du 1er cp",input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
+            form.fields['date_fin_semester']=forms.DateField(label=u"Date du 2eme cp", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
+            
+            selected_formation = self.request.POST.get('formation')
+
+            # Filter enseignants queryset based on selected formation
+            if selected_formation:
+                form.fields['delegues'].queryset = Etudiant.objects.filter(
+                    inscriptions__formation_id=selected_formation
+                ).distinct()
+            else:
+                # If no formation is selected, show all enseignants
+                form.fields['delegues'].queryset = Etudiant.objects.all()
+
+            form.helper.add_input(Submit('submit','Enregistrer', css_class='btn-primary'))
+            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
+          
+        except Exception:
+            if settings.DEBUG:
+                raise Exception
+            else:
+                messages.error(self.request, "ERREUR: lors de la création d'un cp.")
+    
+        return form
+    
+class CPListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+
+    template_name='scolar/list.html'
+    
+    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion' 
+       
+    def get_context_data(self, **kwargs):
+        context = super(CPListView, self).get_context_data(**kwargs)
+        exclude_=["delegues","enseignants"]
+        table = CPTable(CP.objects.all(), exclude=exclude_)
+        RequestConfig(self.request).configure(table)
+        context['table'] = table
+
+        btn_list={}
+        btn_list['+ Créer']=reverse('comite_pedagogique_create')
+        context['btn_list']=btn_list
+
+        context['back'] = self.request.META.get('HTTP_REFERER')
+        """if self.request.user.has_perm(''):
+            context['create_url'] = reverse('anneeuniv_create')
+            context['create_btn'] = 'Année'
+            """
+        return context
