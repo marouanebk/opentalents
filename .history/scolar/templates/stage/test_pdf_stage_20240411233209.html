@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+    </style>
+    <style>
+      @media print {
+        .new-page {
+          page-break-before: always;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    {% if institution.header %}
+    <img
+      src="{{ institution.header.url }}"
+      alt="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "
+      width="100%"
+    />
+    {% endif %}
+    <h1 align="center">PROCES-VERBaL DU COMITE PEDAGOGIQUE No 2</h1>
+    <h1 align="center">treannée classe préparatoife</h1>
+    <p>
+      L'an deux mille vingt-trois et le 05 du mois de Mai & 13 h.30, s'estenpe
+      la reunion du comité pédagogique de la 2trannée classe préparatoire,
+      présidée par Dr.Berbague Chemseddinc. Le débat a été lancé autour de
+      l'ordre du jour suivant : 1. Avancement des enseignements (cours, travaux
+      dirigés et travaux pratiques). 2. Les examens semestriels et l'examen de
+      passage. 3. Divers. Etaient pr
+    </p>
+    <br /><br />
+    <table id="#top" align="center" class="table">
+      <thead>
+        <tr>
+          <th>Programme</th>
+          <th>Titre</th>
+          <th>Spécialité</th>
+          <th>Diplôme</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#programme_code">Programme Code</a></td>
+          <td>Programme Title</td>
+          <td>Programme Speciality</td>
+          <td>Programme Diploma</td>
+        </tr>
+      </tbody>
+    </table>
+    <br /><br />
+    <div class="container new-page" id="programme_code">
+      <!-- Include programme detail content here -->
+      <br /><br />
+      <a href="#top">Retour</a>
+      <br /><br />
+    </div>
+    <div class="container new-page" id="matiere_id">
+      <!-- Include matiere detail content here -->
+      <br /><br />
+      <a href="#top">Retour</a>
+    </div>
+  </body>
+</html>

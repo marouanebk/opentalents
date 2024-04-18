@@ -19,7 +19,7 @@ from scolar.tables import OrganismeTable, OrganismeFilter, PFETable, PFEFilter, 
     SurveillanceFilter, SurveillanceTable, EnseignementsTable,EncadrementsTable,EncadrementsAttestationTable, SoutenancesAttestationTable, ProgresFormationTable, TraceTable, TraceFilter,\
     NotificationsTable, UserTable, ExportTable, DoctorantTable, DoctorantFilter, TheseFilter, TheseTable, ProjetFilter, ProjetTable, ProjetsEnseignantTable, CritereTable, OptionCritereTable, FormationDoctoratTable, InscriptionDoctoratAvancementTable, SeminairesFilter, SeminairesTable, \
     DomaineConnaissanceTable, PosteTable, PosteFilter, ProgrammeDetteTable, DetteFilter, DetteTable, UserFilter, PersonnelTable, PaysTable, WilayaTable, CommuneTable, SurveillancesEnseignantFilter, EnregistrementEtudiantTable, EnregistrementEtudiantFilter, EquipeRechercheFilter, EquipeRechercheTable, EquipeRechercheEnseignantTable, ExpertisesPFEAttestationTable, OffreFilter, OffreTable, CandidatureTable, \
-    GoogleCalenderTable, GoogleCalenderFilter,CPTable
+    GoogleCalenderTable, GoogleCalenderFilter
     
 from functools import reduce
 from django.contrib.messages.views import SuccessMessageMixin
@@ -109,7 +109,24 @@ from rest_framework import serializers
 from .models import  Etudiant, Module, AnneeUniv , Programme , PeriodeProgramme , UE , Matiere
 from django.http import JsonResponse
 
+def test_pdf_stage(request):
+    return render(request, 'stage/test_pdf_stage.html')
 
+# def test_pdf_stage_2(request):
+#     return render(request, 'stage/test_pdf_stage_2.html')
+
+class TestPDFStage2View(PDFTemplateView):
+    template_name = 'stage/test_pdf_stage_2.html'
+    
+    cmd_options = {
+        'orientation': 'Landscape',
+        'page-size': 'A4',
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any additional context data you need for your template here
+        return context
 
 @login_required
 def pv(request): 
@@ -9007,7 +9024,6 @@ class PublicEtudiantListView(TemplateView):
         if not self.request.user.is_authenticated:
             private=True
         else :
-
             private= not self.request.user.has_perm('scolar.fonctionnalite_etudiants_visualisationsensible') 
         exclude_=[]
         if private:
@@ -23231,119 +23247,3 @@ class GoogleCalendarDeleteView(LoginRequiredMixin, SuccessMessageMixin, Permissi
  
     def get_success_url(self):
         return reverse('googlecalendar_list')   
-
-class CPCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, CreateView):
-    model = CP
-    fields = [ 'formation','periode','date_debut_semester','date_fin_semester','enseignants','delegues']
-    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
-    template_name = 'scolar/create.html'
-    success_message = "La Comité Pédagogique a été créé avec succès"
-    
-    def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = FormHelper()
-        try:
-         
-            form.fields['formation']=forms.ModelChoiceField(queryset=Formation.objects.all())
-            form.fields['periode']=forms.ModelChoiceField(queryset=Periode.objects.all())
-            form.fields['date_debut_semester']=forms.DateField(label=u"Date du 1er cp",input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            form.fields['date_fin_semester']=forms.DateField(label=u"Date du 2eme cp", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            
-            selected_formation = self.request.POST.get('formation')
-
-            # Filter enseignants queryset based on selected formation
-            if selected_formation:
-                form.fields['delegues'].queryset = Etudiant.objects.filter(
-                    inscriptions__formation_id=selected_formation
-                ).distinct()
-            else:
-                # If no formation is selected, show all enseignants
-                form.fields['delegues'].queryset = Etudiant.objects.all()
-
-            form.helper.add_input(Submit('submit','Enregistrer', css_class='btn-primary'))
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-          
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la création d'un cp.")
-    
-        return form
-    
-class CPListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
-
-    template_name='scolar/list.html'
-    
-    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion' 
-       
-    def get_context_data(self, **kwargs):
-        context = super(CPListView, self).get_context_data(**kwargs)
-        exclude_=["delegues","enseignants"]
-        table = CPTable(CP.objects.all(), exclude=exclude_)
-        RequestConfig(self.request).configure(table)
-        context['table'] = table
-
-        btn_list={}
-        btn_list['+ Créer']=reverse('comite_pedagogique_create')
-        context['btn_list']=btn_list
-
-        context['back'] = self.request.META.get('HTTP_REFERER')
-        """if self.request.user.has_perm(''):
-            context['create_url'] = reverse('anneeuniv_create')
-            context['create_btn'] = 'Année'
-            """
-        return context
-
-
-
-class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
-    # template_name = 'stage/test_pdf_stage_2.html'
-    template_name = 'stage/pdf.html'
-
-    
-    cmd_options = {
-        'orientation': 'Portrait',
-        'page-size': 'A4',
-        'enable-local-file-access': True,
-        'quiet': False
-        # 'header-html': 'stage/header.html',
-        # 'footer-html': 'stage/footer.html'
-
-    }
-    def test_func(self):
-        # Implement your test here
-        # This is just an example, replace it with your actual test
-        return self.request.user.is_authenticated
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        cp_id = self.kwargs.get('pk')
-
-        cp = CP.objects.get(id=cp_id)
-        print(f"CP: {cp}")
-
-        formation = Formation.objects.get(id=cp.formation.id)
-        print(f"Formation: {formation}")
-
-        programme = Programme.objects.get(code=formation.programme.code)
-        print(f"Programme: {programme}")
-
-        periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
-        print(f"PeriodeProgrammes: {list(periode_programmes)}")
-
-        ues = UE.objects.filter(periode__in=periode_programmes)
-        print(f"UEs: {list(ues)}")
-
-        matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
-        print(f"Matieres: {list(matieres)}")
-
-        context['cp'] = cp
-        context['matieres'] = matieres
-
-        self.filename='pv_du_cp.pdf'        
-        return context

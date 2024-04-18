@@ -2669,10 +2669,9 @@ class GoogleCalenderTable(tables.Table):
 
 
 class CPTable(tables.Table):
-    pv1 = tables.TemplateColumn('<button class="btn btn-primary generate-pdf" data-id="{{ record.pk }}">Generate PV1</button>', orderable=False)
-    pv2 = tables.TemplateColumn('<button class="btn btn-primary generate-pdf" data-id="{{ record.pk }}">Generate PV2</button>', orderable=False)
+    pdf = tables.TemplateColumn('<a href="{% url \'generate_pdf\' record.pk %}" class="btn btn-primary">Generate PDF</a>', orderable=False)
 
     class Meta:
         model = CP
-        fields=('formation','periode', 'date_debut_semester','date_fin_semester', 'pv1', 'pv2')
+        fields=('formation','periode', 'date_debut_semester','date_fin_semester', 'pdf')
         template_name= "django_tables2/bootstrap4.html"

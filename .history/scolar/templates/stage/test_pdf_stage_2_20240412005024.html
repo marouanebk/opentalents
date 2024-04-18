@@ -1,0 +1,37 @@
+{% extends 'stage/modele_landscape_pdf.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% block content %}
+
+<h4 align="center">PROCES-VERBAL DU COMITE PEDAGOGIQUE N<sup>o</sup> 2</h4>
+<h4 align="center">2<sup>eme</sup> année classe préparatoire</h4>
+<p>
+  L'an deux mille vingt-trois et le 05 du mois de Mai & 13 h.30, s'estenpe
+  la reunion du comité pédagogique de la 2<sup>tr</sup>année classe préparatoire,
+  présidée par Dr.Berbague Chemseddinc. Le débat a été lancé autour de
+  l'ordre du jour suivant :<br>&nbsp;&nbsp;&nbsp;1. Avancement des enseignements (cours, travaux
+  dirigés et travaux pratiques).<br>&nbsp;&nbsp;&nbsp;2. Les examens semestriels et l'examen de
+  passage.<br>&nbsp;&nbsp;&nbsp;3. Divers. Etaient pr
+</p>
+<br /><br />
+<p>
+  &nbsp;&nbsp;&nbsp;Etiant presents:
+</p>
+<table style="margin-left: 40px; border: 1px solid black; width: 100%;">
+  <tr>
+    <th style="border: 1px solid black; height: 50px;">Enseignent</th>
+    <th style="border: 1px solid black; height: 50px;">Emargement</th>
+    <th style="border: 1px solid black; height: 50px;">Etudiants</th>
+    <th style="border: 1px solid black; height: 50px;">Emargements</th>
+  </tr>
+  {% for _ in ""|center:25 %}
+  <tr>
+    <td style="border: 1px solid black; height: 50px;">test</td>
+    <td style="border: 1px solid black; height: 50px;">test</td>
+    <td style="border: 1px solid black; height: 50px;">test</td>
+    <td style="border: 1px solid black; height: 50px;">test</td>
+  </tr>
+  {% endfor %}
+</table>
+<br /><br />
+
+{% endblock %}

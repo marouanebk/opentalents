@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+      .page {
+        page-break-after: always;
+        page-break-inside: avoid;
+        height: 297mm;
+        overflow: hidden;
+      }
+
+      @media print {
+    .new-page {
+      page-break-before: always;
+      page-break-inside: avoid;
+    }
+  }
+
+    </style>
+  </head>
+  <body>
+    <div class="container page">
+      <table>
+        {% if institution.header %}
+          <tr>
+            <td class="text-center">
+              <img src="{{ institution.header.url }}" alt="Logo" width="100%"> 
+            </td>
+          </tr>
+        {% endif %}
+      </table>
+
+      <p>
+      {% block signataire %}
+      {% endblock %}
+      </p>
+      
+      <h3 align="center">
+        {% block title %}
+        {% endblock %}  
+      </h3>
+
+      {% block content%}
+      {% endblock %}
+
+      <table>
+        {% if institution.footer %}
+          <tr>
+            <td class="text-center">
+              <img src="{{ institution.footer.url }}" alt="Logo ESI" width="100%"> 
+            </td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
+  </body>
+</html>

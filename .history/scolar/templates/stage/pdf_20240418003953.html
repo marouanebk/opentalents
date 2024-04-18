@@ -1,0 +1,143 @@
+{% load dictionary %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+
+	<style>
+
+@page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            header {
+                position: fixed;
+                top: 0;
+            }
+            footer {
+                position: fixed;
+                bottom: 0;
+            }
+        }
+
+        @media print {
+            .new-page {
+                page-break-before: always;
+            }
+}
+
+	table {
+		page-break-inside:auto;
+	}
+	th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+    @page {
+    size: A4;
+    margin-top: 100px; /* Adjust the size for your header */
+    margin-bottom: 100px; /* Adjust the size for your footer */
+    @top-center {
+      content: element(header);
+    }
+    @bottom-center {
+      content: element(footer);
+    }
+  }
+  header {
+    position: running(header);
+  }
+  footer {
+    position: running(footer);
+  }
+  .content {
+    padding-top: 120px; /* Adjust the padding to avoid overlapping with the header */
+    padding-bottom: 120px; /* Adjust the padding to avoid overlapping with the footer */
+  }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+    
+  </head>
+  <body>
+
+
+    <header id="header">
+        <div class="header">
+            {% if institution.header %}
+                <img src="{{ institution.header.url }}" alt="Logo" width="100%">
+            {% endif %}
+        </div>
+    </header>
+    <div class="content">
+
+        <h4 align="center">PROCES-VERBAL DU COMITE PEDAGOGIQUE N<sup>o</sup> 3</h4>
+        <h4 align="center">2<sup>eme</sup> année classe préparatoire</h4>
+        <p>
+          L'an deux mille vingt-trois et le 05 du mois de Mai & 13 h.30, s'estenpe
+          la reunion du comité pédagogique de la 2<sup>tr</sup>année classe préparatoire,
+          présidée par Dr.Berbague Chemseddinc. Le débat a été lancé autour de
+          l'ordre du jour suivant :<br>&nbsp;&nbsp;&nbsp;1. Avancement des enseignements (cours, travaux
+          dirigés et travaux pratiques).<br>&nbsp;&nbsp;&nbsp;2. Les examens semestriels et l'examen de
+          passage.<br>&nbsp;&nbsp;&nbsp;3. Divers. Etaient pr
+        </p>
+        <br /><br />
+      
+      
+        &nbsp;&nbsp;&nbsp;Etiant presents:
+      </p>
+      <table style="margin-left: 40px; border: 1px solid black; width: 100%;">
+        <tr>
+          <th style="border: 1px solid black; height: 50px;">Enseignent</th>
+          <th style="border: 1px solid black; height: 50px;">Emargement</th>
+          <th style="border: 1px solid black; height: 50px;">Etudiants</th>
+          <th style="border: 1px solid black; height: 50px;">Emargements</th>
+        </tr>
+        {% for enseignant in cp.enseignants.all %}
+        <tr>
+            <td style="border: 1px solid black; height: 50px;">{{ enseignant.name }}</td>
+            <td style="border: 1px solid black; height: 50px;"></td>
+            <td style="border: 1px solid black; height: 50px;"></td>
+            <td style="border: 1px solid black; height: 50px;"></td>
+        </tr>
+        {% endfor %}
+        {% for delegue in cp.delegues.all %}
+        <tr>
+            <td style="border: 1px solid black; height: 50px;"></td>
+            <td style="border: 1px solid black; height: 50px;"></td>
+            <td style="border: 1px solid black; height: 50px;">{{ delegue.nom }} {{ delegue.prenom }}</td>
+            <td style="border: 1px solid black; height: 50px;"></td>
+        </tr>
+        {% endfor %}
+      </table>
+      <br /><br />
+    
+
+
+    </div>
+
+
+  
+  <footer id="footer">
+    <div class="footer">
+        {% if institution.footer %}
+            <img src="{{ institution.footer.url }}" alt="Logo" width="100%">
+        {% endif %}
+    </div>
+</footer>
+  	
+  </body>
+ </html>

@@ -23298,52 +23298,8 @@ class CPListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
             """
         return context
 
-
-
-class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
-    # template_name = 'stage/test_pdf_stage_2.html'
-    template_name = 'stage/pdf.html'
-
-    
-    cmd_options = {
-        'orientation': 'Portrait',
-        'page-size': 'A4',
-        'enable-local-file-access': True,
-        'quiet': False
-        # 'header-html': 'stage/header.html',
-        # 'footer-html': 'stage/footer.html'
-
-    }
-    def test_func(self):
-        # Implement your test here
-        # This is just an example, replace it with your actual test
-        return self.request.user.is_authenticated
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
+class GeneratePDFView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
         cp_id = self.kwargs.get('pk')
-
-        cp = CP.objects.get(id=cp_id)
-        print(f"CP: {cp}")
-
-        formation = Formation.objects.get(id=cp.formation.id)
-        print(f"Formation: {formation}")
-
-        programme = Programme.objects.get(code=formation.programme.code)
-        print(f"Programme: {programme}")
-
-        periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
-        print(f"PeriodeProgrammes: {list(periode_programmes)}")
-
-        ues = UE.objects.filter(periode__in=periode_programmes)
-        print(f"UEs: {list(ues)}")
-
-        matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
-        print(f"Matieres: {list(matieres)}")
-
-        context['cp'] = cp
-        context['matieres'] = matieres
-
-        self.filename='pv_du_cp.pdf'        
-        return context
+        # TODO: Generate the PDF for the CP with id `cp_id`
+        return HttpResponse('PDF generated')

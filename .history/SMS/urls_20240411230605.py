@@ -20,7 +20,7 @@ from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import RedirectView
 from django.views.generic.base import TemplateView 
-from scolar.views import canonical_redirect_enseignant_detail_view, media_access, quittances_access, pv  , gestion_cp , GeneratePDFView
+from scolar.views import canonical_redirect_enseignant_detail_view, media_access, quittances_access, pv  , gestion_cp
 from scolar.forms import UserLoginForm
 from django.contrib.auth import views
 urlpatterns = [
@@ -29,8 +29,7 @@ urlpatterns = [
     path('stage', RedirectView.as_view(url='/stage/pv')),
     path('pv', pv, name='pv'),
     path('gestion_cp', gestion_cp, name='gestion_cp'),
-    path('generate_pdf/<int:pk>/<str:text>/', GeneratePDFView.as_view(), name='generate_pdf'),
-
+    path('test_pdf_stage', gestion_cp, name='test_pdf_stage'),
 
     path('index', RedirectView.as_view(url='/scolar/index')),
     path('home', RedirectView.as_view(url='/scolar/index')),

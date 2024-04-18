@@ -2669,8 +2669,8 @@ class GoogleCalenderTable(tables.Table):
 
 
 class CPTable(tables.Table):
-    pv1 = tables.TemplateColumn('<button class="btn btn-primary generate-pdf" data-id="{{ record.pk }}">Generate PV1</button>', orderable=False)
-    pv2 = tables.TemplateColumn('<button class="btn btn-primary generate-pdf" data-id="{{ record.pk }}">Generate PV2</button>', orderable=False)
+    pv1 = tables.TemplateColumn('<button class="btn btn-primary generate-pdf" data-id="{{ record.pk }}">Generate PDF</button>', orderable=False)
+    pv2 = tables.TemplateColumn('<button class="btn btn-primary generate-pdf" data-id="{{ record.pk }}">Generate PDF</button>', orderable=False)
 
     class Meta:
         model = CP

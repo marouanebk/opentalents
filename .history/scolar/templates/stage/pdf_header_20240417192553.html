@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .header {
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        {% if institution.header %}
+            <img src="{{ institution.header.url }}" alt="Logo" width="100%">
+        {% endif %}
+    </div>
+</body>
+</html>

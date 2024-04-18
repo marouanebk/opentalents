@@ -23298,7 +23298,11 @@ class CPListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
             """
         return context
 
-
+# class GeneratePDFView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+#     def get(self, request, *args, **kwargs):
+#         cp_id = self.kwargs.get('pk')
+#         # TODO: Generate the PDF for the CP with id `cp_id`
+#         return HttpResponse('PDF generated')
 
 class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
     # template_name = 'stage/test_pdf_stage_2.html'
@@ -23324,26 +23328,19 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
 
         cp_id = self.kwargs.get('pk')
 
-        cp = CP.objects.get(id=cp_id)
-        print(f"CP: {cp}")
+        cp = CP.objects.get(cd=cp_id)
 
-        formation = Formation.objects.get(id=cp.formation.id)
-        print(f"Formation: {formation}")
+        formation = Formation.objects.get(formation=cp.formation)
 
-        programme = Programme.objects.get(code=formation.programme.code)
-        print(f"Programme: {programme}")
+        programme = Programme.objects.get(code=formation.programme)
+
+        # anne_univ=AnneeUniv.objects.get(encours=True).annee_univ
 
         periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
-        print(f"PeriodeProgrammes: {list(periode_programmes)}")
 
         ues = UE.objects.filter(periode__in=periode_programmes)
-        print(f"UEs: {list(ues)}")
 
         matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
-        print(f"Matieres: {list(matieres)}")
 
-        context['cp'] = cp
-        context['matieres'] = matieres
-
-        self.filename='pv_du_cp.pdf'        
+        self.filename='test_Arabe.pdf'        
         return context

@@ -23298,7 +23298,11 @@ class CPListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
             """
         return context
 
-
+# class GeneratePDFView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+#     def get(self, request, *args, **kwargs):
+#         cp_id = self.kwargs.get('pk')
+#         # TODO: Generate the PDF for the CP with id `cp_id`
+#         return HttpResponse('PDF generated')
 
 class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
     # template_name = 'stage/test_pdf_stage_2.html'
@@ -23345,5 +23349,5 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
         context['cp'] = cp
         context['matieres'] = matieres
 
-        self.filename='pv_du_cp.pdf'        
+        self.filename='test_Arabe.pdf'        
         return context
