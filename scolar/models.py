@@ -3372,3 +3372,39 @@ class CP(models.Model):
     delegues=models.ManyToManyField(Etudiant, blank=True)
     def __str__(self):
         return f"{self.formation.programme.titre} {self.formation.annee_univ.annee_univ} {self.periode.code}" 
+    
+
+
+class Ressource(models.Model):
+    nom = models.CharField(max_length=100)
+    nombre=models.IntegerField(blank=True)
+    def __str__(self):
+        return f"{self.nom}" 
+
+class Allocation(models.Model):
+    ressource=models.ForeignKey(Ressource, on_delete=models.CASCADE)
+    enseignant=models.ForeignKey(Enseignant, on_delete=models.SET_NULL, null=True, blank=True)
+    date=models.DateField()
+    heure_debut=models.TimeField(null=True, blank=True)
+    heure_fin=models.TimeField(null=True, blank=True)
+   
+    def __str__(self):
+        return f"{self.enseignant.nom} allocation : {self.ressource.nom} {self.date}" 
+    
+    
+    def save(self, *args, **kwargs):
+            
+  # Count conflicts with existing allocations for the same resource on the same day
+            conflicting_allocations_count = 0
+            allocations = Allocation.objects.filter(ressource=self.ressource, date=self.date).exclude(pk=self.pk if self.pk else None)
+            for allocation in allocations:
+                if (self.heure_debut < allocation.heure_fin and self.heure_fin > allocation.heure_debut) or \
+                   (self.heure_debut >= allocation.heure_debut and self.heure_fin <= allocation.heure_fin) or \
+                   (self.heure_debut <= allocation.heure_debut and self.heure_fin >= allocation.heure_fin):
+                    conflicting_allocations_count += 1
+
+            if conflicting_allocations_count >= self.ressource.nombre:
+                raise ValidationError("The maximum number of allocations for this resource has been reached.")
+
+
+            super().save(*args, **kwargs)

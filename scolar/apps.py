@@ -179,6 +179,8 @@ def initial_permissions_create_update_delete(sender, **kwargs):
         ("fonctionnalitenav_offres_validation", "Valider/Modifier/Supprimer les offres d'emploi, de thèse, de stages pratiques, et autres offres."), 
 
         ("fonctionnalite_comite_pedagogique_gestion", "Gérer les Comités Pédagogique"),
+        
+        ("fonctionnalite_ressources_gestion", "Gérer les ressources"),
     )
     
     permission_codenames=[]

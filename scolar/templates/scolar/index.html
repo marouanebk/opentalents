@@ -621,7 +621,7 @@
 		{% if perms.scolar.fonctionnalite_comite_pedagogique_gestion %}
 		<ul class="nav list-group">
 			<li>
-				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_cp">{% icon 'list' %} CP</button>
+				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_cp">{% icon 'list' %} Comité Pédagogique</button>
 			</li>
 			<div id="menu_cp" class="collapse">
 				<li>
@@ -633,6 +633,44 @@
 	    
 		{% endif %}
 
+		{% if perms.scolar.fonctionnalite_ressources_gestion  %}
+				<ul class="nav list-group">
+					<li>
+						<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_ressources">{% icon 'list' %}
+							Ressources</button>
+					</li>
+					<div id="menu_ressources" class="collapse">
+						<li>
+							<a class="list-group-item" href="{% url "ressources_list" %}">{% icon 'list' %} Liste des ressources
+							</a>
+						</li>
+						<li>
+							<a class="list-group-item" href="{% url "allocation_ressources_list" %}">{% icon 'list' %} Les allocations des ressources
+							</a>
+						</li>
+					</div>
+				
+				</ul>
+				
+		{% endif %}
+		{% if request.user|has_object:"Enseignant" %}
+				<ul class="nav list-group">
+					<li>
+						<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_ressources">{% icon 'list' %}
+							Ressources</button>
+					</li>
+					<div id="menu_ressources" class="collapse">
+					
+						<li>
+							<a class="list-group-item" href="{% url "allocation_ressources_list" %}">{% icon 'list' %} allocation des
+								ressources
+							</a>
+						</li>
+					</div>
+				
+				</ul>
+				
+				{% endif %}
 		{% if institution.activation_offres %}
 			<ul class="nav list-group">
 				<li>

@@ -3237,7 +3237,7 @@ class EnregistrementEtudiantUpdateForm(forms.Form):
         self.fields['choosenew_prenom_a'] = forms.BooleanField(initial=True if enregistrement.prenom_a else False, label='Considérer la nouvelle valeur', help_text='La considération de la nouvelle valeur mettra à jour le profil de l\'étudiant', required = False)        
 
         self.fields['date_naissance']=forms.DateField(disabled=True, required=False, initial=etudiant.date_naissance if etudiant else None, label="Ancienne date de naissance", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-        self.fields['new_date_naissance']=forms.DateField(required=False, initial=enregistrement.date_naissance, label="Nouvelle date de naissance", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
+        self.fields['new_date_naissaetatnce']=forms.DateField(required=False, initial=enregistrement.date_naissance, label="Nouvelle date de naissance", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
         self.fields['choosenew_date_naissance'] = forms.BooleanField(initial=True if enregistrement.date_naissance else False, label='Considérer la nouvelle valeur', help_text='La considération de la nouvelle valeur mettra à jour le profil de l\'étudiant', required = False)
 
         self.fields['lieu_naissance'] = forms.CharField(disabled=True, required=False, initial=etudiant.lieu_naissance if etudiant else '', label="Ancien lieu de naissance")

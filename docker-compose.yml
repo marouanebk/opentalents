@@ -18,8 +18,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5    
-    ports:
-      - "5432:5432"
   
 # Un deuxième conteneur contenant Python et l'application Django. Si c'est une nouvelle installation il est construit à zéro en installant les requirements, puis en chargeant la base de données et settings par les valeurs par défaut. Si ce n'est pas une nouvelle installation (présence d'au moins un fichier de migration) alors il y a juste un makemigrations et migrate.
   opentalents:
@@ -50,12 +48,14 @@ services:
                  echo 'Il y a au moins une migration, aucune nouvelle installation enclenchee.' &&
                  python manage.py makemigrations scolar && 
                  python manage.py migrate &&
+                 python manage.py crontab add &&
                  cp -f install/nginx.conf.example nginx/nginx.conf ;                                        
                else
                  echo 'Aucune migration disponible, nouvelle installation en cours..' &&
                  cp install/settings_default.py SMS/settings.py &&
                  python manage.py makemigrations scolar && 
                  python manage.py migrate &&
+                 python manage.py crontab add &&
                  python manage.py loaddata install/pays_wilayas_communes.json &&
                  python manage.py shell < ./install/create-default-superuser.py &&
                  python manage.py shell < ./install/requete_permissions.py &&
@@ -113,6 +113,7 @@ services:
     command: redis-server
     expose:
       - 6379
+
 
 
 

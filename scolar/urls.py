@@ -551,5 +551,13 @@ urlpatterns = [
 
     path('comite_pedagogique', views.CPListView.as_view(), name='comite_pedagogique_list'),
     path('comite_pedagogique_create', views.CPCreateView.as_view(), name='comite_pedagogique_create'),
-    
+    re_path(r'^comite_pedagogique/(?P<pk>\d+)/$',views.CPUpdateView.as_view(), name='comite_pedagogique_update'),
+
+    path('ressources', views.RessourcesListView.as_view(), name='ressources_list'),
+    path('ressource_create', views.RessourceCreateView.as_view(), name='ressource_create'),
+    re_path(r'^ressources/(?P<pk>\d+)/$',views.RessourceUpdateView.as_view(), name='ressource_update'),
+
+    path('allocation_ressources', views.AllocationListView.as_view(), name='allocation_ressources_list'),
+    path('allocation_ressource_create', views.AllocationCreateView.as_view(), name='allocation_ressource_create'),
+    re_path(r'^allocation_ressources/(?P<pk>\d+)/$',views.AllocationUpdateView.as_view(), name='allocation_ressource_update'),
 ]
