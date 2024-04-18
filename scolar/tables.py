@@ -2696,9 +2696,7 @@ class AllocationTable(tables.Table):
     action = '{% load icons %}\
                 <a href="{% url "allocation_ressource_update" pk=record.id %}" > {% icon "pencil-alt" %} </a>'
     edit= tables.TemplateColumn(action, orderable=False)
-    date = tables.DateTimeColumn(format='d/m/Y')
-    heure_debut = tables.DateTimeColumn(format='H:i')
-    heure_fin = tables.DateTimeColumn(format='H:i')
+
     class Meta:
         model = Allocation
         fields=('ressource','enseignant','date','heure_debut','heure_fin')

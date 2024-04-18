@@ -23547,35 +23547,31 @@ class AllocationUpdateView(LoginRequiredMixin,  SuccessMessageMixin, CreateView)
             else:
                 messages.error(self.request, "ERREUR: lors de la modification d'une allocation.")
         return form
+from django_tables2 import RequestConfig
+
 class AllocationListView(LoginRequiredMixin, TemplateView):
     model = Allocation
     template_name = 'scolar/list.html'
-    context_object_name = "L'allocation a été bien mise à jour"
-
+    
     def test_func(self):
         user = self.request.user
         return (self.request.user.has_perm('scolar.fonctionnalite_ressources_gestion')) or (user.is_authenticated and user.is_enseignant())
-    
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_enseignant():
-            return Allocation.objects.filter(enseignant__user=user)
-        else:
-            return Allocation.objects.all()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
         # Create the allocation table and configure it
-        allocation_table = AllocationTable(self.get_queryset())
-        RequestConfig(self.request).configure(allocation_table)
-        
-        context['table'] = allocation_table
+        table = AllocationTable(Allocation.objects.all())
+        RequestConfig(self.request).configure(table)
+        context['table'] = table
 
-        btn_list={}
+        btn_list = {}
         if self.request.user.is_authenticated and self.request.user.is_enseignant():
             btn_list['+ Créer'] = reverse('allocation_ressource_create')
-        context['btn_list']=btn_list
+        context['btn_list'] = btn_list
         context['back'] = self.request.META.get('HTTP_REFERER')
+
+        return context
 
 
 class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
