@@ -30,7 +30,7 @@
 					var cpId = this.getAttribute('data-id');
 					var text = prompt('Please enter your text');
 					if (text !== null) {
-						window.location.href = `{% url 'generate_pdf' 123 'dummy' %}`.replace('123', cpId).replace('dummy', text);
+						window.location.href = `{% url 'generate_pdf' id=cpId text=text %}`;
 					}
 				});
 			});

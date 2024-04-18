@@ -1,0 +1,39 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% block content %}
+	{% with 'FICHE_INSCRIPTION'|autorite_entete_from_document_programme:inscription.formation.programme as autorite %}
+<table width="100%">
+				<tr> 
+					{% if autorite %}
+						<td style =" text-align: left; margin-left: 0em;"> 
+						<p align="left">			{{ autorite.intitule }}</p>
+						</td>
+						<td></td>
+						<td style =" text-align: right; margin-right: 0em;" > 
+						<p> {{ autorite.intitule_a }}</p>
+						</td>
+					{% endif %} 
+				</tr></table>
+	{% endwith %}
+ 	<br>
+	<h1 style="text-align: center;">Fiche d'Inscription {{inscription.formation.annee_univ.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante.annee_univ}}</h1>
+	<br><br>
+	<div style="text-align: center;" class="row">
+		<div class="col-md-6">
+			<h3 class="text-center"> <strong>Matricule: </strong>{{ inscription.etudiant.matricule }} </h3>
+		</div>
+		{% if inscription.etudiant.photo.name %}
+		<div class="col-lg-2" alt"Photo">
+			<img src="{{ inscription.etudiant.photo.url }}" height="230">
+		</div>
+		{% else %}
+			<strong>PHOTO</strong>
+		{% endif %}
+	</div>
+	
+				
+				
+			
+	<br><br><br><br><br><br>
+	
+{% endblock %}

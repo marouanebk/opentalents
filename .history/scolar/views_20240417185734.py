@@ -19,7 +19,8 @@ from scolar.tables import OrganismeTable, OrganismeFilter, PFETable, PFEFilter, 
     SurveillanceFilter, SurveillanceTable, EnseignementsTable,EncadrementsTable,EncadrementsAttestationTable, SoutenancesAttestationTable, ProgresFormationTable, TraceTable, TraceFilter,\
     NotificationsTable, UserTable, ExportTable, DoctorantTable, DoctorantFilter, TheseFilter, TheseTable, ProjetFilter, ProjetTable, ProjetsEnseignantTable, CritereTable, OptionCritereTable, FormationDoctoratTable, InscriptionDoctoratAvancementTable, SeminairesFilter, SeminairesTable, \
     DomaineConnaissanceTable, PosteTable, PosteFilter, ProgrammeDetteTable, DetteFilter, DetteTable, UserFilter, PersonnelTable, PaysTable, WilayaTable, CommuneTable, SurveillancesEnseignantFilter, EnregistrementEtudiantTable, EnregistrementEtudiantFilter, EquipeRechercheFilter, EquipeRechercheTable, EquipeRechercheEnseignantTable, ExpertisesPFEAttestationTable, OffreFilter, OffreTable, CandidatureTable, \
-    GoogleCalenderTable, GoogleCalenderFilter,CPTable,RessourceTable,AllocationTable
+    GoogleCalenderTable, GoogleCalenderFilter
+    
 from functools import reduce
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMessage, send_mass_mail
@@ -46,7 +47,7 @@ from django import forms
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 import random
-from bootstrap_datepicker_plus import DatePickerInput,TimePickerInput
+from bootstrap_datepicker_plus import DatePickerInput
 from scolar.admin import settings
 from jchart import Chart
 from jchart.config import DataSet
@@ -108,7 +109,98 @@ from rest_framework import serializers
 from .models import  Etudiant, Module, AnneeUniv , Programme , PeriodeProgramme , UE , Matiere
 from django.http import JsonResponse
 
+def test_pdf_stage(request):
+    return render(request, 'stage/test_pdf_stage.html')
 
+# def test_pdf_stage_2(request):
+#     return render(request, 'stage/test_pdf_stage_2.html')
+
+class TestPDFStage2View(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
+    template_name = 'stage/test_pdf_stage_2.html'
+    
+    cmd_options = {
+        'orientation': 'Landscape',
+        'page-size': 'A4',
+        'enable-local-file-access': True,
+        'quiet': False
+
+    }
+    def test_func(self):
+        # Implement your test here
+        # This is just an example, replace it with your actual test
+        return self.request.user.is_authenticated
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        self.filename='test_Arabe.pdf'        
+        return context
+
+class TestPDFStage2ViewTemp(LoginRequiredMixin, UserPassesTestMixin,TemplateView):
+    # template_name = 'stage/test_pdf_stage_2.html'
+    template_name = 'stage/pdf.html'
+
+    
+    cmd_options = {
+        'orientation': 'Portrait',
+        'page-size': 'A4',
+        'enable-local-file-access': True,
+        'quiet': False
+
+    }
+    def test_func(self):
+        # Implement your test here
+        # This is just an example, replace it with your actual test
+        return self.request.user.is_authenticated
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        self.filename='test_Arabe.pdf'        
+        return context
+
+class ReleveNotesPDFViewTest(LoginRequiredMixin, UserPassesTestMixin, PDFTemplateView):
+    template_name = 'scolar/releve_notes_pdf.html'
+    cmd_options={
+        'orientation':'Landscape',
+        'page-size':'A4',
+        'debug-javascript': '',
+        'no-stop-slow-scripts': '',
+    }
+    def test_func(self):
+        # Implement your test here
+        # This is just an example, replace it with your actual test
+        return self.request.user.is_authenticated
+
+    def get_context_data(self, **kwargs):
+        context = super(ReleveNotesPDFViewTest, self).get_context_data(**kwargs)
+
+        # Replace dynamic data with static data
+        # context['inscription'] = {
+        #     'etudiant': 'John Doe',
+        #     'formation': 'Computer Science',
+        #     'groupe': 'Group 1',
+        #     'moy': 15.5,
+        #     'moy_ra': 16.0,
+        #     'rang': 1,
+        #     'decision_jury': 'A',
+        #     'proposition_decision_jury': 'A',
+        #     'observation': 'Good performance',
+        #     'mention': 'A',
+        #     'quittance': 'path/to/quittance/image',
+        # }
+        inscription_id = 1  # Replace this with the actual ID
+        inscription = Inscription.objects.get(id=inscription_id)
+
+        context['inscription'] = inscription
+        context['date'] = datetime.date.today()
+        context['categorie_ue'] = dict(CAT_UE)
+        context['decision_jury'] = dict(DECISIONS_JURY)
+        context['pdf'] = 1
+        context['credits'] = 1
+        context['rang'] = 1
+
+        return context
 
 @login_required
 def pv(request): 
@@ -9006,7 +9098,6 @@ class PublicEtudiantListView(TemplateView):
         if not self.request.user.is_authenticated:
             private=True
         else :
-
             private= not self.request.user.has_perm('scolar.fonctionnalite_etudiants_visualisationsensible') 
         exclude_=[]
         if private:
@@ -23230,398 +23321,3 @@ class GoogleCalendarDeleteView(LoginRequiredMixin, SuccessMessageMixin, Permissi
  
     def get_success_url(self):
         return reverse('googlecalendar_list')   
-
-class CPCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, CreateView):
-    model = CP
-    fields = [ 'formation','periode','date_debut_semester','date_fin_semester','enseignants','delegues']
-    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
-    template_name = 'scolar/create.html'
-    success_message = "La Comité Pédagogique a été créé avec succès"
-    
-    def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = FormHelper()
-        try:
-         
-            form.fields['formation']=forms.ModelChoiceField(queryset=Formation.objects.all())
-            form.fields['periode']=forms.ModelChoiceField(queryset=Periode.objects.all())
-            form.fields['date_debut_semester']=forms.DateField(label=u"Date du 1er cp",input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            form.fields['date_fin_semester']=forms.DateField(label=u"Date du 2eme cp", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            
-           
-            form.fields['enseignants']=forms.ModelMultipleChoiceField(
-                queryset = Enseignant.objects.all().order_by('nom'),
-                widget=ModelSelect2MultipleWidget(
-                    model=Enseignant,
-                    search_fields=['nom__icontains','prenom__icontains'],
-                ),
-                required=False,
-            ) 
-
-            form.fields['delegues']=forms.ModelMultipleChoiceField(
-                queryset = Etudiant.objects.all().order_by('nom'),
-                widget=ModelSelect2MultipleWidget(
-                    model=Etudiant,
-                    search_fields=['nom__icontains','prenom__icontains'],
-                ),
-                required=False,
-            ) 
-
-
-            form.helper.add_input(Submit('submit','Enregistrer', css_class='btn-primary'))
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url =  reverse('comite_pedagogique_list')
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la création d'un cp.")
-    
-        return form
-
-class CPCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, CreateView):
-    model = CP
-    fields = [ 'formation','periode','date_debut_semester','date_fin_semester','enseignants','delegues']
-    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
-    template_name = 'scolar/create.html'
-    success_message = "La Comité Pédagogique a été créé avec succès"
-    
-    def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = FormHelper()
-        try:
-         
-            form.fields['formation']=forms.ModelChoiceField(queryset=Formation.objects.all())
-            form.fields['periode']=forms.ModelChoiceField(queryset=Periode.objects.all())
-            form.fields['date_debut_semester']=forms.DateField(label=u"Date du 1er cp",input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            form.fields['date_fin_semester']=forms.DateField(label=u"Date du 2eme cp", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            
-           
-            form.fields['enseignants']=forms.ModelMultipleChoiceField(
-                queryset = Enseignant.objects.all().order_by('nom'),
-                widget=ModelSelect2MultipleWidget(
-                    model=Enseignant,
-                    search_fields=['nom__icontains','prenom__icontains'],
-                ),
-                required=False,
-            ) 
-
-            form.fields['delegues']=forms.ModelMultipleChoiceField(
-                queryset = Etudiant.objects.all().order_by('nom'),
-                widget=ModelSelect2MultipleWidget(
-                    model=Etudiant,
-                    search_fields=['nom__icontains','prenom__icontains'],
-                ),
-                required=False,
-            ) 
-
-
-            form.helper.add_input(Submit('submit','Enregistrer', css_class='btn-primary'))
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url =  reverse('comite_pedagogique_list')
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la création d'un cp.")
-    
-        return form
-
-class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
-    model = CP
-    fields = [ 'formation','periode','date_debut_semester','date_fin_semester','enseignants','delegues']
-    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
-    template_name = 'scolar/create.html'
-    success_message = "La Comité Pédagogique a été bien mise à jour "
-    
-    def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = FormHelper()
-        try:
-         
-            form.fields['formation']=forms.ModelChoiceField(queryset=Formation.objects.all())
-            form.fields['periode']=forms.ModelChoiceField(queryset=Periode.objects.all())
-            form.fields['date_debut_semester']=forms.DateField(label=u"Date du 1er cp",input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            form.fields['date_fin_semester']=forms.DateField(label=u"Date du 2eme cp", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            
-           
-            form.fields['enseignants']=forms.ModelMultipleChoiceField(
-                queryset = Enseignant.objects.all().order_by('nom'),
-                widget=ModelSelect2MultipleWidget(
-                    model=Enseignant,
-                    search_fields=['nom__icontains','prenom__icontains'],
-                ),
-                required=False,
-            ) 
-
-            form.fields['delegues']=forms.ModelMultipleChoiceField(
-                queryset = Etudiant.objects.all().order_by('nom'),
-                widget=ModelSelect2MultipleWidget(
-                    model=Etudiant,
-                    search_fields=['nom__icontains','prenom__icontains'],
-                ),
-                required=False,
-            ) 
-
-
-            form.helper.add_input(Submit('submit','Enregistrer', css_class='btn-primary'))
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url =  reverse('comite_pedagogique_list')
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la modification d'un cp.")
-    
-        return form       
-
-class CPListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
-
-    template_name='scolar/list.html'
-    
-    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion' 
-       
-    def get_context_data(self, **kwargs):
-        context = super(CPListView, self).get_context_data(**kwargs)
-        exclude_=["delegues","enseignants"]
-        table = CPTable(CP.objects.all(), exclude=exclude_)
-        RequestConfig(self.request).configure(table)
-        context['table'] = table
-
-        btn_list={}
-        btn_list['+ Créer']=reverse('comite_pedagogique_create')
-        context['btn_list']=btn_list
-
-        context['back'] = self.request.META.get('HTTP_REFERER')
-        """if self.request.user.has_perm(''):
-            context['create_url'] = reverse('anneeuniv_create')
-            context['create_btn'] = 'Année'
-            """
-        return context
-
-class RessourcesListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
-
-    template_name='scolar/list.html'
-    
-    permission_required = 'scolar.fonctionnalite_ressources_gestion' 
-       
-    def get_context_data(self, **kwargs):
-        context = super(RessourcesListView, self).get_context_data(**kwargs)
-        table = RessourceTable(Ressource.objects.all())
-        RequestConfig(self.request).configure(table)
-        context['table'] = table
-
-        btn_list={}
-        btn_list['+ Créer']=reverse('ressource_create')
-        context['btn_list']=btn_list
-
-        context['back'] = self.request.META.get('HTTP_REFERER')
-
-        return context
-
-class RessourceCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, CreateView):
-    model = Ressource
-    fields = [ 'nom','nombre']
-    permission_required = 'scolar.fonctionnalite_ressources_gestion'
-    template_name = 'scolar/create.html'
-    success_message = "La ressource a été créé avec succès"
-    
-    def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_ressources_gestion')
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = FormHelper()
-        try:
-         
-
-            form.helper.add_input(Submit('submit','Enregistrer', css_class='btn-primary'))
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url =  reverse('ressources_list')
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la création d'une ressource.")
-    
-        return form
-    
-
-class RessourceUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
-    model = Ressource
-    fields = [ 'nom','nombre']
-    permission_required = 'scolar.fonctionnalite_ressources_gestion'
-    template_name = 'scolar/create.html'
-    success_message = "La ressource a été bien mise à jour"
-    
-    def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_ressources_gestion')
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = FormHelper()
-        try:
-         
-
-            form.helper.add_input(Submit('submit','Enregistrer', css_class='btn-primary'))
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url =  reverse('ressources_list')
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la modification d'une ressource.")
-    
-        return form
-class AllocationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Allocation
-    fields = ['ressource', 'date', 'heure_debut', 'heure_fin']
-    template_name = 'scolar/create.html'
-    success_message = "L'allocation a été créée avec succès"
-
-    def form_valid(self, form):
-        form.instance.enseignant = self.request.user
-        try:
-            return super().form_valid(form)
-        except ValidationError as e:
-            form.add_error(None, e)
-            return super().form_invalid(form)
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = FormHelper()
-        try:
-            form.fields['ressource']=forms.ModelChoiceField(queryset=Ressource.objects.all())
-            form.fields['date']=forms.DateField(label=u"Date",input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            form.fields['heure_debut'] = forms.TimeField(input_formats=['%H:%M'], widget=TimePickerInput(format='%H:%M'))
-            form.fields['heure_fin'] = forms.TimeField(input_formats=['%H:%M'], widget=TimePickerInput(format='%H:%M'))
-            form.helper.add_input(Submit('submit', 'Enregistrer', css_class='btn-primary'))
-           
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url =  reverse('allocation_ressources_list')
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la modification d'une allocation.")
-        return form
-
-
-class AllocationUpdateView(LoginRequiredMixin,  SuccessMessageMixin, CreateView):
-    model = Allocation
-    fields = ['ressource', 'date', 'heure_debut', 'heure_fin']
-    template_name = 'scolar/create.html'
-    success_message = "L'allocation a été bien mise à jour"
-
-    def form_valid(self, form):
-        try:
-            return super().form_valid(form)
-        except ValidationError as e:
-            form.add_error(None, e)
-            return super().form_invalid(form)
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.helper = FormHelper()
-        try:
-            form.fields['ressource']=forms.ModelChoiceField(queryset=Ressource.objects.all())
-            form.fields['date']=forms.DateField(label=u"Date",input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            form.fields['heure_debut'] = forms.TimeField(input_formats=['%H:%M'], widget=TimePickerInput(format='%H:%M'))
-            form.fields['heure_fin'] = forms.TimeField(input_formats=['%H:%M'], widget=TimePickerInput(format='%H:%M'))
-            form.helper.add_input(Submit('submit', 'Enregistrer', css_class='btn-primary'))
-           
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url =  reverse('allocation_ressources_list')
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la modification d'une allocation.")
-        return form
-class AllocationListView(LoginRequiredMixin, TemplateView):
-    model = Allocation
-    template_name = 'scolar/list.html'
-    context_object_name = "L'allocation a été bien mise à jour"
-
-    def test_func(self):
-        user = self.request.user
-        return (self.request.user.has_perm('scolar.fonctionnalite_ressources_gestion')) or (user.is_authenticated and user.is_enseignant())
-    
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_enseignant():
-            return Allocation.objects.filter(enseignant__user=user)
-        else:
-            return Allocation.objects.all()
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Create the allocation table and configure it
-        allocation_table = AllocationTable(self.get_queryset())
-        RequestConfig(self.request).configure(allocation_table)
-        
-        context['table'] = allocation_table
-
-        btn_list={}
-        if self.request.user.is_authenticated and self.request.user.is_enseignant():
-            btn_list['+ Créer'] = reverse('allocation_ressource_create')
-        context['btn_list']=btn_list
-        context['back'] = self.request.META.get('HTTP_REFERER')
-
-
-class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
-    # template_name = 'stage/test_pdf_stage_2.html'
-    template_name = 'stage/pdf.html'
-
-    
-    cmd_options = {
-        'orientation': 'Portrait',
-        'page-size': 'A4',
-        'enable-local-file-access': True,
-        'quiet': False
-        # 'header-html': 'stage/header.html',
-        # 'footer-html': 'stage/footer.html'
-
-    }
-    def test_func(self):
-        # Implement your test here
-        # This is just an example, replace it with your actual test
-        return self.request.user.is_authenticated
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        cp_id = self.kwargs.get('pk')
-
-        cp = CP.objects.get(id=cp_id)
-        print(f"CP: {cp}")
-
-        formation = Formation.objects.get(id=cp.formation.id)
-        print(f"Formation: {formation}")
-
-        programme = Programme.objects.get(code=formation.programme.code)
-        print(f"Programme: {programme}")
-
-        periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
-        print(f"PeriodeProgrammes: {list(periode_programmes)}")
-
-        ues = UE.objects.filter(periode__in=periode_programmes)
-        print(f"UEs: {list(ues)}")
-
-        matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
-        print(f"Matieres: {list(matieres)}")
-
-        context['cp'] = cp
-        context['matieres'] = matieres
-
-        self.filename='pv_du_cp.pdf'        
-        return context

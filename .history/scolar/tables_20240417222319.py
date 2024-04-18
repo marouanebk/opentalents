@@ -2669,37 +2669,9 @@ class GoogleCalenderTable(tables.Table):
 
 
 class CPTable(tables.Table):
-    action = '{% load icons %}\
-            {% if perms.scolar.fonctionnalite_comite_pedagogique_gestion %}\
-                <a href="{% url "comite_pedagogique_update" pk=record.id %}" > {% icon "pencil-alt" %} </a>\
-            {% endif %}'
-    edit= tables.TemplateColumn(action, orderable=False)
-    pv1 = tables.TemplateColumn('<button class="btn btn-primary generate-pdf" data-id="{{ record.pk }}">Generate PV1</button>', orderable=False)
-    pv2 = tables.TemplateColumn('<button class="btn btn-primary generate-pdf" data-id="{{ record.pk }}">Generate PV2</button>', orderable=False)
+    pdf = tables.TemplateColumn('<a href="{% url \'generate_pdf\' record.pk %}" class="btn btn-primary">Generate PDF</a>', orderable=False)
 
     class Meta:
         model = CP
-        fields=('formation','periode', 'date_debut_semester','date_fin_semester', 'pv1', 'pv2')
-        template_name= "django_tables2/bootstrap4.html"
-
-class RessourceTable(tables.Table):
-    action = '{% load icons %}\
-            {% if perms.scolar.fonctionnalite_ressources_gestion %}\
-                <a href="{% url "ressource_update" pk=record.id %}" > {% icon "pencil-alt" %} </a>\
-            {% endif %}'
-    edit= tables.TemplateColumn(action, orderable=False)
-    class Meta:
-        model = Ressource
-        fields=('nom','nombre')
-        template_name= "django_tables2/bootstrap4.html"
-class AllocationTable(tables.Table):
-    action = '{% load icons %}\
-                <a href="{% url "allocation_ressource_update" pk=record.id %}" > {% icon "pencil-alt" %} </a>'
-    edit= tables.TemplateColumn(action, orderable=False)
-    date = tables.DateTimeColumn(format='d/m/Y')
-    heure_debut = tables.DateTimeColumn(format='H:i')
-    heure_fin = tables.DateTimeColumn(format='H:i')
-    class Meta:
-        model = Allocation
-        fields=('ressource','enseignant','date','heure_debut','heure_fin')
+        fields=('formation','periode', 'date_debut_semester','date_fin_semester', 'pdf')
         template_name= "django_tables2/bootstrap4.html"

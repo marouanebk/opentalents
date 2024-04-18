@@ -24,16 +24,5 @@
 			<a href="{{ back }}" class="btn btn-secondary">Retour</a>
 		{% endif %}
 		<br><br><br><br><br><br>
-		<script>
-			document.querySelectorAll('.generate-pdf').forEach(function(button) {
-				button.addEventListener('click', function() {
-					var cpId = this.getAttribute('data-id');
-					var text = prompt('Please enter your text');
-					if (text !== null) {
-						window.location.href = `{% url 'generate_pdf' 123 'dummy' %}`.replace('123', cpId).replace('dummy', text);
-					}
-				});
-			});
-			</script>
 {% endblock %}
 	

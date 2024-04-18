@@ -29,7 +29,7 @@ urlpatterns = [
     path('stage', RedirectView.as_view(url='/stage/pv')),
     path('pv', pv, name='pv'),
     path('gestion_cp', gestion_cp, name='gestion_cp'),
-    path('generate_pdf/<int:pk>/<str:text>/', GeneratePDFView.as_view(), name='generate_pdf'),
+    path('generate_pdf/<int:pk>/', GeneratePDFView.as_view(), name='generate_pdf'),
 
 
     path('index', RedirectView.as_view(url='/scolar/index')),
