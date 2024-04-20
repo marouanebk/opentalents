@@ -129,15 +129,7 @@
           <th style="border: 1px solid black; height: 50px;">Etudiants</th>
           <th style="border: 1px solid black; height: 50px;">Emargements</th>
         </tr>
-        {% for item in combined_list %}
-        <tr>
-            <td style="border: 1px solid black; height: 50px;">{{ item.enseignant.nom|default:'' }} {{ item.enseignant.prenom|default:'' }}</td>
-            <td style="border: 1px solid black; height: 50px;"></td>
-            <td style="border: 1px solid black; height: 50px;">{{ item.delegue.nom|default:'' }} {{ item.delegue.prenom|default:'' }}</td>
-            <td style="border: 1px solid black; height: 50px;"></td>
-        </tr>
-        {% endfor %}
-        <!-- {% for enseignant in cp.enseignants.all %}
+        {% for enseignant in cp.enseignants.all %}
         <tr>
             <td style="border: 1px solid black; height: 50px;">{{ enseignant.nom }} {{ enseignant.prenom }}</td>
             <td style="border: 1px solid black; height: 50px;"></td>
@@ -152,7 +144,7 @@
             <td style="border: 1px solid black; height: 50px;">{{ delegue.nom }} {{ delegue.prenom }}</td>
             <td style="border: 1px solid black; height: 50px;"></td>
         </tr>
-        {% endfor %} -->
+        {% endfor %}
       </table>
       <br /><br />
       <br /><br />

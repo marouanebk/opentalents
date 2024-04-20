@@ -23489,8 +23489,7 @@ class AllocationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "L'allocation a été créée avec succès"
 
     def form_valid(self, form):
-        ens = Enseignant.objects.get(user= self.request.user)
-        form.instance.enseignant = ens
+        form.instance.enseignant = self.request.user
         try:
             return super().form_valid(form)
         except ValidationError as e:
