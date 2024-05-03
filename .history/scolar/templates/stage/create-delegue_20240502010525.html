@@ -1,0 +1,69 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!--
+{{form.media}}
+-->
+
+    <br><br>
+    <h5>{{ titre }}</h5>
+    <br>
+    {% crispy form %}
+
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+        var inscriptions = JSON.parse('{{ inscriptions_json|escapejs }}');
+        var etudiants = JSON.parse('{{ etudiants_json|escapejs }}');
+        var formationSelect = $('#id_formation');
+        var etudiantsSelect = $('#id_etudiants');
+                
+
+        formationSelect.change(function () {
+            var formationId = $(this).val();
+            var etudiantMatricules = inscriptions.filter(function(inscription) {
+                return inscription.formation_id == formationId;
+            }).map(function(inscription) {
+                console.log("inscription: " + inscription.etudiant_id);
+                return inscription.etudiant_id ? inscription.etudiant_id.toString() : null;  // add a check here
+            }).filter(function(matricule) {
+                return matricule !== null;  // filter out null values
+            });
+//             if (etudiantsSelect.hasClass('select2-hidden-accessible')) {
+//     // Select2 has been initialized, so it's safe to destroy it
+//     etudiantsSelect.select2('destroy');
+// }
+            etudiantsSelect.empty();
+            $.each(etudiantMatricules, function(index, etudiantMatricule) {
+                var etudiant = etudiants.find(function(etudiant) {
+                    // console.log("etudiant", etudiant)
+                    // console.log("etudiantMatricule", etudiantMatricule)
+                    // console.log(etudiant.matricule.toString() === etudiantMatricule)
+                    return etudiant.matricule.toString() === etudiantMatricule;
+                });
+                if (etudiant) {
+    var newOption = new Option(etudiant.nom + ' ' + etudiant.prenom, etudiantMatricule);
+    console.log(newOption);
+    etudiantsSelect.append(newOption);
+
+
+
+                }
+            });
+            etudiantsSelect.select2();  // re-initialize Select2
+
+            etudiantsSelect.trigger('change-select2');  // trigger the 'change' event
+
+
+        });
+    })
+    </script>
+ 
+   
+{% endblock %}

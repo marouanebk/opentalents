@@ -1,0 +1,74 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2>Edit CP</h2>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#cp">CP</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#ordre_du_jour_cp1">Ordre du jour CP1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#ordre_du_jour_cp2">Ordre du jour CP2</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+    <!-- Tab panes -->
+	<form method="post">
+		{% csrf_token %}
+		<div class="tab-content">
+			<div id="cp" class="container tab-pane active">
+				{{ cp_form|crispy }}
+			</div>
+	
+			<div id="ordre_du_jour_cp1" class="container tab-pane fade">
+				{{ ordre_du_jour_formset.management_form }}
+				<div id="ordre_du_jour_container">
+				  {% for form in ordre_du_jour_formset %}
+					<div class="dynamic-form">
+					  {{ form|crispy }}
+					  {% if not form.instance.pk %}Delete: {{ form.DELETE }}{% endif %}
+					</div>
+				  {% endfor %}
+				</div>
+				<button type="button" id="add-ordre-du-jour">Add Ordre du jour</button>
+			  </div>
+	
+			<div id="ordre_du_jour_cp2" class="container tab-pane fade">
+				{{ ordre_du_jour_cp2_formset.management_form }}
+				<div id="ordre_du_jour_cp2_container">
+					{% for form in ordre_du_jour_cp2_formset %}
+						<div class="dynamic-form">
+							{{ form|crispy }}
+							{% if not form.instance.pk %}Delete: {{ form.DELETE }}{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+				<button type="button" id="add-ordre-du-jour-cp2">Add Ordre du jour CP2</button>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary">Save changes</button>
+	</form>
+	
+  <script>
+  $(document).ready(function() {
+    $('#add-ordre-du-jour').click(function() {
+      var formIdx = $('#id_ordre_du_jour_formset-TOTAL_FORMS').val();
+      var form = $('#ordre_du_jour .dynamic-form').last().clone(true);
+      form.find(':input').each(function() {
+        var name = $(this).attr('name').replace('-' + (formIdx-1) + '-', '-' + formIdx + '-');
+        var id = 'id_' + name;
+        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+      });
+      form.appendTo('#ordre_du_jour_container');
+      $('#id_ordre_du_jour_formset-TOTAL_FORMS').val(parseInt(formIdx) + 1);
+    });
+  });
+  </script>
+  
+{% endblock %}

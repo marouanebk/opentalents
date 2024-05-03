@@ -1,0 +1,67 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2>Edit CP</h2>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#cp">CP</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#ordre_du_jour_cp1">Ordre du jour CP1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#ordre_du_jour_cp2">Ordre du jour CP2</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+    <!-- Tab panes -->
+	<form method="post">
+		{% csrf_token %}
+		<div class="tab-content">
+		  <div id="cp" class="container tab-pane active">
+			{{ cp_form|crispy }}
+		  </div>
+	
+		  <div id="ordre_du_jour_cp1" class="container tab-pane fade">
+			{{ ordre_du_jour_cp1_formset.management_form }}
+			{% for form in ordre_du_jour_cp1_formset %}
+			  {{ form|crispy }}
+			  {% if not form.instance.pk %}Delete: {{ form.DELETE }}{% endif %}
+			{% endfor %}
+			<button type="button" id="add-ordre-du-jour-cp1">Add Ordre du jour CP1</button>
+		  </div>
+	
+		  <div id="ordre_du_jour_cp2" class="container tab-pane fade">
+			{{ ordre_du_jour_cp2_formset.management_form }}
+			{% for form in ordre_du_jour_cp2_formset %}
+			  {{ form|crispy }}
+			  {% if not form.instance.pk %}Delete: {{ form.DELETE }}{% endif %}
+			{% endfor %}
+			<button type="button" id="add-ordre-du-jour-cp2">Add Ordre du jour CP2</button>
+		  </div>
+		</div>
+		<button type="submit" class="btn btn-primary">Save changes</button>
+	  </form>
+	
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  <script>
+	  $(document).ready(function() {
+		  $('#add-ordre-du-jour-cp1').click(function() {
+			  var formIdx = $('#id_ordre_du_jour_cp1_formset-TOTAL_FORMS').val();
+			  $('#ordre_du_jour_cp1').append($('#ordre_du_jour_cp1_formset').children().first().clone());
+			  $('#id_ordre_du_jour_cp1_formset-TOTAL_FORMS').val(parseInt(formIdx) + 1);
+		  });
+	
+		  $('#add-ordre-du-jour-cp2').click(function() {
+			  var formIdx = $('#id_ordre_du_jour_cp2_formset-TOTAL_FORMS').val();
+			  $('#ordre_du_jour_cp2').append($('#ordre_du_jour_cp2_formset').children().first().clone());
+			  $('#id_ordre_du_jour_cp2_formset-TOTAL_FORMS').val(parseInt(formIdx) + 1);
+		  });
+	  });
+	  </script>
+  
+{% endblock %}

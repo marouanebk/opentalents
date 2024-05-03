@@ -1,0 +1,40 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 static %}
+
+{% block content %}
+<!--
+{{form.media}}
+-->
+
+    <br><br>
+    <h5>{{ titre }}</h5>
+    <br>
+    {% crispy form %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#id_formation').change(function () {
+                var url = $('#id_etudiants').attr("data-etudiants-url");
+                var formationId = $(this).val();
+
+                $.ajax({
+                    url: url,
+                    data: {
+                        'formation': formationId
+                    },
+                    success: function (data) {
+                        var select = $('#id_etudiants');
+                        select.empty();
+
+                        $.each(data, function(index, item) {
+                            select.append(
+                                $('<option></option>').attr('value', item.id).text(item.name)
+                            );
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!--
+{{form.media}}
+-->
+
+    <br><br>
+    <h5>{{ titre }}</h5>
+    <br>
+    {% crispy form %}
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    var inscriptions = JSON.parse('{{ inscriptions_json|escapejs }}');
+        var formationSelect = $('#id_formation');
+        console.log(inscriptions);
+        console.log(formationSelect);
+        var etudiantsSelect = $('#id_etudiants');
+        console.log(etudiantsSelect);
+        var allEtudiantsOptions = etudiantsSelect.find('option').clone();
+
+        formationSelect.change(function () {
+            var formationId = $(this).val();
+            console.log('Selected formation:', formationId);  // Add this line
+
+            var etudiantIds = inscriptions.filter(function(inscription) {
+                return inscription.formation_id == formationId;
+            }).map(function(inscription) {
+                console.log('inscription:', inscription);
+                return inscription.etudiant_id.toString();
+            });
+            console.log('Etudiant matricules:', etudiantIds);  // Add this line
+
+            etudiantsSelect.empty();
+    $.each(etudiantMatricules, function(index, etudiantMatricule) {
+        etudiantsSelect.append(new Option(etudiantMatricule, etudiantMatricule));
+    });
+
+            // etudiantsSelect.empty().append(allEtudiantsOptions.filter(function() {
+            //     return etudiantIds.includes($(this).val());
+            // }));
+        });
+    </script>
+{% endblock %}

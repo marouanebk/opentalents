@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .header {
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="/media/admin/Entete_ESI_lg.png" alt="Logo" width="100%">
+
+        {% if institution.header %}
+            <img src="{{ institution.header.url }}" alt="Logo" width="100%">
+        {% endif %}
+    </div>
+</body>
+</html>

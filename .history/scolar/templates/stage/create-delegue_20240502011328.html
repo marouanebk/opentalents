@@ -1,0 +1,16 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <br><br>
+    <h5>{{ titre }}</h5>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.management_form }}
+        {% for subform in form %}
+            {% crispy subform %}
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
