@@ -213,3 +213,5 @@ class ScolarConfig(AppConfig):
         
         post_migrate.connect(initial_groups_create_if_not_exists, sender=self)
         post_migrate.connect(initial_permissions_create_update_delete, sender=self)
+        from . import updater
+        updater.start()

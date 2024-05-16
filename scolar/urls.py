@@ -565,4 +565,5 @@ urlpatterns = [
     path('allocation_ressources', views.AllocationListView.as_view(), name='allocation_ressources_list'),
     path('allocation_ressource_create', views.AllocationCreateView.as_view(), name='allocation_ressource_create'),
     re_path(r'^allocation_ressources/(?P<pk>\d+)/$',views.AllocationUpdateView.as_view(), name='allocation_ressource_update'),
+    path('allocation_ressources/update_etat/<int:pk>/', views.update_allocation_etat, name='update_allocation_etat'),
 ]

@@ -1,1 +1,0 @@
-*/2 * * * * root python /scolar/emails.py >> /scolar/send_emails.log 2>&1

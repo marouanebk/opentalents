@@ -1,0 +1,890 @@
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:31:38.933209+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:31:46.643761+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:31:52.286667+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:31:56.317040+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:32:02.459768+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:32:07.567902+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:32:11.340918+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:32:21 CET)" (scheduled at 2024-04-25 12:32:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:32:21.400439+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:32:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:32:31 CET)" (scheduled at 2024-04-25 12:32:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:32:31.400127+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:32:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:32:41 CET)" (scheduled at 2024-04-25 12:32:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:32:41.400329+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:32:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:32:51 CET)" (scheduled at 2024-04-25 12:32:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:32:51.400106+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:01 CET)" (scheduled at 2024-04-25 12:33:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:33:01.400389+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:11 CET)" (scheduled at 2024-04-25 12:33:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:33:11.402223+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:21 CET)" (scheduled at 2024-04-25 12:33:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:33:21.400466+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:31 CET)" (scheduled at 2024-04-25 12:33:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:33:31.400311+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:41 CET)" (scheduled at 2024-04-25 12:33:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:33:41.400322+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:33:51 CET)" (scheduled at 2024-04-25 12:33:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:33:51.400270+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:11 CET)" (scheduled at 2024-04-25 12:34:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:34:01.400059+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:21 CET)" (scheduled at 2024-04-25 12:34:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:34:11.399852+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:31 CET)" (scheduled at 2024-04-25 12:34:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:34:21.400515+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:41 CET)" (scheduled at 2024-04-25 12:34:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:34:31.400482+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:51 CET)" (scheduled at 2024-04-25 12:34:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:34:41.399898+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:34:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:01 CET)" (scheduled at 2024-04-25 12:34:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:34:51.399674+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:11 CET)" (scheduled at 2024-04-25 12:35:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:35:01.399842+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:21 CET)" (scheduled at 2024-04-25 12:35:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:35:11.400222+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:31 CET)" (scheduled at 2024-04-25 12:35:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:35:21.400149+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:41 CET)" (scheduled at 2024-04-25 12:35:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:35:31.399791+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:51 CET)" (scheduled at 2024-04-25 12:35:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:35:41.399936+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:35:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:01 CET)" (scheduled at 2024-04-25 12:35:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:35:51.399939+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:11 CET)" (scheduled at 2024-04-25 12:36:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:36:01.400475+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:21 CET)" (scheduled at 2024-04-25 12:36:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:36:11.400147+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:31 CET)" (scheduled at 2024-04-25 12:36:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:36:21.400181+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:41 CET)" (scheduled at 2024-04-25 12:36:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:36:31.399823+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:51 CET)" (scheduled at 2024-04-25 12:36:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:36:41.399867+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:36:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:01 CET)" (scheduled at 2024-04-25 12:36:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:36:51.401319+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:11 CET)" (scheduled at 2024-04-25 12:37:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:37:01.399865+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:21 CET)" (scheduled at 2024-04-25 12:37:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:37:11.400050+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:31 CET)" (scheduled at 2024-04-25 12:37:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:37:21.400243+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:41 CET)" (scheduled at 2024-04-25 12:37:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:37:31.399710+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:51 CET)" (scheduled at 2024-04-25 12:37:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:37:41.400314+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:37:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:01 CET)" (scheduled at 2024-04-25 12:37:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:37:51.400077+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:11 CET)" (scheduled at 2024-04-25 12:38:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:38:01.400091+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:21 CET)" (scheduled at 2024-04-25 12:38:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:38:11.400021+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:31 CET)" (scheduled at 2024-04-25 12:38:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:38:21.400084+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:41 CET)" (scheduled at 2024-04-25 12:38:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:38:31.399803+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:51 CET)" (scheduled at 2024-04-25 12:38:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:38:41.399896+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:38:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:01 CET)" (scheduled at 2024-04-25 12:38:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:38:51.400199+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:11 CET)" (scheduled at 2024-04-25 12:39:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:39:01.399634+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:21 CET)" (scheduled at 2024-04-25 12:39:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:39:11.400050+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:31 CET)" (scheduled at 2024-04-25 12:39:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:39:21.400288+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:41 CET)" (scheduled at 2024-04-25 12:39:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:39:31.400202+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:51 CET)" (scheduled at 2024-04-25 12:39:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:39:41.399910+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:39:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:01 CET)" (scheduled at 2024-04-25 12:39:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:39:51.400084+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:11 CET)" (scheduled at 2024-04-25 12:40:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:40:01.400175+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:21 CET)" (scheduled at 2024-04-25 12:40:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:40:11.400247+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:31 CET)" (scheduled at 2024-04-25 12:40:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:40:21.399859+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:41 CET)" (scheduled at 2024-04-25 12:40:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:40:31.400007+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:51 CET)" (scheduled at 2024-04-25 12:40:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:40:41.399900+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:40:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:01 CET)" (scheduled at 2024-04-25 12:40:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:40:51.400322+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:11 CET)" (scheduled at 2024-04-25 12:41:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:41:01.400202+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:21 CET)" (scheduled at 2024-04-25 12:41:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:41:11.399986+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:31 CET)" (scheduled at 2024-04-25 12:41:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:41:21.400284+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:41 CET)" (scheduled at 2024-04-25 12:41:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:41:31.400263+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:51 CET)" (scheduled at 2024-04-25 12:41:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:41:41.400256+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:41:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:01 CET)" (scheduled at 2024-04-25 12:41:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:41:51.400296+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:11 CET)" (scheduled at 2024-04-25 12:42:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:42:01.399910+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:21 CET)" (scheduled at 2024-04-25 12:42:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:42:11.399842+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:31 CET)" (scheduled at 2024-04-25 12:42:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:42:21.400048+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:41 CET)" (scheduled at 2024-04-25 12:42:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:42:31.400204+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:51 CET)" (scheduled at 2024-04-25 12:42:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:42:41.400131+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:42:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:01 CET)" (scheduled at 2024-04-25 12:42:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:42:51.399903+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:11 CET)" (scheduled at 2024-04-25 12:43:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:43:01.400103+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:21 CET)" (scheduled at 2024-04-25 12:43:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:43:11.399963+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:31 CET)" (scheduled at 2024-04-25 12:43:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:43:21.399580+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:41 CET)" (scheduled at 2024-04-25 12:43:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:43:31.400105+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:51 CET)" (scheduled at 2024-04-25 12:43:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:43:41.400300+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:43:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:01 CET)" (scheduled at 2024-04-25 12:43:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:43:51.400276+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:11 CET)" (scheduled at 2024-04-25 12:44:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:44:01.400090+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:21 CET)" (scheduled at 2024-04-25 12:44:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:44:11.399988+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:31 CET)" (scheduled at 2024-04-25 12:44:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:44:21.469408+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:41 CET)" (scheduled at 2024-04-25 12:44:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:44:31.399817+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:51 CET)" (scheduled at 2024-04-25 12:44:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:44:41.400262+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:44:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:01 CET)" (scheduled at 2024-04-25 12:44:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:44:51.400384+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:11 CET)" (scheduled at 2024-04-25 12:45:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:45:01.399811+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:21 CET)" (scheduled at 2024-04-25 12:45:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:45:11.400244+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:31 CET)" (scheduled at 2024-04-25 12:45:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:45:21.400016+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:41 CET)" (scheduled at 2024-04-25 12:45:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:45:31.400081+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:51 CET)" (scheduled at 2024-04-25 12:45:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:45:41.399956+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:45:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:01 CET)" (scheduled at 2024-04-25 12:45:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:45:51.400079+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:11 CET)" (scheduled at 2024-04-25 12:46:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:46:01.400258+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:21 CET)" (scheduled at 2024-04-25 12:46:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:46:11.400177+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:31 CET)" (scheduled at 2024-04-25 12:46:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:46:21.400145+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:41 CET)" (scheduled at 2024-04-25 12:46:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:46:31.399994+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:51 CET)" (scheduled at 2024-04-25 12:46:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:46:41.399950+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:46:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:01 CET)" (scheduled at 2024-04-25 12:46:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:46:51.400227+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:11 CET)" (scheduled at 2024-04-25 12:47:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:47:01.400222+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:21 CET)" (scheduled at 2024-04-25 12:47:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:47:11.400838+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:31 CET)" (scheduled at 2024-04-25 12:47:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:47:21.400162+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:41 CET)" (scheduled at 2024-04-25 12:47:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:47:31.399966+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:51 CET)" (scheduled at 2024-04-25 12:47:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:47:41.400246+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:47:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:01 CET)" (scheduled at 2024-04-25 12:47:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:47:51.400037+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:11 CET)" (scheduled at 2024-04-25 12:48:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:48:01.400156+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:21 CET)" (scheduled at 2024-04-25 12:48:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:48:11.400324+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:31 CET)" (scheduled at 2024-04-25 12:48:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:48:21.400202+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:41 CET)" (scheduled at 2024-04-25 12:48:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:48:31.399941+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:51 CET)" (scheduled at 2024-04-25 12:48:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:48:41.399690+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:48:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:01 CET)" (scheduled at 2024-04-25 12:48:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:48:51.399864+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:11 CET)" (scheduled at 2024-04-25 12:49:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:49:01.400288+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:21 CET)" (scheduled at 2024-04-25 12:49:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:49:11.399767+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:31 CET)" (scheduled at 2024-04-25 12:49:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:49:21.434606+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:41 CET)" (scheduled at 2024-04-25 12:49:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:49:31.400292+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:51 CET)" (scheduled at 2024-04-25 12:49:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:49:41.400117+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:49:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:01 CET)" (scheduled at 2024-04-25 12:49:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:49:51.399783+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:11 CET)" (scheduled at 2024-04-25 12:50:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:50:01.399915+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:21 CET)" (scheduled at 2024-04-25 12:50:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:50:11.399959+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:31 CET)" (scheduled at 2024-04-25 12:50:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:50:21.400127+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:41 CET)" (scheduled at 2024-04-25 12:50:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:50:31.399937+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:51 CET)" (scheduled at 2024-04-25 12:50:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:50:41.400086+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:50:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:01 CET)" (scheduled at 2024-04-25 12:50:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:50:51.400370+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:11 CET)" (scheduled at 2024-04-25 12:51:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:51:01.400214+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:21 CET)" (scheduled at 2024-04-25 12:51:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:51:11.400251+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:31 CET)" (scheduled at 2024-04-25 12:51:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:51:21.400308+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:41 CET)" (scheduled at 2024-04-25 12:51:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:51:31.400381+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:51 CET)" (scheduled at 2024-04-25 12:51:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:51:41.400146+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:51:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:01 CET)" (scheduled at 2024-04-25 12:51:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:51:51.400237+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:11 CET)" (scheduled at 2024-04-25 12:52:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:52:01.400257+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:21 CET)" (scheduled at 2024-04-25 12:52:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:52:11.400064+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:31 CET)" (scheduled at 2024-04-25 12:52:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:52:21.399817+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:41 CET)" (scheduled at 2024-04-25 12:52:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:52:31.400081+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:51 CET)" (scheduled at 2024-04-25 12:52:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:52:41.399949+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:52:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:01 CET)" (scheduled at 2024-04-25 12:52:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:52:51.400331+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:11 CET)" (scheduled at 2024-04-25 12:53:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:53:01.402388+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:21 CET)" (scheduled at 2024-04-25 12:53:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:53:11.399812+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:21 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/etudes_esi.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:31 CET)" (scheduled at 2024-04-25 12:53:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:53:21.400061+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:31 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:axes.attempts:AXES: Cleaned up 2 expired access attempts from database that were older than 2024-04-25 11:38:27.075063+00:00
+INFO:axes.handlers.database:AXES: Successful login by {username: "admins", ip_address: "172.18.0.1", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36", path_info: "/accounts/login/"}.
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/etudes_esi.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:41 CET)" (scheduled at 2024-04-25 12:53:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:53:31.399936+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:41 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:51 CET)" (scheduled at 2024-04-25 12:53:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:53:41.400023+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:53:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:01 CET)" (scheduled at 2024-04-25 12:53:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:53:51.401107+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:11 CET)" (scheduled at 2024-04-25 12:54:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:54:01.400480+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:21 CET)" (scheduled at 2024-04-25 12:54:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:54:11.400070+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:21 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/etudes_esi.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:31 CET)" (scheduled at 2024-04-25 12:54:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:54:21.399892+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:31 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:41 CET)" (scheduled at 2024-04-25 12:54:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:54:31.401062+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:41 CET)" executed successfully
+INFO:axes.handlers.database:AXES: User login failed, running database handler for failure.
+INFO:axes.attempts:AXES: Cleaned up 0 expired access attempts from database that were older than 2024-04-25 11:39:34.592818+00:00
+WARNING:axes.handlers.database:AXES: New login failure by {username: "ense", ip_address: "172.18.0.1", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0", path_info: "/accounts/login/"}. Created new record in the database.
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:51 CET)" (scheduled at 2024-04-25 12:54:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:54:41.400190+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:54:51 CET)" executed successfully
+WARNING:django.request:Not Found: /favicon.ico
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:01 CET)" (scheduled at 2024-04-25 12:54:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:54:51.400224+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:11 CET)" (scheduled at 2024-04-25 12:55:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:55:01.400302+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:11 CET)" executed successfully
+INFO:axes.attempts:AXES: Cleaned up 0 expired access attempts from database that were older than 2024-04-25 11:40:10.593174+00:00
+INFO:axes.handlers.database:AXES: Successful login by {username: "testens", ip_address: "172.18.0.1", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0", path_info: "/accounts/login/"}.
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:21 CET)" (scheduled at 2024-04-25 12:55:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:55:11.399855+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:21 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/etudes_esi.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:31 CET)" (scheduled at 2024-04-25 12:55:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:55:21.401998+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:31 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:41 CET)" (scheduled at 2024-04-25 12:55:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:55:31.400239+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:41 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:51 CET)" (scheduled at 2024-04-25 12:55:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:55:41.400661+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:55:51 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:01 CET)" (scheduled at 2024-04-25 12:55:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:55:51.400635+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:11 CET)" (scheduled at 2024-04-25 12:56:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:56:01.399839+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:21 CET)" (scheduled at 2024-04-25 12:56:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:56:11.400090+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:31 CET)" (scheduled at 2024-04-25 12:56:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:56:21.399943+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:31 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:41 CET)" (scheduled at 2024-04-25 12:56:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:56:31.401338+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:41 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:51 CET)" (scheduled at 2024-04-25 12:56:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:56:41.400035+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:56:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:01 CET)" (scheduled at 2024-04-25 12:56:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:56:51.400194+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:11 CET)" (scheduled at 2024-04-25 12:57:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:57:01.400414+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:21 CET)" (scheduled at 2024-04-25 12:57:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:57:11.400252+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:21 CET)" executed successfully
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:31 CET)" (scheduled at 2024-04-25 12:57:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:57:21.401357+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:41 CET)" (scheduled at 2024-04-25 12:57:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:57:31.399987+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:51 CET)" (scheduled at 2024-04-25 12:57:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:57:41.399997+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:57:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:01 CET)" (scheduled at 2024-04-25 12:57:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:57:51.400287+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:11 CET)" (scheduled at 2024-04-25 12:58:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:58:01.399906+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:21 CET)" (scheduled at 2024-04-25 12:58:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:58:11.399976+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:31 CET)" (scheduled at 2024-04-25 12:58:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:58:21.400182+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:41 CET)" (scheduled at 2024-04-25 12:58:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:58:31.400259+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:51 CET)" (scheduled at 2024-04-25 12:58:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:58:41.399917+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:58:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:01 CET)" (scheduled at 2024-04-25 12:58:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:58:51.400374+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:11 CET)" (scheduled at 2024-04-25 12:59:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:59:01.399916+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:21 CET)" (scheduled at 2024-04-25 12:59:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:59:11.400959+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:31 CET)" (scheduled at 2024-04-25 12:59:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:59:21.399723+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:41 CET)" (scheduled at 2024-04-25 12:59:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:59:31.399824+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:51 CET)" (scheduled at 2024-04-25 12:59:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:59:41.400116+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 12:59:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:01 CET)" (scheduled at 2024-04-25 12:59:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 11:59:51.402087+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:11 CET)" (scheduled at 2024-04-25 13:00:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:00:01.402848+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:21 CET)" (scheduled at 2024-04-25 13:00:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:00:11.400077+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:31 CET)" (scheduled at 2024-04-25 13:00:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:00:21.406024+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:41 CET)" (scheduled at 2024-04-25 13:00:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:00:31.399891+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:51 CET)" (scheduled at 2024-04-25 13:00:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:00:41.399804+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:00:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:01 CET)" (scheduled at 2024-04-25 13:00:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:00:51.403137+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:11 CET)" (scheduled at 2024-04-25 13:01:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:01:01.399604+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:21 CET)" (scheduled at 2024-04-25 13:01:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:01:11.400943+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:31 CET)" (scheduled at 2024-04-25 13:01:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:01:21.400079+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:41 CET)" (scheduled at 2024-04-25 13:01:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:01:31.399748+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:41 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:51 CET)" (scheduled at 2024-04-25 13:01:41.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:01:41.400898+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:01:51 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:01 CET)" (scheduled at 2024-04-25 13:01:51.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:01:51.399981+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:01 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:11 CET)" (scheduled at 2024-04-25 13:02:01.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:02:01.399625+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:11 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:21 CET)" (scheduled at 2024-04-25 13:02:11.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:02:11.399863+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:21 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:31 CET)" (scheduled at 2024-04-25 13:02:21.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:02:21.399934+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:31 CET)" executed successfully
+INFO:apscheduler.executors.default:Running job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:41 CET)" (scheduled at 2024-04-25 13:02:31.398490+01:00)
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:02:31.399817+00:00
+INFO:apscheduler.executors.default:Job "cp_remainder (trigger: interval[0:00:10], next run at: 2024-04-25 13:02:41 CET)" executed successfully
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:02:45.283951+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:02:49.742604+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:02:52.844054+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:02:56.214926+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:03:00.050889+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:03:04.431598+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:03:11.904262+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:03:22.616744+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:03:40.061452+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:04:12.021309+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:05:07.070923+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:06:10.322405+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:07:13.743122+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:08:18.992901+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:09:21.467541+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:10:25.402974+00:00
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:11:32.786136+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:11:49.689845+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:11:57.211052+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:00.194711+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:04.593525+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:09.767940+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:12.553592+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:17.252956+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:22.095544+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:25.092179+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:30.071731+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:40.051371+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:44.510023+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:48.904272+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:12:54.884572+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:13:00.126510+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+ERROR:django.request:Internal Server Error: /scolar/allocation_ressources
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.6/site-packages/django/core/handlers/exception.py", line 34, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.6/site-packages/django/core/handlers/base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python3.6/site-packages/django/core/handlers/base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django/views/generic/base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django/contrib/auth/mixins.py", line 52, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django/views/generic/base.py", line 97, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django/views/generic/base.py", line 158, in get
+    context = self.get_context_data(**kwargs)
+  File "/opentalents/scolar/views.py", line 23578, in get_context_data
+    filter_.form.helper = FormHelper()
+UnboundLocalError: local variable 'filter_' referenced before assignment
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:14:02.205485+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:14:10.926765+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:14:16.092895+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+INFO:root:Running cp_remainder function for the date : 2024-04-25 12:14:20.116345+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/ESI_Logo.png
+WARNING:django.request:Not Found: /media/admin/banniere.png
+WARNING:django.request:Not Found: /media/admin/Logo_ESI_talents.png
+INFO:root:Running cp_remainder function for the date : 2024-04-25 14:06:16.011554+00:00
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "cp_remainder" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:axes.apps:AXES: BEGIN LOG
+INFO:axes.apps:AXES: Using django-axes version 5.27.0
+INFO:axes.apps:AXES: blocking by combination of username and IP.

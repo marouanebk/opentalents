@@ -19,7 +19,7 @@ from scolar.tables import OrganismeTable, OrganismeFilter, PFETable, PFEFilter, 
     SurveillanceFilter, SurveillanceTable, EnseignementsTable,EncadrementsTable,EncadrementsAttestationTable, SoutenancesAttestationTable, ProgresFormationTable, TraceTable, TraceFilter,\
     NotificationsTable, UserTable, ExportTable, DoctorantTable, DoctorantFilter, TheseFilter, TheseTable, ProjetFilter, ProjetTable, ProjetsEnseignantTable, CritereTable, OptionCritereTable, FormationDoctoratTable, InscriptionDoctoratAvancementTable, SeminairesFilter, SeminairesTable, \
     DomaineConnaissanceTable, PosteTable, PosteFilter, ProgrammeDetteTable, DetteFilter, DetteTable, UserFilter, PersonnelTable, PaysTable, WilayaTable, CommuneTable, SurveillancesEnseignantFilter, EnregistrementEtudiantTable, EnregistrementEtudiantFilter, EquipeRechercheFilter, EquipeRechercheTable, EquipeRechercheEnseignantTable, ExpertisesPFEAttestationTable, OffreFilter, OffreTable, CandidatureTable, \
-    GoogleCalenderTable, GoogleCalenderFilter,CPTable,RessourceTable,AllocationTable , DelegueTable
+    GoogleCalenderTable, GoogleCalenderFilter,CPTable,RessourceTable,AllocationTable,AllocationFilter , DelegueTable
 from functools import reduce
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMessage, send_mass_mail
@@ -23404,8 +23404,7 @@ class AllocationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "L'allocation a été créée avec succès"
 
     def form_valid(self, form):
-        ens = Enseignant.objects.get(user= self.request.user)
-        form.instance.enseignant = ens
+        form.instance.enseignant = self.request.user
         try:
             return super().form_valid(form)
         except ValidationError as e:
@@ -23473,20 +23472,41 @@ class AllocationListView(LoginRequiredMixin, TemplateView):
         user = self.request.user
         return (self.request.user.has_perm('scolar.fonctionnalite_ressources_gestion')) or (user.is_authenticated and user.is_enseignant())
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
         
-        # Create the allocation table and configure it
-        table = AllocationTable(Allocation.objects.all())
+
+        # Filter allocations based on the user's role
+        if user.is_authenticated and user.is_enseignant():
+            allocations = Allocation.objects.filter(enseignant__user=user)
+            filter_ = AllocationFilter(self.request.GET, queryset=Allocation.objects.filter(enseignant__user=user).order_by('date', 'heure_debut'))
+        elif user.has_perm('scolar.fonctionnalite_ressources_gestion'):
+            allocations = Allocation.objects.all()
+            filter_ = AllocationFilter(self.request.GET, queryset=Allocation.objects.all().order_by('date', 'heure_debut'))
+        else:
+            allocations = Allocation.objects.none()  # Return an empty queryset
+            filter_=None
+        filter_.form.helper = FormHelper()
+
+        
+        # Create the allocation table and pass etat to it
+        table = AllocationTable(allocations)
+        
+        #table = AllocationTable(allocations)
         RequestConfig(self.request).configure(table)
         context['table'] = table
-
+        context['filter'] = filter_
+        # Set button list only for enseignant users
         btn_list = {}
-        if self.request.user.is_authenticated and self.request.user.is_enseignant():
+        if user.is_authenticated and user.is_enseignant():
             btn_list['+ Créer'] = reverse('allocation_ressource_create')
         context['btn_list'] = btn_list
+        
         context['back'] = self.request.META.get('HTTP_REFERER')
 
+        
         return context
 from django.views import View
 
@@ -23497,6 +23517,20 @@ class HeaderView(View):
 class FooterView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'stage/footer.html')
+
+
+def update_allocation_etat(request, pk):
+    if request.method == 'POST':
+        new_etat = request.POST.get('etat')
+        allocation = get_object_or_404(Allocation, pk=pk)
+
+        
+        allocation.etat = new_etat
+        allocation.save()
+        trace_create(request.user, allocation.enseignant.user, "Demande d'allocation de ressource "+str(allocation.ressource.nom)+":"+str(new_etat)+".") 
+        return redirect('allocation_ressources_list')
+    else:
+        return redirect('allocation_ressources_list')
 
 class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
     template_name = 'stage/pdf.html'
@@ -23512,8 +23546,6 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
 
     }
     def test_func(self):
-        # Implement your test here
-        # This is just an example, replace it with your actual test
         return self.request.user.is_authenticated
 
     def get_context_data(self, **kwargs):

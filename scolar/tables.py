@@ -2686,15 +2686,59 @@ class RessourceTable(tables.Table):
             {% if perms.scolar.fonctionnalite_ressources_gestion %}\
                 <a href="{% url "ressource_update" pk=record.id %}" > {% icon "pencil-alt" %} </a>\
             {% endif %}'
-    edit= tables.TemplateColumn(action, orderable=False)
+    edit = tables.TemplateColumn(action, orderable=False)
+    available_quantity = tables.Column(verbose_name='Available Quantity', accessor='available_quantity', orderable=False)
+
     class Meta:
         model = Ressource
-        fields=('nom','nombre')
-        template_name= "django_tables2/bootstrap4.html"
+        fields = ('nom', 'nombre', 'available_quantity')
+        template_name = "django_tables2/bootstrap4.html"
+
+
+
 class AllocationTable(tables.Table):
-    action = '{% load icons %}\
-                <a href="{% url "allocation_ressource_update" pk=record.id %}" > {% icon "pencil-alt" %} </a>'
-    edit= tables.TemplateColumn(action, orderable=False)
+
+
+    update_etat = tables.TemplateColumn(
+        '''
+        {% if perms.scolar.fonctionnalite_ressources_gestion %}\
+        {% if record.etat == 'En attente' %}
+            <form action="{% url 'update_allocation_etat' pk=record.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="etat" value="Approuver">
+                <button type="submit" class="btn btn-success btn-sm">Approuver</button>
+            </form>
+            <form action="{% url 'update_allocation_etat' pk=record.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="etat" value="Rejeter">
+                <button type="submit" class="btn btn-danger btn-sm">Rejeter</button>
+            </form>
+        {% elif record.etat == 'Approuver' %}
+            <form action="{% url 'update_allocation_etat' pk=record.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="etat" value="Retourner">
+                <button type="submit" class="btn btn-warning btn-sm">Retourner</button>
+            </form>
+        {% endif %}
+        {% endif %}
+        ''',
+        orderable=False
+    )
+
+    action = '''
+        {% load icons %}
+        <a href="{% url "allocation_ressource_update" pk=record.id %}" > {% icon "pencil-alt" %} </a>
+    '''
+    edit = tables.TemplateColumn(action, orderable=False)
+  
+    class Meta:
+        model = Allocation
+        fields = ('ressource', 'enseignant', 'date', 'heure_debut', 'heure_fin', 'etat', 'edit')
+        template_name = "django_tables2/bootstrap4.html"
+
+class AllocationFilter(django_filters.FilterSet):
+    etat = django_filters.ChoiceFilter(field_name='etat', choices=Allocation_choices)
+    ressource = django_filters.CharFilter(field_name='ressource__nom', lookup_expr='icontains')
 
     class Meta:
         model = Allocation

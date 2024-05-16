@@ -48,12 +48,14 @@ services:
                  echo 'Il y a au moins une migration, aucune nouvelle installation enclenchee.' &&
                  python manage.py makemigrations scolar && 
                  python manage.py migrate &&
+                
                  cp -f install/nginx.conf.example nginx/nginx.conf ;                                        
                else
                  echo 'Aucune migration disponible, nouvelle installation en cours..' &&
                  cp install/settings_default.py SMS/settings.py &&
                  python manage.py makemigrations scolar && 
                  python manage.py migrate &&
+        
                  python manage.py loaddata install/pays_wilayas_communes.json &&
                  python manage.py shell < ./install/create-default-superuser.py &&
                  python manage.py shell < ./install/requete_permissions.py &&

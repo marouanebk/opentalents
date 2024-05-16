@@ -3394,8 +3394,24 @@ class OrdreDuJour(models.Model):
 class Ressource(models.Model):
     nom = models.CharField(max_length=100)
     nombre=models.IntegerField(blank=True)
+
     def __str__(self):
         return f"{self.nom}" 
+    
+    def available_quantity(self):
+        # Get all allocations for this resource that are in 'Approuver' state
+        approved_allocations_count = self.allocation_set.filter(etat='Approuver').count()
+        # Calculate available quantity
+        available_quantity = self.nombre - approved_allocations_count
+        return available_quantity
+
+Allocation_choices=(
+    ('', '---'),
+    ('En attente','En attente'),
+    ('Approuver','Approuver'),
+    ('Retourner','Retourner'),
+    ('Rejeter','Rejeter'),
+)
 
 class Allocation(models.Model):
     ressource=models.ForeignKey(Ressource, on_delete=models.CASCADE)
@@ -3403,24 +3419,8 @@ class Allocation(models.Model):
     date=models.DateField()
     heure_debut=models.TimeField(null=True, blank=True)
     heure_fin=models.TimeField(null=True, blank=True)
-   
+    etat=models.CharField(max_length=10,null=True, blank=True, choices=Allocation_choices, default='En attente')
     def __str__(self):
         return f"{self.enseignant.nom} allocation : {self.ressource.nom} {self.date}" 
     
     
-    def save(self, *args, **kwargs):
-            
-  # Count conflicts with existing allocations for the same resource on the same day
-            conflicting_allocations_count = 0
-            allocations = Allocation.objects.filter(ressource=self.ressource, date=self.date).exclude(pk=self.pk if self.pk else None)
-            for allocation in allocations:
-                if (self.heure_debut < allocation.heure_fin and self.heure_fin > allocation.heure_debut) or \
-                   (self.heure_debut >= allocation.heure_debut and self.heure_fin <= allocation.heure_fin) or \
-                   (self.heure_debut <= allocation.heure_debut and self.heure_fin >= allocation.heure_fin):
-                    conflicting_allocations_count += 1
-
-            if conflicting_allocations_count >= self.ressource.nombre:
-                raise ValidationError("The maximum number of allocations for this resource has been reached.")
-
-
-            super().save(*args, **kwargs)
