@@ -3361,12 +3361,6 @@ class Candidature(models.Model):
         return f"{self.user} : {self.offre}"
 
 
-class Delegue(models.Model):
-    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
-    etudiants = models.ManyToManyField(Etudiant, blank=True)
-
-    def __str__(self):
-        return f"{self.formation}"
     
 class CP(models.Model):
     formation=models.ForeignKey(Formation, on_delete=models.SET_NULL, null=True, blank=True)
@@ -3424,3 +3418,16 @@ class Allocation(models.Model):
         return f"{self.enseignant.nom} allocation : {self.ressource.nom} {self.date}" 
     
     
+class Delegue(models.Model):
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+    etudiants = models.ManyToManyField(Etudiant, blank=True)
+
+    def __str__(self):
+        return f"Delegues de : {self.formation}"
+        def clean(self):
+        if self.pk is None and Delegue.objects.filter(formation=self.formation).exists():
+            raise ValidationError("Une délégation existe déjà pour cette formation.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)

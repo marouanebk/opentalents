@@ -1166,6 +1166,11 @@ class FormationTable(tables.Table):
     action='{% load icons %}\
             <a href="{% url "section_list" formation_pk=record.id %}" class="btn btn-link"> Sections </a> '
     detail=tables.TemplateColumn(action, orderable=False)
+
+    action='{% load icons %}\
+            <a href="{% url "delegue_access" formation_pk=record.id %}" class="btn btn-link"> Delegues </a> '
+    Delegues=tables.TemplateColumn(action, orderable=False)
+
     action='{% load icons %}\
             <a href="{% url "export_inscriptions" formation_pk=record.id %}" > Liste Inscrits {% icon "file-excel" %} </a> '
     Inscrits=tables.TemplateColumn(action, orderable=False)    

@@ -1,30 +1,30 @@
 from django.core.mail import EmailMessage
 from django.utils import timezone
-from datetime import timedelta,datetime
+from datetime import timedelta, datetime
 from django.utils.timezone import activate
 from django.conf import settings
-from scolar.models import Formation,CP,Institution
+from scolar.models import Formation, CP, Institution, Delegue
 import logging
 
 def get_institution():
     institution_ = Institution.objects.all()
     if institution_.exists():
         return institution_[0]
-    else :
+    else:
         raise Exception
-    
-def signature_emails(): 
-    institution=get_institution()
+
+def signature_emails():
+    institution = get_institution()
     return institution.signature_emails if institution.signature_emails else ''
 
 def cp_remainder():
     # Set the time zone to Algeria
     activate("Africa/Algiers")
-  
-
-# Configure logging
+    
+    # Configure logging
     logging.basicConfig(filename='cron/log/debug.log', level=logging.INFO)
-    logging.info(f'Running cp_remainder function for the date : {timezone.now()}' )
+    logging.info(f'Running cp_remainder function for the date: {timezone.now()}')
+    
     # Get all formations with encours=True for the current year
     formations = Formation.objects.filter(annee_univ__encours=True)
     
@@ -34,59 +34,57 @@ def cp_remainder():
         
         for cp in cps:
             # Check if CP's start date is within one week
-         if (cp.date_cp1):
-            cp_date_debut_datetime = timezone.make_aware(datetime.combine(cp.date_debut_semester, datetime.min.time()))
-            if cp_date_debut_datetime - timezone.now() == timedelta(days=7):
-                # Send email to enseignants
-                enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
-                delegues_emails = [delegue.email for delegue in cp.delegues.all()]
-                emails=enseignants_emails+delegues_emails
-                email = EmailMessage('Reminder: CP Start Date Approaching',
-                                 'Bonjour,\n'+ 
-                                 "The start date of CP {cp} is approaching within one week."+
-                                 signature_emails(), to=emails)
+            if cp.date_cp1:
+                cp_date_debut_datetime = timezone.make_aware(datetime.combine(cp.date_cp1, datetime.min.time()))
+                if cp_date_debut_datetime - timezone.now() == timedelta(days=7):
+                    # Send email to enseignants and delegates of the formation
+                    enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
+                    delegues_emails = [delegue.email for delegue in Delegue.objects.filter(formation=formation).values_list('etudiants__email', flat=True)]
+                    emails = enseignants_emails + delegues_emails
+                    email = EmailMessage(
+                        'Rappel: Date des Comités Pédagogiques Approchant',
+                        f'Bonjour,\nLes dates des Comités Pédagogiques pour la formation {formation} approchent dans une semaine.\nDébut CP: {cp.date_cp1}\n{signature_emails()}',
+                        to=emails
+                    )
+                    email.send(fail_silently=True)
+                    logging.info(f'Emails sent for the CP: {cp.formation} on: {timezone.now()}')
+                
+                # Check if CP's start date is within 2 days
+                if cp_date_debut_datetime - timezone.now() == timedelta(days=2):
+                    emails = enseignants_emails + delegues_emails
+                    email = EmailMessage(
+                        'Rappel: Date des Comités Pédagogiques Approchant',
+                        f'Bonjour,\nLes dates des Comités Pédagogiques pour la formation {formation} approchent dans 2 jours.\nDébut CP: {cp.date_cp1}\n{signature_emails()}',
+                        to=emails
+                    )
+                    email.send(fail_silently=True)
+                    logging.info(f'Emails sent for the CP: {cp.formation} on: {timezone.now()}')
             
-                email.send(fail_silently=True)
-                logging.info(f'emails sent for the cp: {cp.formation} in : {timezone.now()}' )
-            # Check if CP's end date is within 2 days
-            if  cp_date_debut_datetime - timezone.now() == timedelta(days=2):
-                enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
-                delegues_emails = [delegue.email for delegue in cp.delegues.all()]
-                emails=enseignants_emails+delegues_emails
-                email = EmailMessage('Reminder: CP Start Date Approaching'
-                                 'Bonjour,\n'+ 
-                                 "The start date of CP {cp} is approaching within 2 days."+
-                                 signature_emails(), to=emails
-                                                    )
-            
-                email.send(fail_silently=True)
-                logging.info(f'emails sent for the cp: {cp.formation} in : {timezone.now()}' )
-         if (cp.date_cp2):
-            cp_date_fin_datetime = timezone.make_aware(datetime.combine(cp.date_fin_semester, datetime.min.time()))
-            if cp_date_fin_datetime - timezone.now() == timedelta(days=7):
-                # Send email to enseignants
-                enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
-                delegues_emails = [delegue.email for delegue in cp.delegues.all()]
-                emails=enseignants_emails+delegues_emails
-                email = EmailMessage('Reminder: CP Start Date Approaching',
-                                 'Bonjour,\n'+ 
-                                 "The start date of CP {cp} is approaching within one week."+
-                                 signature_emails(), to=emails)
-            
-                email.send(fail_silently=True)
-                logging.info(f'emails sent for the cp: {cp.formation} in : {timezone.now()}' )
-            # Check if CP's end date is within 2 days
-            if  cp_date_fin_datetime - timezone.now() == timedelta(days=2):
-                enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
-                delegues_emails = [delegue.email for delegue in cp.delegues.all()]
-                emails=enseignants_emails+delegues_emails
-                email = EmailMessage('Reminder: CP Start Date Approaching'
-                                 'Bonjour,\n'+ 
-                                 "The start date of CP {cp} is approaching within 2 days."+
-                                 signature_emails(), to=emails
-                                                    )
-            
-                email.send(fail_silently=True)
-                logging.info(f'emails sent for the cp: {cp.formation} in : {timezone.now()}' )
+            if cp.date_cp2:
+                cp_date_fin_datetime = timezone.make_aware(datetime.combine(cp.date_cp2, datetime.min.time()))
+                if cp_date_fin_datetime - timezone.now() == timedelta(days=7):
+                    # Send email to enseignants and delegates of the formation
+                    enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
+                    delegues_emails = [delegue.email for delegue in Delegue.objects.filter(formation=formation).values_list('etudiants__email', flat=True)]
+                    emails = enseignants_emails + delegues_emails
+                    email = EmailMessage(
+                        'Rappel: Date des Comités Pédagogiques Approchant',
+                        f'Bonjour,\nLes dates des Comités Pédagogiques pour la formation {formation} approchent dans une semaine.\nFin CP: {cp.date_cp2}\n{signature_emails()}',
+                        to=emails
+                    )
+                    email.send(fail_silently=True)
+                    logging.info(f'Emails sent for the CP: {cp.formation} on: {timezone.now()}')
+                
+                # Check if CP's end date is within 2 days
+                if cp_date_fin_datetime - timezone.now() == timedelta(days=2):
+                    emails = enseignants_emails + delegues_emails
+                    email = EmailMessage(
+                        'Rappel: Date des Comités Pédagogiques Approchant',
+                        f'Bonjour,\nLes dates des Comités Pédagogiques pour la formation {formation} approchent dans 2 jours.\nFin CP: {cp.date_cp2}\n{signature_emails()}',
+                        to=emails
+                    )
+                    email.send(fail_silently=True)
+                    logging.info(f'Emails sent for the CP: {cp.formation} on: {timezone.now()}')
 
+# Run the function
 cp_remainder()

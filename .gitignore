@@ -24,3 +24,5 @@ __pycache__/
 .idea/
 /execution.bat
 /DB-*.json
+cron/log/debug.log
+cron/log/debug.log

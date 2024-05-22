@@ -23226,8 +23226,7 @@ class CPCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
                 messages.error(self.request, "ERREUR: lors de la création d'un cp.")
     
         return form
-from django.forms import formset_factory
-from django.forms import inlineformset_factory
+
 from django.forms import modelformset_factory
 
 class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
@@ -23661,43 +23660,143 @@ from .forms import DelegueForm
 
 
 
+
+@receiver(post_save, sender=Formation)
+def create_delegue(sender, instance, created, **kwargs):
+    if created:
+        Delegue.objects.create(formation=instance)
+
+
+class DelegueAccessView(LoginRequiredMixin, UserPassesTestMixin, View):
+    permission_required = 'scolar.fonctionnalite_planification_gestionformations'
+
+    def test_func(self):
+        return self.request.user.has_perm('scolar.fonctionnalite_planification_gestionformations')
+
+    def get(self, request, *args, **kwargs):
+        formation_id = self.kwargs.get('formation_pk')
+        formation = Formation.objects.filter(pk=formation_id).first()
+
+        if not formation:
+            messages.error(request, "No Formation matches the given query.")
+            return redirect('formation_list')  # Or any other appropriate URL
+
+        try:
+            delegue = Delegue.objects.get(formation=formation)
+            return redirect('delegue_update', pk=delegue.pk)
+        except Delegue.DoesNotExist:
+            return redirect('delegue_create', formation_pk=formation_id)
 class DelegueCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, CreateView):
     model = Delegue
     form_class = DelegueForm
-    template_name = 'stage/create-delegue.html'
-    success_url = reverse_lazy('delegue_list')
-    success_message = "Le délégué a été créé avec succès"
-    permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        if self.request.method in ('POST', 'PUT'):
-            data = self.request.POST.copy()
-            kwargs['data'] = data
-            if data.get('formation'):
-                kwargs['formation'] = Formation.objects.get(pk=data.get('formation'))
-        return kwargs
-
-    def form_valid(self, form):
-        delegue = form.save(commit=False)
-        delegue.save()
-        delegue.etudiants.set(form.cleaned_data['etudiants'])
-        return super().form_valid(form)
+    permission_required = 'scolar.fonctionnalite_planification_gestionformations'
+    template_name = 'scolar/create.html'
+    success_message = "Succès"
 
     def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
+        return self.request.user.has_perm('scolar.fonctionnalite_planification_gestionformations')
+
+    def get(self, request, *args, **kwargs):
+        formation_id = self.kwargs.get('formation_pk')
+        formation = get_object_or_404(Formation, pk=formation_id)
+
+        try:
+            delegue = Delegue.objects.get(formation=formation)
+            return redirect('delegue_update', pk=delegue.pk)
+        except Delegue.DoesNotExist:
+            return super().get(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
+        formation_id = self.kwargs.get('formation_pk')
+        formation = get_object_or_404(Formation, pk=formation_id)
+
+        try:
+            form.fields['formation'] = forms.ModelChoiceField(
+                queryset=Formation.objects.filter(pk=formation_id),
+                widget=forms.Select(attrs={'id': 'id_formation'}),
+                initial=formation,
+                disabled=True
+            )
+
+            form.fields['etudiants'] = forms.ModelMultipleChoiceField(
+                queryset=Etudiant.objects.filter(inscriptions__formation=formation).distinct(),
+                widget=ModelSelect2MultipleWidget(
+                    model=Etudiant,
+                    search_fields=['nom__icontains', 'prenom__icontains'],
+                ),
+                required=False,
+            )
+
+            form.helper.add_input(Submit('submit', 'Enregistrer', css_class='btn-primary'))
+            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
+            self.success_url = reverse_lazy('anneeuniv_list')
+        except Exception:
+            if settings.DEBUG:
+                raise Exception
+            else:
+                messages.error(self.request, "ERREUR: lors de la création d'un cp.")
     
+        return form
 
-from django.http import HttpResponse
-from django.views import View
+    def form_valid(self, form):
+        formation_id = self.kwargs.get('formation_pk')
+        form.instance.formation = get_object_or_404(Formation, pk=formation_id)
+        return super().form_valid(form)
 
-class LoadEtudiantsView(View):
-    def get(self, request):
-        print("load etudiants function ::: ")
+    def get_students(self, request, *args, **kwargs):
         formation_id = request.GET.get('formation')
-        etudiants = Etudiant.objects.filter(inscription__formation=formation_id)
-        print(etudiants)
+        students = Etudiant.objects.filter(inscriptions__formation_id=formation_id).distinct()
+        student_list = [{'id': student.id, 'text': f"{student.nom} {student.prenom}"} for student in students]
+        return JsonResponse(student_list, safe=False)
 
-        response = HttpResponse('<option value="">---------</option>' + ''.join([f'<option value="{e.id}">{e.nom} {e.prenom}</option>' for e in etudiants]))
-        print(response)  # Add this line
-        return response
+
+class DelegueUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
+    model = Delegue
+    form_class = DelegueForm
+    permission_required = 'scolar.fonctionnalite_planification_gestionformations'
+    template_name = 'scolar/update.html'
+    success_message = "Modification réussie"
+    success_url = reverse_lazy('anneeuniv_list')
+
+    def test_func(self):
+        return self.request.user.has_perm('scolar.fonctionnalite_planification_gestionformations')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.helper = FormHelper()
+        formation_id = self.object.formation.pk
+        formation = get_object_or_404(Formation, pk=formation_id)
+
+        form.fields['formation'] = forms.ModelChoiceField(
+            queryset=Formation.objects.filter(pk=formation_id),
+            widget=forms.Select(attrs={'id': 'id_formation'}),
+            initial=formation,
+            disabled=True
+        )
+
+        form.fields['etudiants'] = forms.ModelMultipleChoiceField(
+            queryset=Etudiant.objects.filter(inscriptions__formation=formation).distinct(),
+            widget=ModelSelect2MultipleWidget(
+                model=Etudiant,
+                search_fields=['nom__icontains', 'prenom__icontains'],
+            ),
+            required=False,
+        )
+
+        form.helper.add_input(Submit('submit', 'Enregistrer', css_class='btn-primary'))
+        form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
+    
+        return form
+
+class DelegueForm(forms.ModelForm):
+    class Meta:
+        model = Delegue
+        fields = '__all__'
+        widgets = {
+            'etudiants': ModelSelect2MultipleWidget(
+                model=Etudiant,
+                search_fields=['nom__icontains', 'prenom__icontains'],
+            )
+        }

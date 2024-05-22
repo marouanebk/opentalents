@@ -554,7 +554,7 @@ urlpatterns = [
     path('delegue/list/', views.DelegueListView.as_view(), name='delegue_list'),
     path('delegue/create/', views.DelegueCreateView.as_view(), name='delegue_create'),
     
-    path('ajax/load-etudiants/', views.LoadEtudiantsView.as_view(), name='ajax_load_etudiants'),
+    #path('ajax/load-etudiants/', views.LoadEtudiantsView.as_view(), name='ajax_load_etudiants'),
     
     re_path(r'^comite_pedagogique/(?P<pk>\d+)/$',views.CPUpdateView.as_view(), name='comite_pedagogique_update'),
 
@@ -566,4 +566,10 @@ urlpatterns = [
     path('allocation_ressource_create', views.AllocationCreateView.as_view(), name='allocation_ressource_create'),
     re_path(r'^allocation_ressources/(?P<pk>\d+)/$',views.AllocationUpdateView.as_view(), name='allocation_ressource_update'),
     path('allocation_ressources/update_etat/<int:pk>/', views.update_allocation_etat, name='update_allocation_etat'),
+
+
+    re_path(r'^delegue_access/(?P<formation_pk>\d+)/$',views.DelegueAccessView.as_view(), name='delegue_access'),
+    re_path(r'^delegue_create/(?P<formation_pk>\d+)/$',views.DelegueCreateView.as_view(), name='delegue_create'),
+    re_path(r'^delegue_update/(?P<pk>\d+)/$',views.DelegueUpdateView.as_view(), name='delegue_update'),
+ 
 ]
