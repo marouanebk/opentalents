@@ -3424,7 +3424,7 @@ class Delegue(models.Model):
 
     def __str__(self):
         return f"Delegues de : {self.formation}"
-        def clean(self):
+    def clean(self):
         if self.pk is None and Delegue.objects.filter(formation=self.formation).exists():
             raise ValidationError("Une délégation existe déjà pour cette formation.")
 
