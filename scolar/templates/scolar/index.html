@@ -633,20 +633,6 @@
 	    
 		{% endif %}
 
-		{% if perms.scolar.fonctionnalite_comite_pedagogique_gestion %}
-		<ul class="nav list-group">
-			<li>
-				<button class="btn btn-primary btn-sidebar" data-toggle="collapse" data-target="#menu_delegues">{% icon 'list' %} Gestion des déléguées</button>
-			</li>
-			<div id="menu_delegues" class="collapse">
-				<li>
-					<a class="list-group-item" href="{% url "delegue_list" %}">{% icon 'list' %} Gestion des déléguées </a>
-				</li>
-			</div>
-			
-		</ul>
-	    
-		{% endif %}
 
 		{% if perms.scolar.fonctionnalite_ressources_gestion  %}
 				<ul class="nav list-group">

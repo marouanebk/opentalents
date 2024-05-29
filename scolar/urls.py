@@ -552,7 +552,7 @@ urlpatterns = [
     path('comite_pedagogique', views.CPListView.as_view(), name='comite_pedagogique_list'),
     path('comite_pedagogique_create', views.CPCreateView.as_view(), name='comite_pedagogique_create'),
     path('delegue/list/', views.DelegueListView.as_view(), name='delegue_list'),
-    path('delegue/create/', views.DelegueCreateView.as_view(), name='delegue_create'),
+    #path('delegue/create/', views.DelegueCreateView.as_view(), name='delegue_create'),
     
     #path('ajax/load-etudiants/', views.LoadEtudiantsView.as_view(), name='ajax_load_etudiants'),
     
@@ -569,7 +569,7 @@ urlpatterns = [
 
 
     re_path(r'^delegue_access/(?P<formation_pk>\d+)/$',views.DelegueAccessView.as_view(), name='delegue_access'),
-    re_path(r'^delegue_create/(?P<formation_pk>\d+)/$',views.DelegueCreateView.as_view(), name='delegue_create'),
+    #re_path(r'^delegue_create/(?P<formation_pk>\d+)/$',views.DelegueCreateView.as_view(), name='delegue_create'),
     re_path(r'^delegue_update/(?P<pk>\d+)/$',views.DelegueUpdateView.as_view(), name='delegue_update'),
  
 ]

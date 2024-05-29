@@ -110,7 +110,7 @@ from django.http import JsonResponse
 from django.forms import modelformset_factory
 
 from django.forms.models import inlineformset_factory
-
+from django.views.generic.edit import FormMixin
 
 
 def send_email(context):
@@ -23188,81 +23188,102 @@ class GoogleCalendarDeleteView(LoginRequiredMixin, SuccessMessageMixin, Permissi
 
 class CPCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, CreateView):
     model = CP
-    fields = [ 'formation','periode','date_cp1','date_cp2','enseignants']
+    fields = ['formation', 'periode', 'date_cp1', 'date_cp2', 'enseignants']
     permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
     template_name = 'scolar/create.html'
     success_message = "La Comité Pédagogique a été créé avec succès"
-    
+
     def test_func(self):
         return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
-    
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.helper = FormHelper()
         try:
-         
-            form.fields['formation']=forms.ModelChoiceField(queryset=Formation.objects.all())
-            form.fields['periode']=forms.ModelChoiceField(queryset=Periode.objects.all())
-            form.fields['date_cp1']=forms.DateField(label=u"Date du 1er cp",input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            form.fields['date_cp2']=forms.DateField(label=u"Date du 2eme cp", input_formats = settings.DATE_INPUT_FORMATS, widget=DatePickerInput(format='%d/%m/%Y'))
-            
-           
-            form.fields['enseignants']=forms.ModelMultipleChoiceField(
-                queryset = Enseignant.objects.all().order_by('nom'),
+            form.fields['formation'] = forms.ModelChoiceField(queryset=Formation.objects.all())
+            form.fields['periode'] = forms.ModelChoiceField(queryset=Periode.objects.all())
+            form.fields['date_cp1'] = forms.DateField(
+                label=u"Date du 1er cp",
+                input_formats=settings.DATE_INPUT_FORMATS,
+                widget=DatePickerInput(format='%d/%m/%Y')
+            )
+            form.fields['date_cp2'] = forms.DateField(
+                label=u"Date du 2eme cp",
+                input_formats=settings.DATE_INPUT_FORMATS,
+                widget=DatePickerInput(format='%d/%m/%Y')
+            )
+            form.fields['enseignants'] = forms.ModelMultipleChoiceField(
+                queryset=Enseignant.objects.all().order_by('nom'),
                 widget=ModelSelect2MultipleWidget(
                     model=Enseignant,
-                    search_fields=['nom__icontains','prenom__icontains'],
+                    search_fields=['nom__icontains', 'prenom__icontains'],
                 ),
                 required=False,
-            ) 
-
-            form.helper.add_input(Submit('submit','Enregistrer', css_class='btn-primary'))
+            )
+            form.helper.add_input(Submit('submit', 'Enregistrer', css_class='btn-primary'))
             form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url =  reverse('comite_pedagogique_list')
+            self.success_url = reverse('comite_pedagogique_list')
         except Exception:
             if settings.DEBUG:
                 raise Exception
             else:
                 messages.error(self.request, "ERREUR: lors de la création d'un cp.")
-    
         return form
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        trace_create(self.request.user, None, f"Création de la Comité Pédagogique pour la formation {form.instance.formation}")
+        return response
 
 from django.forms import modelformset_factory
 
+
+
 class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = CP
-    fields = ['formation', 'periode', 'date_cp1', 'date_cp2', 'enseignants', ]
+    fields = ['formation', 'periode', 'date_cp1', 'date_cp2', 'enseignants']
     permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
     template_name = 'stage/create.html'
-    success_message = "La Comité Pédagogique a été bien mise à jour "
-    success_url = '/scolar/comite_pedagogique'  
+    template_name = 'scolar/update.html'
+    success_message = "La Comité Pédagogique a été bien mise à jour"
+    success_url = '/scolar/comite_pedagogique'
 
+    def test_func(self):
+        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cp_form'] = self.get_form()
 
-        cp_instance = self.get_object()  
+        cp_instance = self.get_object()
         context['description_cp1'] = cp_instance.description_cp1
         context['description_cp2'] = cp_instance.description_cp2
 
         OrdreDuJourFormSet = modelformset_factory(OrdreDuJour, form=OrdreDuJourForm, extra=1, can_delete=True)
 
         if self.request.method == 'POST':
-            context['ordre_du_jour_cp1_formset'] = OrdreDuJourFormSet(self.request.POST, prefix='ordre_du_jour_cp1_formset', queryset=OrdreDuJour.objects.filter(cp=cp_instance, cp_type='cp1'))
-            context['ordre_du_jour_cp2_formset'] = OrdreDuJourFormSet(self.request.POST, prefix='ordre_du_jour_cp2_formset', queryset=OrdreDuJour.objects.filter(cp=cp_instance, cp_type='cp2'))
+            context['ordre_du_jour_cp1_formset'] = OrdreDuJourFormSet(
+                self.request.POST,
+                prefix='ordre_du_jour_cp1_formset',
+                queryset=OrdreDuJour.objects.filter(cp=cp_instance, cp_type='cp1')
+            )
+            context['ordre_du_jour_cp2_formset'] = OrdreDuJourFormSet(
+                self.request.POST,
+                prefix='ordre_du_jour_cp2_formset',
+                queryset=OrdreDuJour.objects.filter(cp=cp_instance, cp_type='cp2')
+            )
         else:
-            context['ordre_du_jour_cp1_formset'] = OrdreDuJourFormSet(prefix='ordre_du_jour_cp1_formset', queryset=OrdreDuJour.objects.filter(cp=cp_instance, cp_type='cp1'))
-            context['ordre_du_jour_cp2_formset'] = OrdreDuJourFormSet(prefix='ordre_du_jour_cp2_formset', queryset=OrdreDuJour.objects.filter(cp=cp_instance, cp_type='cp2'))
+            context['ordre_du_jour_cp1_formset'] = OrdreDuJourFormSet(
+                prefix='ordre_du_jour_cp1_formset',
+                queryset=OrdreDuJour.objects.filter(cp=cp_instance, cp_type='cp1')
+            )
+            context['ordre_du_jour_cp2_formset'] = OrdreDuJourFormSet(
+                prefix='ordre_du_jour_cp2_formset',
+                queryset=OrdreDuJour.objects.filter(cp=cp_instance, cp_type='cp2')
+            )
         return context
-    
-    def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
-
 
     def form_valid(self, form):
-        print(self.request.POST)
-
         context = self.get_context_data()
         ordre_du_jour_cp1_formset = context['ordre_du_jour_cp1_formset']
         ordre_du_jour_cp2_formset = context['ordre_du_jour_cp2_formset']
@@ -23287,17 +23308,16 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
 
             ordre_du_jour_cp1_formset.save_m2m()
             ordre_du_jour_cp2_formset.save_m2m()
-            
-            
+
             for form in ordre_du_jour_cp1_formset.deleted_forms:
                 form.instance.delete()
             for form in ordre_du_jour_cp2_formset.deleted_forms:
                 form.instance.delete()
 
+            trace_create(self.request.user, None, f"Mise à jour de la Comité Pédagogique pour la formation {self.object.formation}")
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
-
 class CPListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 
     template_name='scolar/list.html'
@@ -23545,7 +23565,7 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
 
     }
     def test_func(self):
-        return self.request.user.is_authenticated
+        return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23660,96 +23680,71 @@ from .forms import DelegueForm
 
 
 
-
 @receiver(post_save, sender=Formation)
 def create_delegue(sender, instance, created, **kwargs):
     if created:
         Delegue.objects.create(formation=instance)
 
 
-class DelegueAccessView(LoginRequiredMixin, UserPassesTestMixin, View):
-    permission_required = 'scolar.fonctionnalite_planification_gestionformations'
 
-    def test_func(self):
-        return self.request.user.has_perm('scolar.fonctionnalite_planification_gestionformations')
-
-    def get(self, request, *args, **kwargs):
-        formation_id = self.kwargs.get('formation_pk')
-        formation = Formation.objects.filter(pk=formation_id).first()
-
-        if not formation:
-            messages.error(request, "No Formation matches the given query.")
-            return redirect('formation_list')  # Or any other appropriate URL
-
-        try:
-            delegue = Delegue.objects.get(formation=formation)
-            return redirect('delegue_update', pk=delegue.pk)
-        except Delegue.DoesNotExist:
-            return redirect('delegue_create', formation_pk=formation_id)
-class DelegueCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, CreateView):
-    model = Delegue
+class DelegueAccessView(LoginRequiredMixin, UserPassesTestMixin, FormMixin, View):
     form_class = DelegueForm
     permission_required = 'scolar.fonctionnalite_planification_gestionformations'
-    template_name = 'scolar/create.html'
-    success_message = "Succès"
+    template_name = 'scolar/create_update.html'
 
     def test_func(self):
         return self.request.user.has_perm('scolar.fonctionnalite_planification_gestionformations')
 
-    def get(self, request, *args, **kwargs):
-        formation_id = self.kwargs.get('formation_pk')
-        formation = get_object_or_404(Formation, pk=formation_id)
-
+    def dispatch(self, request, *args, **kwargs):
+        self.formation = get_object_or_404(Formation, pk=kwargs.get('formation_pk'))
         try:
-            delegue = Delegue.objects.get(formation=formation)
-            return redirect('delegue_update', pk=delegue.pk)
+            self.delegue = Delegue.objects.get(formation=self.formation)
+            return super().dispatch(request, *args, **kwargs)
         except Delegue.DoesNotExist:
-            return super().get(request, *args, **kwargs)
+            self.delegue = None
+            return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        if self.delegue:
+            return redirect('delegue_update', pk=self.delegue.pk)
+        return self.render_to_response(self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        if self.delegue:
+            return redirect('delegue_update', pk=self.delegue.pk)
+        return self.form_valid(self.get_form())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formation'] = self.formation
+        return context
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.helper = FormHelper()
-        formation_id = self.kwargs.get('formation_pk')
-        formation = get_object_or_404(Formation, pk=formation_id)
-
-        try:
-            form.fields['formation'] = forms.ModelChoiceField(
-                queryset=Formation.objects.filter(pk=formation_id),
-                widget=forms.Select(attrs={'id': 'id_formation'}),
-                initial=formation,
-                disabled=True
-            )
-
-            form.fields['etudiants'] = forms.ModelMultipleChoiceField(
-                queryset=Etudiant.objects.filter(inscriptions__formation=formation).distinct(),
-                widget=ModelSelect2MultipleWidget(
-                    model=Etudiant,
-                    search_fields=['nom__icontains', 'prenom__icontains'],
-                ),
-                required=False,
-            )
-
-            form.helper.add_input(Submit('submit', 'Enregistrer', css_class='btn-primary'))
-            form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
-            self.success_url = reverse_lazy('anneeuniv_list')
-        except Exception:
-            if settings.DEBUG:
-                raise Exception
-            else:
-                messages.error(self.request, "ERREUR: lors de la création d'un cp.")
-    
+        form.fields['formation'] = forms.ModelChoiceField(
+            queryset=Formation.objects.filter(pk=self.formation.pk),
+            widget=forms.Select(attrs={'id': 'id_formation'}),
+            initial=self.formation,
+            disabled=True
+        )
+        form.fields['etudiants'] = forms.ModelMultipleChoiceField(
+            queryset=Etudiant.objects.filter(inscriptions__formation=self.formation).distinct(),
+            widget=ModelSelect2MultipleWidget(
+                model=Etudiant,
+                search_fields=['nom__icontains', 'prenom__icontains'],
+            ),
+            required=False,
+        )
+        form.helper.add_input(Submit('submit', 'Enregistrer', css_class='btn-primary'))
+        form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
         return form
 
     def form_valid(self, form):
-        formation_id = self.kwargs.get('formation_pk')
-        form.instance.formation = get_object_or_404(Formation, pk=formation_id)
-        return super().form_valid(form)
-
-    def get_students(self, request, *args, **kwargs):
-        formation_id = request.GET.get('formation')
-        students = Etudiant.objects.filter(inscriptions__formation_id=formation_id).distinct()
-        student_list = [{'id': student.id, 'text': f"{student.nom} {student.prenom}"} for student in students]
-        return JsonResponse(student_list, safe=False)
+        form.instance.formation = self.formation
+        response = super().form_valid(form)
+        trace_create(self.request.user, None, f"Mise à jour de la liste des délégués pour la formation {self.formation}")
+        return response
 
 
 class DelegueUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
@@ -23789,6 +23784,11 @@ class DelegueUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestM
         form.helper.add_input(Button('cancel', 'Annuler', css_class='btn-secondary', onclick="window.history.back()"))
     
         return form
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        trace_create(self.request.user, None, f"Mise à jour de la liste des délégués pour la formation {self.object.formation}")
+        return response
 
 class DelegueForm(forms.ModelForm):
     class Meta:
