@@ -23243,7 +23243,7 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
     model = CP
     fields = ['formation', 'periode', 'date_cp1', 'date_cp2', 'enseignants']
     permission_required = 'scolar.fonctionnalite_comite_pedagogique_gestion'
-    template_name = 'stage/create.html'
+    #template_name = 'stage/create.html'
     template_name = 'scolar/update.html'
     success_message = "La Comité Pédagogique a été bien mise à jour"
     success_url = '/scolar/comite_pedagogique'
