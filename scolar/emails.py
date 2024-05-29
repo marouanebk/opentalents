@@ -4,6 +4,7 @@ from datetime import timedelta, datetime
 from django.utils.timezone import activate
 from django.conf import settings
 from scolar.models import Formation, CP, Institution, Delegue
+from views import trace_create  
 import logging
 
 def get_institution():
@@ -48,6 +49,10 @@ def cp_remainder():
                     )
                     email.send(fail_silently=True)
                     logging.info(f'Emails sent for the CP: {cp.formation} on: {timezone.now()}')
+                    for enseignant in cp.enseignants.all():
+                        trace_create(None, enseignant, f"Rappel envoyé pour le CP de {formation} dans une semaine")
+                    for delegue in Delegue.objects.filter(formation=formation):
+                        trace_create(None, delegue.etudiants, f"Rappel envoyé pour le CP de {formation} dans une semaine")
                 
                 # Check if CP's start date is within 2 days
                 if cp_date_debut_datetime - timezone.now() == timedelta(days=2):
@@ -59,6 +64,10 @@ def cp_remainder():
                     )
                     email.send(fail_silently=True)
                     logging.info(f'Emails sent for the CP: {cp.formation} on: {timezone.now()}')
+                    for enseignant in cp.enseignants.all():
+                        trace_create(None, enseignant, f"Rappel envoyé pour le CP de {formation} dans 2 jours")
+                    for delegue in Delegue.objects.filter(formation=formation):
+                        trace_create(None, delegue.etudiants, f"Rappel envoyé pour le CP de {formation} dans 2 jours")
             
             if cp.date_cp2:
                 cp_date_fin_datetime = timezone.make_aware(datetime.combine(cp.date_cp2, datetime.min.time()))
@@ -74,6 +83,10 @@ def cp_remainder():
                     )
                     email.send(fail_silently=True)
                     logging.info(f'Emails sent for the CP: {cp.formation} on: {timezone.now()}')
+                    for enseignant in cp.enseignants.all():
+                        trace_create(None, enseignant, f"Rappel envoyé pour le CP de {formation} dans une semaine")
+                    for delegue in Delegue.objects.filter(formation=formation):
+                        trace_create(None, delegue.etudiants, f"Rappel envoyé pour le CP de {formation} dans une semaine")
                 
                 # Check if CP's end date is within 2 days
                 if cp_date_fin_datetime - timezone.now() == timedelta(days=2):
@@ -85,6 +98,10 @@ def cp_remainder():
                     )
                     email.send(fail_silently=True)
                     logging.info(f'Emails sent for the CP: {cp.formation} on: {timezone.now()}')
+                    for enseignant in cp.enseignants.all():
+                        trace_create(None, enseignant, f"Rappel envoyé pour le CP de {formation} dans 2 jours")
+                    for delegue in Delegue.objects.filter(formation=formation):
+                        trace_create(None, delegue.etudiants, f"Rappel envoyé pour le CP de {formation} dans 2 jours")
 
 # Run the function
 cp_remainder()
