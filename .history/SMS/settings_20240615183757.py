@@ -24,7 +24,7 @@ MEDIA_URL = '/media/'
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #with open('/opentalents/secret/secret_key.txt', encoding='utf8') as f:
@@ -157,7 +157,7 @@ DATABASES = {
 		'ENGINE':'django.db.backends.postgresql_psycopg2',
         'NAME':'opentalents',
 		'USER':'postgres',
-		'PASSWORD':'root',
+		'PASSWORD':'password',
 		'HOST':'db',
 		'PORT':'5432',
 	}

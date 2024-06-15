@@ -156,8 +156,8 @@ DATABASES = {
 	'default':{
 		'ENGINE':'django.db.backends.postgresql_psycopg2',
         'NAME':'opentalents',
-		'USER':'postgres',
-		'PASSWORD':'root',
+		'USER':'admin',
+		'PASSWORD':DATABASE_PASSWORD,
 		'HOST':'db',
 		'PORT':'5432',
 	}

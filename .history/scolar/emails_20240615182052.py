@@ -104,4 +104,4 @@ def cp_remainder():
                         trace_create(None, delegue.etudiants, f"Rappel envoyé pour le CP de {cp.formation} dans 2 jours")
 
 # Run the function
-# cp_remainder()
+cp_remainder()

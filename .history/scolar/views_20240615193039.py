@@ -23235,6 +23235,19 @@ class CPCreateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
         trace_create(self.request.user, None, f"Création de la Comité Pédagogique pour la formation {form.instance.formation}")
         return response
 
+from django.forms import modelformset_factory
+
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.views.generic.edit import UpdateView
+from django.forms import modelformset_factory
+from django.contrib import messages
+
+from .models import CP, OrdreDuJour
+from .forms import CpForm, OrdreDuJourForm
+from .utils import trace_create  # Assuming this is a utility function you have
 
 class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = CP
