@@ -23293,124 +23293,7 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
         context['description_cp2'] = cp_instance.description_cp2
 
         return context
-        
-    def form_valid(self, form):
-        print("in form valid")
-        context = self.get_context_data()
-        ordre_du_jour_cp1_formset = context['ordre_du_jour_cp1_formset']
-        ordre_du_jour_cp2_formset = context['ordre_du_jour_cp2_formset']
-        print("before loop")
-
-        # Print all form elements before modification
-        print("Form data for CP1 formset before modification:")
-        for f in ordre_du_jour_cp1_formset:
-            if f.is_valid():
-                print("Valid form data:", f.cleaned_data)
-            else:
-                print("Errors:", f.errors)
-
-        print("Form data for CP2 formset before modification:")
-        for f in ordre_du_jour_cp2_formset:
-            if f.is_valid():
-                print("Valid form data:", f.cleaned_data)
-            else:
-                print("Errors:", f.errors)
-
-        # Preprocess CP1 formset
-        # for f in ordre_du_jour_cp1_formset:
-        #     if f.is_valid():
-        #         print(f"CP1 Form is valid: {f.cleaned_data}")
-        #         if 'id' in f.cleaned_data and not f.cleaned_data['id']:
-        #             # Remove 'id' for new forms if it's an empty string or None
-        #             print(f"Removing id for new CP1 form: {f.cleaned_data['id']}")
-        #             f.cleaned_data.pop('id')
-        #         elif f.cleaned_data.get('id') and not f.instance.pk:
-        #             # Remove 'id' for new forms
-        #             print(f"Removing id for new CP1 form: {f.cleaned_data['id']}")
-        #             f.instance.id = None
-        #     else:
-        #         print(f"CP1 Form is not valid: {f.errors}")
-
-        # # Preprocess CP2 formset
-        # for f in ordre_du_jour_cp2_formset:
-        #     if f.is_valid():
-        #         print(f"CP2 Form is valid: {f.cleaned_data}")
-        #         if 'id' in f.cleaned_data and not f.cleaned_data['id']:
-        #             # Remove 'id' for new forms if it's an empty string or None
-        #             print(f"Removing id for new CP2 form: {f.cleaned_data['id']}")
-        #             f.cleaned_data.pop('id')
-        #         elif f.cleaned_data.get('id') and not f.instance.pk:
-        #             # Remove 'id' for new forms
-        #             print(f"Removing id for new CP2 form: {f.cleaned_data['id']}")
-        #             f.instance.id = None
-        #     else:
-        #         print(f"CP2 Form is not valid: {f.errors}")
-
-        print("after loop")
-
-        self.object.description_cp1 = self.request.POST.get('description_cp1')
-        self.object.description_cp2 = self.request.POST.get('description_cp2')
-        self.object.save()
-
-        if ordre_du_jour_cp1_formset.is_valid() and ordre_du_jour_cp2_formset.is_valid():
-            self.object = form.save()
-
-            # for f in ordre_du_jour_cp1_formset:
-            #     if f.cleaned_data.get('DELETE', False) and f.instance.pk:
-            #         f.instance.delete()
-            #     else:
-            #         ordre = f.save(commit=False)
-            #         if isinstance(self.object, CP):
-            #             ordre.cp = self.object
-            #         else:
-            #             print("not cp type")
-            #             print(type(self.object))
-            #             print(self.object.__class__)
-            #             print("Error: self.object is not a CP instance.")
-            #         ordre.cp_type = 'cp1'
-            #         ordre.save()
-
-            # for f in ordre_du_jour_cp2_formset:
-            #     if f.cleaned_data.get('DELETE', False) and f.instance.pk:
-            #         f.instance.delete()
-            #     else:
-            #         ordre = f.save(commit=False)
-            #         ordre.cp = self.object  # Ensure the cp field is correctly assigned
-            #         ordre.cp_type = 'cp2'
-            #         ordre.save()
-# Process CP1 formset
-            for f in ordre_du_jour_cp1_formset:
-                if f.cleaned_data.get('DELETE', False) and f.instance.pk:
-                    f.instance.delete()
-                elif not f.cleaned_data.get('DELETE', False):
-                    ordre = f.save(commit=False)
-                    if not f.instance.pk:  # If it doesn't have an ID, it's a new instance
-                        if isinstance(self.object, CP):
-                            ordre.cp = self.object
-                            ordre.cp_type = 'cp1'
-                            ordre.save()
-                        else:
-                            print("Error: self.object is not a CP instance.")
-                    else:  # Existing instance, just save changes
-                        ordre.save()
-
-            # Process CP2 formset
-            for f in ordre_du_jour_cp2_formset:
-                if f.cleaned_data.get('DELETE', False) and f.instance.pk:
-                    f.instance.delete()
-                elif not f.cleaned_data.get('DELETE', False):
-                    ordre = f.save(commit=False)
-                    if not f.instance.pk:  # If it doesn't have an ID, it's a new instance
-                        ordre.cp = self.object
-                        ordre.cp_type = 'cp2'
-                        ordre.save()
-                    else:  # Existing instance, just save changes
-                        ordre.save()
-
-            trace_create(self.request.user, None, f"Mise à jour de la Comité Pédagogique pour la formation {self.object.formation}")
-            return super().form_valid(form)
-        else:
-            return self.form_invalid(form)
+    
 
     def form_invalid(self, form):
         # Log form errors
@@ -23423,33 +23306,62 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
         ordre_du_jour_cp2_formset_errors = context['ordre_du_jour_cp2_formset'].errors
         print("Ordre du Jour CP1 Formset Errors:", ordre_du_jour_cp1_formset_errors)
         print("Ordre du Jour CP2 Formset Errors:", ordre_du_jour_cp2_formset_errors)
+        ordre_du_jour_cp1_formset = context['ordre_du_jour_cp1_formset']
 
+        # Call the base class's form_invalid method to render the invalid form
+        for form in ordre_du_jour_cp1_formset:
+            print("Submitted 'id' value:", form.cleaned_data.get('id', 'No ID submitted'))
+    
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
         ordre_du_jour_cp1_formset = context['ordre_du_jour_cp1_formset']
         ordre_du_jour_cp2_formset = context['ordre_du_jour_cp2_formset']
 
-        # Log formset data after attempting to modify ids
+        # Process CP1 formset
         for form in ordre_du_jour_cp1_formset:
-            if form.is_valid():
-                print("CP1 Form is valid after modification:", form.cleaned_data)
-            else:
-                print("CP1 Form is not valid after modification:", form.errors)
-            print("Submitted 'id' value:", form.cleaned_data.get('id', 'No ID submitted'))
+            if form.cleaned_data.get('id') and not form.instance.pk:
+                # Remove 'id' for new forms
+                form.cleaned_data['id'] = None
+                form.instance.id = None
 
+        # Process CP2 formset
         for form in ordre_du_jour_cp2_formset:
-            if form.is_valid():
-                print("CP2 Form is valid after modification:", form.cleaned_data)
-            else:
-                print("CP2 Form is not valid after modification:", form.errors)
-            print("Submitted 'id' value:", form.cleaned_data.get('id', 'No ID submitted'))
+            if form.cleaned_data.get('id') and not form.instance.pk:
+                # Remove 'id' for new forms
+                form.cleaned_data['id'] = None
+                form.instance.id = None
 
-        # Additional logging for context
-        print("Form data for CP1 formset:", [f.cleaned_data for f in ordre_du_jour_cp1_formset])
-        print("Form data for CP2 formset:", [f.cleaned_data for f in ordre_du_jour_cp2_formset])
+        self.object.description_cp1 = self.request.POST.get('description_cp1')
+        self.object.description_cp2 = self.request.POST.get('description_cp2')
+        self.object.save()
 
-        # Call the base class's form_invalid method to render the invalid form
-        return super().form_invalid(form)
+        if ordre_du_jour_cp1_formset.is_valid() and ordre_du_jour_cp2_formset.is_valid():
+            self.object = form.save()
 
+            for form in ordre_du_jour_cp1_formset:
+                if form.cleaned_data.get('DELETE', False) and form.instance.pk:
+                    form.instance.delete()
+                else:
+                    ordre = form.save(commit=False)
+                    ordre.cp = self.object
+                    ordre.cp_type = 'cp1'
+                    ordre.save()
 
+            for form in ordre_du_jour_cp2_formset:
+                if form.cleaned_data.get('DELETE', False) and form.instance.pk:
+                    form.instance.delete()
+                else:
+                    ordre = form.save(commit=False)
+                    ordre.cp = self.object
+                    ordre.cp_type = 'cp2'
+                    ordre.save()
+
+            trace_create(self.request.user, None, f"Mise à jour de la Comité Pédagogique pour la formation {self.object.formation}")
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 class CPListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 

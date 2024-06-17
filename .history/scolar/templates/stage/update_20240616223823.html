@@ -101,7 +101,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Save changes</button>
 </form><script>
-    document.getElementById('logButton').addEventListener('click', function(event) {
+    document.querySelector('logButton').addEventListener('click', function(event) {
         // Select all inputs for descriptions in the formsets
         var descriptionInputs = document.querySelectorAll('input[name$="-description"]');
     
@@ -131,13 +131,13 @@
             console.log(`CP1 Form ${index}:`, Object.fromEntries(formData.entries()));
         });
     
-        // // Log CP2 form data
-        // var cp2Forms = document.querySelectorAll('#ordre_du_jour_cp2_container .dynamic-form');
-        // console.log('CP2 Forms Data:');
-        // cp2Forms.forEach(function(form, index) {
-        //     var formData = new FormData(form);
-        //     console.log(`CP2 Form ${index}:`, Object.fromEntries(formData.entries()));
-        // });
+        // Log CP2 form data
+        var cp2Forms = document.querySelectorAll('#ordre_du_jour_cp2_container .dynamic-form');
+        console.log('CP2 Forms Data:');
+        cp2Forms.forEach(function(form, index) {
+            var formData = new FormData(form);
+            console.log(`CP2 Form ${index}:`, Object.fromEntries(formData.entries()));
+        });
     
         // If all descriptions are filled, form will be submitted
     });
