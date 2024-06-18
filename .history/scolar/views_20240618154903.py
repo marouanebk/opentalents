@@ -23350,7 +23350,7 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
                     if description and description.strip() != '[]':  # Check if description is not None and not just an empty bracket
                         ordre = f.save(commit=False)
                         ordre.cp = self.object
-                        ordre.cp_type = 'cp2'
+                        ordre.cp_type = 'cp1'
                         ordre.save()
 
             for description in new_cp2_descriptions:

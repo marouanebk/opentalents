@@ -23293,7 +23293,7 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
         context['description_cp2'] = cp_instance.description_cp2
 
         return context
-
+        
     def form_valid(self, form):
         print("in form valid")
         context = self.get_context_data()
@@ -23319,15 +23319,12 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
 
             for f in ordre_du_jour_cp1_formset:
                 if f.cleaned_data.get('DELETE', False) and f.instance.pk:
-                    print("Delete: %s" % f.cleaned_data)
                     f.instance.delete()
                 elif not f.cleaned_data.get('DELETE', False):
-                    description = f.cleaned_data.get('description')
-                    if description and description.strip() != '[]':  # Check if description is not None and not just an empty bracket
-                        ordre = f.save(commit=False)
-                        ordre.cp = self.object
-                        ordre.cp_type = 'cp1'
-                        ordre.save()
+                    ordre = f.save(commit=False)
+                    ordre.cp = self.object
+                    ordre.cp_type = 'cp1'
+                    ordre.save()
 
             for description in new_cp1_descriptions:
                 if description:
@@ -23343,15 +23340,12 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
 
             for f in ordre_du_jour_cp2_formset:
                 if f.cleaned_data.get('DELETE', False) and f.instance.pk:
-                    print("Delete: %s" % f.cleaned_data)
                     f.instance.delete()
                 elif not f.cleaned_data.get('DELETE', False):
-                    description = f.cleaned_data.get('description')
-                    if description and description.strip() != '[]':  # Check if description is not None and not just an empty bracket
-                        ordre = f.save(commit=False)
-                        ordre.cp = self.object
-                        ordre.cp_type = 'cp2'
-                        ordre.save()
+                    ordre = f.save(commit=False)
+                    ordre.cp = self.object
+                    ordre.cp_type = 'cp2'
+                    ordre.save()
 
             for description in new_cp2_descriptions:
                 if description:
@@ -23365,7 +23359,7 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
-
+        
     def form_invalid(self, form):
         # Log form errors
         print("Form is invalid")

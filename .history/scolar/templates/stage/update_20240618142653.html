@@ -198,44 +198,25 @@ document.addEventListener('DOMContentLoaded', function() {
     //     }
     // }
 
-    window.deleteForm = function(button, containerId, formsetPrefix) {
-        var form = $(button).closest('.dynamic-form');
-        var container = $(containerId);
-        var forms = container.find('.dynamic-form');
-        var nonDeletedCount = forms.find('input[id$="-DELETE"][value="False"]').length;
-
-        if (nonDeletedCount > 1) {
-            form.find('input[id$="-DELETE"]').val('True');
-            form.hide();
-        } else {
-            form.find(':input, select, textarea').each(function() {
-                if ($(this).attr('type') !== 'hidden') {
-                    $(this).val('');
-                }
-            });
-            form.find('input[type="hidden"][name$="-DELETE"]').val('False');
+    function deleteForm(button, containerId, formsetPrefix) {
+            var form = $(button).closest('.dynamic-form');
+            var container = $(containerId);
+            var forms = container.find('.dynamic-form');
+            var nonDeletedCount = forms.find('input[id$="-DELETE"][value="False"]').length;
+        
+            if (nonDeletedCount > 1) {
+                form.find('input[id$="-DELETE"]').val('True');
+                form.hide();
+            } else {
+                form.find(':input, select, textarea').each(function () {
+                    if ($(this).attr('type') !== 'hidden') {
+                        $(this).val('');
+                    }
+                });
+                form.find('input[type="hidden"][name$="-DELETE"]').val('False');
+            }
+        
         }
-    };
-
-    // function deleteForm(button, containerId, formsetPrefix) {
-    //         var form = $(button).closest('.dynamic-form');
-    //         var container = $(containerId);
-    //         var forms = container.find('.dynamic-form');
-    //         var nonDeletedCount = forms.find('input[id$="-DELETE"][value="False"]').length;
-        
-    //         if (nonDeletedCount > 1) {
-    //             form.find('input[id$="-DELETE"]').val('True');
-    //             form.hide();
-    //         } else {
-    //             form.find(':input, select, textarea').each(function () {
-    //                 if ($(this).attr('type') !== 'hidden') {
-    //                     $(this).val('');
-    //                 }
-    //             });
-    //             form.find('input[type="hidden"][name$="-DELETE"]').val('False');
-    //         }
-        
-    //     }
 });
 </script>
 

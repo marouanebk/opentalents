@@ -23322,8 +23322,8 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
                     print("Delete: %s" % f.cleaned_data)
                     f.instance.delete()
                 elif not f.cleaned_data.get('DELETE', False):
-                    description = f.cleaned_data.get('description')
-                    if description and description.strip() != '[]':  # Check if description is not None and not just an empty bracket
+                    # Check if description is not just an empty bracket or meets your criteria
+                    if f.cleaned_data.get('description', '').strip() != '[]':
                         ordre = f.save(commit=False)
                         ordre.cp = self.object
                         ordre.cp_type = 'cp1'
@@ -23346,8 +23346,8 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
                     print("Delete: %s" % f.cleaned_data)
                     f.instance.delete()
                 elif not f.cleaned_data.get('DELETE', False):
-                    description = f.cleaned_data.get('description')
-                    if description and description.strip() != '[]':  # Check if description is not None and not just an empty bracket
+                    # Check if description is not just an empty bracket or meets your criteria
+                    if f.cleaned_data.get('description', '').strip() != '[]':
                         ordre = f.save(commit=False)
                         ordre.cp = self.object
                         ordre.cp_type = 'cp2'

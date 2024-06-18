@@ -179,63 +179,24 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById(`id_${formsetPrefix}-TOTAL_FORMS`).value = formIdx + 1; // Increment total forms count
     }
 
-    // window.deleteForm = function(button, containerId, formsetPrefix) {
-    //     var form = button.closest('.dynamic-form');
-    //     var container = document.querySelector(containerId);
-    //     var forms = container.querySelectorAll('.dynamic-form');
-    //     var nonDeletedCount = Array.from(forms).filter(form => form.querySelector('input[id$="-DELETE"]').value === 'False').length;
-
-    //     if (nonDeletedCount > 1) {
-    //         form.querySelector('input[id$="-DELETE"]').value = 'True';
-    //         form.style.display = 'none';
-    //     } else {
-    //         form.querySelectorAll('input, select, textarea').forEach(function(input) {
-    //             if (input.type !== 'hidden') {
-    //                 input.value = '';
-    //             }
-    //         });
-    //         form.querySelector('input[type="hidden"][name$="-DELETE"]').value = 'False';
-    //     }
-    // }
-
     window.deleteForm = function(button, containerId, formsetPrefix) {
-        var form = $(button).closest('.dynamic-form');
-        var container = $(containerId);
-        var forms = container.find('.dynamic-form');
-        var nonDeletedCount = forms.find('input[id$="-DELETE"][value="False"]').length;
+        var form = button.closest('.dynamic-form');
+        var container = document.querySelector(containerId);
+        var forms = container.querySelectorAll('.dynamic-form');
+        var nonDeletedCount = Array.from(forms).filter(form => form.querySelector('input[id$="-DELETE"]').value === 'False').length;
 
         if (nonDeletedCount > 1) {
-            form.find('input[id$="-DELETE"]').val('True');
-            form.hide();
+            form.querySelector('input[id$="-DELETE"]').value = 'True';
+            form.style.display = 'none';
         } else {
-            form.find(':input, select, textarea').each(function() {
-                if ($(this).attr('type') !== 'hidden') {
-                    $(this).val('');
+            form.querySelectorAll('input, select, textarea').forEach(function(input) {
+                if (input.type !== 'hidden') {
+                    input.value = '';
                 }
             });
-            form.find('input[type="hidden"][name$="-DELETE"]').val('False');
+            form.querySelector('input[type="hidden"][name$="-DELETE"]').value = 'False';
         }
-    };
-
-    // function deleteForm(button, containerId, formsetPrefix) {
-    //         var form = $(button).closest('.dynamic-form');
-    //         var container = $(containerId);
-    //         var forms = container.find('.dynamic-form');
-    //         var nonDeletedCount = forms.find('input[id$="-DELETE"][value="False"]').length;
-        
-    //         if (nonDeletedCount > 1) {
-    //             form.find('input[id$="-DELETE"]').val('True');
-    //             form.hide();
-    //         } else {
-    //             form.find(':input, select, textarea').each(function () {
-    //                 if ($(this).attr('type') !== 'hidden') {
-    //                     $(this).val('');
-    //                 }
-    //             });
-    //             form.find('input[type="hidden"][name$="-DELETE"]').val('False');
-    //         }
-        
-    //     }
+    }
 });
 </script>
 
