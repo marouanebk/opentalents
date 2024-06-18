@@ -23690,26 +23690,36 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
         cp_id = self.kwargs.get('pk')
         pv_type = self.kwargs.get('type')
 
+
         cp = CP.objects.get(id=cp_id)
+
         ordres_du_jour = OrdreDuJour.objects.filter(cp=cp, cp_type=pv_type)
 
+        # Add CP description based on pv_type
         if pv_type == 'cp1':
             cp_description = cp.description_cp1
         else:
             cp_description = cp.description_cp2
 
         formation = Formation.objects.get(id=cp.formation.id)
+
         programme = Programme.objects.get(code=formation.programme.code)
 
-        # Extract and format programme text
-        programme_text = self.format_programme_text(programme.code)
-        print("programme code "+programme.code)
-        print("programme_text" + programme_text)
-
         periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
+
         ues = UE.objects.filter(periode__in=periode_programmes)
+
         matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
         enseignants = list(cp.enseignants.all())
+        # delegues = list(cp.delegues.all())
+        # delegues = Delegue.objects.filter(formation=cp.formation)
+
+        # combined_list = []
+        # for i in range(max(len(enseignants), len(delegues))):
+        #     combined_list.append({
+        #         'enseignant': enseignants[i] if i < len(enseignants) else None,
+        #         'delegue': delegues[i] if i < len(delegues) else None,
+        #     })
         etudiants = Etudiant.objects.filter(delegue__formation=cp.formation)
 
         combined_list = []
@@ -23719,29 +23729,16 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
                 'etudiant': etudiants[i] if i < len(etudiants) else None,
             })
 
+
         context['cp'] = cp
         context['matieres'] = matieres
         context['combined_list'] = combined_list
         context['type'] = pv_type
         context['cp_description'] = cp_description
         context['ordres_du_jour'] = ordres_du_jour
-        context['programme_text'] = programme_text  # Add the formatted text to the context
 
-        self.filename = 'pv_du_cp.pdf'
+        self.filename='pv_du_cp.pdf'        
         return context
-
-    def format_programme_text(self, code):
-        # Extract the first part of the code and convert to lowercase
-        base_code = code.split('-')[0].lower()
-        # Determine the text based on the base code
-        if base_code in ['1cp', '2cp']:
-            year = base_code[0]
-            return f'<h4 style="font-weight: bold; text-align: center;">{year}<sup>ème</sup> année classe préparatoire</h4>'
-        elif base_code in ['1cs', '2cs', '3cs']:
-            year = base_code[0]
-            return f'<h4 style="font-weight: bold; text-align: center;">{year}<sup>ème</sup> année classe spécialité</h4>'
-        else:
-            return '<h4 style="font-weight: bold; text-align: center;">Programme non reconnu</h4>'
 
 class DelegueListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     template_name = 'scolar/list.html'

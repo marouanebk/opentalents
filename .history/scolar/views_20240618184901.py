@@ -23703,8 +23703,6 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
 
         # Extract and format programme text
         programme_text = self.format_programme_text(programme.code)
-        print("programme code "+programme.code)
-        print("programme_text" + programme_text)
 
         periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
         ues = UE.objects.filter(periode__in=periode_programmes)
@@ -23736,12 +23734,10 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
         # Determine the text based on the base code
         if base_code in ['1cp', '2cp']:
             year = base_code[0]
-            return f'<h4 style="font-weight: bold; text-align: center;">{year}<sup>ème</sup> année classe préparatoire</h4>'
+            return f"{year}<sup>ème</sup> année classe préparatoire"
         elif base_code in ['1cs', '2cs', '3cs']:
             year = base_code[0]
-            return f'<h4 style="font-weight: bold; text-align: center;">{year}<sup>ème</sup> année classe spécialité</h4>'
-        else:
-            return '<h4 style="font-weight: bold; text-align: center;">Programme non reconnu</h4>'
+            return f"{year}<sup>ème</sup> année
 
 class DelegueListView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     template_name = 'scolar/list.html'

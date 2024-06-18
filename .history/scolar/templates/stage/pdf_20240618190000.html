@@ -87,8 +87,8 @@
 <body>
     <div class="content">
         <h4 style="font-weight: bold; text-align: center;">PROCES-VERBAL DU COMITE PEDAGOGIQUE N<sup>o</sup> {% if type == 'pv1' %}1{% else %}2{% endif %}</h4>
-        {{ programme_text|safe }}
-        <br />
+{{ programme_text }}       
+ <br />
         <p>{{ cp_description }}</p>
         {% for ordre in ordres_du_jour %}
         <p>&nbsp;&nbsp;&nbsp;{{ forloop.counter }}. {{ ordre.description }}</p>

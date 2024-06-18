@@ -3,6 +3,8 @@
 
 {% block content %}
 <style>
+
+    
     textarea {
         width: 100%;
         min-height: 100px;
@@ -20,6 +22,11 @@
     .dynamic-form input[type="checkbox"]+label {
         display: none;
     }
+
+    .align-items-center {
+    display: flex;
+    align-items: center; /* This centers the items vertically */
+}
 </style>
 
 <h2>Edit CP</h2>
@@ -55,12 +62,14 @@
                 <div class="card mb-3 dynamic-form">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-10">
-                                {{ form|crispy }}
-                                <input type="hidden" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" value="False">
-                            </div>
-                            <div class="col-md-2">
-                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteForm(this, '#ordre_du_jour_cp1_container', 'ordre_du_jour_cp1_formset')">Supprimer</button>
+                            <div class="row align-items-center"> <!-- Add the custom class here -->
+                                <div class="col-md-10">
+                                    {{ form|crispy }}
+                                    <input type="hidden" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" value="False">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteForm(this, '#ordre_du_jour_cp1_container', 'ordre_du_jour_cp1_formset')">Supprimer</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -84,12 +93,14 @@
                 <div class="card mb-3 dynamic-form">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-10">
-                                {{ form|crispy }}
-                                <input type="hidden" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" value="False">
-                            </div>
-                            <div class="col-md-2">
-                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteForm(this, '#ordre_du_jour_cp2_container', 'ordre_du_jour_cp2_formset')">Supprimer</button>
+                            <div class="row align-items-center"> <!-- Add the custom class here -->
+                                <div class="col-md-10">
+                                    {{ form|crispy }}
+                                    <input type="hidden" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" value="False">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteForm(this, '#ordre_du_jour_cp2_container', 'ordre_du_jour_cp2_formset')">Supprimer</button>
+                                </div>
                             </div>
                         </div>
                     </div>

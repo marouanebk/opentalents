@@ -23704,7 +23704,6 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
         # Extract and format programme text
         programme_text = self.format_programme_text(programme.code)
         print("programme code "+programme.code)
-        print("programme_text" + programme_text)
 
         periode_programmes = PeriodeProgramme.objects.filter(programme=programme)
         ues = UE.objects.filter(periode__in=periode_programmes)
