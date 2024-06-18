@@ -182,7 +182,6 @@ console.log("new cp1 form: " + newCP1Forms.toString());
     var xhr = new XMLHttpRequest();
     xhr.open('POST', event.target.action, true);
     xhr.onload = function() {
-        console.log("status code: " + xhr.status);
         if (xhr.status >= 200 && xhr.status < 400) {
             console.log('Form submitted successfully');
         } else {

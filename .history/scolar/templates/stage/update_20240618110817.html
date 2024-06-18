@@ -130,11 +130,6 @@ document.querySelector('form').addEventListener('submit', function(event) {
     //     }
     // });
 
-    var newForms = document.querySelectorAll('[data-isnew="true"]');
-    newForms.forEach(function(form) {
-        form.remove();
-    });
-
     // var newCP1Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp1"]');
     // newCP1Forms.forEach(function(form) {
     //     // Specific logic for new CP1 forms
@@ -156,45 +151,39 @@ document.querySelector('form').addEventListener('submit', function(event) {
 
     var newCP1Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp1"]');
     var newCP2Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp2"]');
-console.log("new cp1 form: " + newCP1Forms.toString());
-    var newCP1Descriptions = [];
+
+    var newCP1Indices = [];
     newCP1Forms.forEach(function(form) {
-        var description = form.querySelector('input[name$="-description"]').value.trim();
-        if (description) {
-            newCP1Descriptions.push(description);
-        }
+        var index = form.querySelector('input, select, textarea').name.match(/-(\d+)-/)[1];
+        newCP1Indices.push(index);
     });
 
-    var newCP2Descriptions = [];
+    var newCP2Indices = [];
     newCP2Forms.forEach(function(form) {
-        var description = form.querySelector('input[name$="-description"]').value.trim();
-        if (description) {
-            newCP2Descriptions.push(description);
-        }
+        var index = form.querySelector('input, select, textarea').name.match(/-(\d+)-/)[1];
+        newCP2Indices.push(index);
     });
 
-    // Prepare data for submission (if using AJAX)
-    var formData = new FormData();
-    formData.append('new_cp1_descriptions', newCP1Descriptions.join(';'));
-    formData.append('new_cp2_descriptions', newCP2Descriptions.join(';'));
+    // Add new form indices as parameters to the form submission
+    var formData = new FormData(event.target);
+    formData.append('new_cp1_indices', newCP1Indices.join(','));
+    formData.append('new_cp2_indices', newCP2Indices.join(','));
 
-    // AJAX submission (if desired)
+    // Create a new FormData object and send it via AJAX to avoid interfering with default submission
     var xhr = new XMLHttpRequest();
     xhr.open('POST', event.target.action, true);
     xhr.onload = function() {
-        console.log("status code: " + xhr.status);
         if (xhr.status >= 200 && xhr.status < 400) {
+            // Handle successful submission here
             console.log('Form submitted successfully');
         } else {
+            // Handle error here
             console.error('Form submission failed');
         }
     };
-    xhr.onerror = function() {
-    console.error('Request failed:', xhr.statusText);
-};
     xhr.send(formData);
 
-    event.preventDefault();
+    event.preventDefault(); 
 });
 
 

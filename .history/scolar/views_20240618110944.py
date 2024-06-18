@@ -23304,11 +23304,12 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
         self.object.description_cp2 = self.request.POST.get('description_cp2')
         self.object.save()
 
-        new_cp1_descriptions = self.request.POST.get('new_cp1_descriptions', '').split(';')
-        new_cp2_descriptions = self.request.POST.get('new_cp2_descriptions', '').split(';')
+        new_cp1_indices = self.request.POST.get('new_cp1_indices', '').split(',')
+        new_cp2_indices = self.request.POST.get('new_cp2_indices', '').split(',')
+
         # Print the new form indices
-        print('New CP1 descriptions:', new_cp1_descriptions)
-        print('New CP2 descriptions:', new_cp2_descriptions)
+        print('New CP1 Indices:', new_cp1_indices)
+        print('New CP2 Indices:', new_cp2_indices)
 
         if ordre_du_jour_cp1_formset.is_valid() and ordre_du_jour_cp2_formset.is_valid():
             self.object = form.save()

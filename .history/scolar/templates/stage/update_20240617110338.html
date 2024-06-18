@@ -105,14 +105,14 @@ document.querySelector('form').addEventListener('submit', function(event) {
     // Select all inputs for descriptions in the formsets
     var descriptionInputs = document.querySelectorAll('input[name$="-description"]');
 
-    // Iterate over the inputs to check if any is empty and DELETE is False
+    // Iterate over the inputs to check if any is empty and DELETE is not checked
     for (var i = 0; i < descriptionInputs.length; i++) {
         var descriptionInput = descriptionInputs[i];
         var formRow = descriptionInput.closest('.dynamic-form');
-        var deleteField = formRow.querySelector('input[name$="-DELETE"]');
+        var deleteCheckbox = formRow.querySelector('input[name$="-DELETE"]');
 
-        // Check if DELETE field value is 'False'
-        if (deleteField && deleteField.value === 'False') {
+        // Check if DELETE checkbox is not checked
+        if (!deleteCheckbox || !deleteCheckbox.checked) {
             if (descriptionInput.value.trim() === '') {
                 alert('Please fill in all descriptions before saving changes.');
                 event.preventDefault(); // Prevent form submission
@@ -122,81 +122,14 @@ document.querySelector('form').addEventListener('submit', function(event) {
     }
 
     // Remove id field from forms where isNew is True
-    // var newForms = document.querySelectorAll('[data-isnew="true"]');
-    // newForms.forEach(function(form) {
-    //     var idField = form.querySelector('input[name$="-id"]');
-    //     if (idField) {
-    //         idField.remove();
-    //     }
-    // });
-
     var newForms = document.querySelectorAll('[data-isnew="true"]');
     newForms.forEach(function(form) {
-        form.remove();
-    });
-
-    // var newCP1Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp1"]');
-    // newCP1Forms.forEach(function(form) {
-    //     // Specific logic for new CP1 forms
-    //     var idField = form.querySelector('input[name$="-id"]');
-    //     if (idField) {
-    //         idField.remove(); // Remove ID for new entries
-    //     }
-    // });
-
-    // // Handle new CP2 forms
-    // var newCP2Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp2"]');
-    // newCP2Forms.forEach(function(form) {
-    //     // Specific logic for new CP2 forms
-    //     var idField = form.querySelector('input[name$="-id"]');
-    //     if (idField) {
-    //         idField.remove(); // Remove ID for new entries
-    //     }
-    // });
-
-    var newCP1Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp1"]');
-    var newCP2Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp2"]');
-console.log("new cp1 form: " + newCP1Forms.toString());
-    var newCP1Descriptions = [];
-    newCP1Forms.forEach(function(form) {
-        var description = form.querySelector('input[name$="-description"]').value.trim();
-        if (description) {
-            newCP1Descriptions.push(description);
+        var idField = form.querySelector('input[name$="-id"]');
+        if (idField) {
+            idField.remove();
         }
     });
-
-    var newCP2Descriptions = [];
-    newCP2Forms.forEach(function(form) {
-        var description = form.querySelector('input[name$="-description"]').value.trim();
-        if (description) {
-            newCP2Descriptions.push(description);
-        }
-    });
-
-    // Prepare data for submission (if using AJAX)
-    var formData = new FormData();
-    formData.append('new_cp1_descriptions', newCP1Descriptions.join(';'));
-    formData.append('new_cp2_descriptions', newCP2Descriptions.join(';'));
-
-    // AJAX submission (if desired)
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', event.target.action, true);
-    xhr.onload = function() {
-        console.log("status code: " + xhr.status);
-        if (xhr.status >= 200 && xhr.status < 400) {
-            console.log('Form submitted successfully');
-        } else {
-            console.error('Form submission failed');
-        }
-    };
-    xhr.onerror = function() {
-    console.error('Request failed:', xhr.statusText);
-};
-    xhr.send(formData);
-
-    event.preventDefault();
 });
-
 
     
         $(document).ready(function () {

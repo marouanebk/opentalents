@@ -130,71 +130,24 @@ document.querySelector('form').addEventListener('submit', function(event) {
     //     }
     // });
 
-    var newForms = document.querySelectorAll('[data-isnew="true"]');
-    newForms.forEach(function(form) {
-        form.remove();
-    });
-
-    // var newCP1Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp1"]');
-    // newCP1Forms.forEach(function(form) {
-    //     // Specific logic for new CP1 forms
-    //     var idField = form.querySelector('input[name$="-id"]');
-    //     if (idField) {
-    //         idField.remove(); // Remove ID for new entries
-    //     }
-    // });
-
-    // // Handle new CP2 forms
-    // var newCP2Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp2"]');
-    // newCP2Forms.forEach(function(form) {
-    //     // Specific logic for new CP2 forms
-    //     var idField = form.querySelector('input[name$="-id"]');
-    //     if (idField) {
-    //         idField.remove(); // Remove ID for new entries
-    //     }
-    // });
-
     var newCP1Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp1"]');
-    var newCP2Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp2"]');
-console.log("new cp1 form: " + newCP1Forms.toString());
-    var newCP1Descriptions = [];
     newCP1Forms.forEach(function(form) {
-        var description = form.querySelector('input[name$="-description"]').value.trim();
-        if (description) {
-            newCP1Descriptions.push(description);
+        // Specific logic for new CP1 forms
+        var idField = form.querySelector('input[name$="-id"]');
+        if (idField) {
+            idField.remove(); // Remove ID for new entries
         }
     });
 
-    var newCP2Descriptions = [];
+    // Handle new CP2 forms
+    var newCP2Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp2"]');
     newCP2Forms.forEach(function(form) {
-        var description = form.querySelector('input[name$="-description"]').value.trim();
-        if (description) {
-            newCP2Descriptions.push(description);
+        // Specific logic for new CP2 forms
+        var idField = form.querySelector('input[name$="-id"]');
+        if (idField) {
+            idField.remove(); // Remove ID for new entries
         }
     });
-
-    // Prepare data for submission (if using AJAX)
-    var formData = new FormData();
-    formData.append('new_cp1_descriptions', newCP1Descriptions.join(';'));
-    formData.append('new_cp2_descriptions', newCP2Descriptions.join(';'));
-
-    // AJAX submission (if desired)
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', event.target.action, true);
-    xhr.onload = function() {
-        console.log("status code: " + xhr.status);
-        if (xhr.status >= 200 && xhr.status < 400) {
-            console.log('Form submitted successfully');
-        } else {
-            console.error('Form submission failed');
-        }
-    };
-    xhr.onerror = function() {
-    console.error('Request failed:', xhr.statusText);
-};
-    xhr.send(formData);
-
-    event.preventDefault();
 });
 
 

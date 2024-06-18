@@ -23304,8 +23304,8 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
         self.object.description_cp2 = self.request.POST.get('description_cp2')
         self.object.save()
 
-        new_cp1_descriptions = self.request.POST.get('new_cp1_descriptions', '').split(';')
-        new_cp2_descriptions = self.request.POST.get('new_cp2_descriptions', '').split(';')
+        new_cp1_descriptions = request.POST.get('new_cp1_descriptions', '').split(';')
+        new_cp2_descriptions = request.POST.get('new_cp2_descriptions', '').split(';')
         # Print the new form indices
         print('New CP1 descriptions:', new_cp1_descriptions)
         print('New CP2 descriptions:', new_cp2_descriptions)

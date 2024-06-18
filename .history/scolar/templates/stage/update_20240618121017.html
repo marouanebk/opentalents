@@ -156,7 +156,7 @@ document.querySelector('form').addEventListener('submit', function(event) {
 
     var newCP1Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp1"]');
     var newCP2Forms = document.querySelectorAll('[data-isnew="true"][data-cptype="cp2"]');
-console.log("new cp1 form: " + newCP1Forms.toString());
+console.log("new cp1 form: " + newCP1Forms.length);
     var newCP1Descriptions = [];
     newCP1Forms.forEach(function(form) {
         var description = form.querySelector('input[name$="-description"]').value.trim();
@@ -182,19 +182,15 @@ console.log("new cp1 form: " + newCP1Forms.toString());
     var xhr = new XMLHttpRequest();
     xhr.open('POST', event.target.action, true);
     xhr.onload = function() {
-        console.log("status code: " + xhr.status);
         if (xhr.status >= 200 && xhr.status < 400) {
             console.log('Form submitted successfully');
         } else {
             console.error('Form submission failed');
         }
     };
-    xhr.onerror = function() {
-    console.error('Request failed:', xhr.statusText);
-};
     xhr.send(formData);
 
-    event.preventDefault();
+    // event.preventDefault();
 });
 
 

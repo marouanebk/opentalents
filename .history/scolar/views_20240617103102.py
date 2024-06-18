@@ -23300,23 +23300,13 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
         ordre_du_jour_cp1_formset = context['ordre_du_jour_cp1_formset']
         ordre_du_jour_cp2_formset = context['ordre_du_jour_cp2_formset']
 
+
         self.object.description_cp1 = self.request.POST.get('description_cp1')
         self.object.description_cp2 = self.request.POST.get('description_cp2')
         self.object.save()
 
-        new_cp1_descriptions = self.request.POST.get('new_cp1_descriptions', '').split(';')
-        new_cp2_descriptions = self.request.POST.get('new_cp2_descriptions', '').split(';')
-        # Print the new form indices
-        print('New CP1 descriptions:', new_cp1_descriptions)
-        print('New CP2 descriptions:', new_cp2_descriptions)
-
         if ordre_du_jour_cp1_formset.is_valid() and ordre_du_jour_cp2_formset.is_valid():
             self.object = form.save()
-
-            print("CP1 Formset Data:")
-            cp1_formset_data = [f.cleaned_data for f in ordre_du_jour_cp1_formset]
-            print(cp1_formset_data)
-
             for f in ordre_du_jour_cp1_formset:
                 if f.cleaned_data.get('DELETE', False) and f.instance.pk:
                     f.instance.delete()
@@ -23332,10 +23322,7 @@ class CPUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin,
                     else:  # Existing instance, just save changes
                         ordre.save()
 
-            print("CP2 Formset Data:")
-            cp2_formset_data = [f.cleaned_data for f in ordre_du_jour_cp2_formset]
-            print(cp2_formset_data)
-
+            # Process CP2 formset
             for f in ordre_du_jour_cp2_formset:
                 if f.cleaned_data.get('DELETE', False) and f.instance.pk:
                     f.instance.delete()
