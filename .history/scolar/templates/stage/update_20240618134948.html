@@ -1,0 +1,194 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+    textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        resize: vertical;
+    }
+
+    .dynamic-form input[type="checkbox"] {
+        display: none;
+    }
+
+    .dynamic-form input[type="checkbox"]+label {
+        display: none;
+    }
+</style>
+
+<h2>Edit CP</h2>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#cp">CP</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#ordre_du_jour_cp1">Ordre du jour CP1</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#ordre_du_jour_cp2">Ordre du jour CP2</a>
+    </li>
+</ul>
+
+<!-- Tab panes -->
+<form method="post">
+    {% csrf_token %}
+    <div class="tab-content">
+        <div id="cp" class="container tab-pane active">
+            {{ cp_form|crispy }}
+        </div>
+
+        <div id="ordre_du_jour_cp1" class="container tab-pane fade">
+            <label for="description_cp1">Description for CP1:</label>
+            <textarea name="description_cp1" placeholder="Enter description for CP1">{{ description_cp1 }}</textarea>
+
+            {{ ordre_du_jour_cp1_formset.management_form }}
+            <div id="ordre_du_jour_cp1_container">
+                {% for form in ordre_du_jour_cp1_formset %}
+                <div class="card mb-3 dynamic-form">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                {{ form|crispy }}
+                                <input type="hidden" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" value="False">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteForm(this, '#ordre_du_jour_cp1_container', 'ordre_du_jour_cp1_formset')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-ordre-du-jour-cp1" class="btn btn-secondary">Add Ordre du jour CP1</button>
+
+            <!-- Hidden input to store new CP1 descriptions -->
+            <input type="hidden" name="new_cp1_descriptions" id="new_cp1_descriptions">
+
+        </div>
+
+        <div id="ordre_du_jour_cp2" class="container tab-pane fade">
+            <label for="description_cp2">Description for CP2:</label>
+            <textarea name="description_cp2" placeholder="Enter description for CP2">{{ description_cp2 }}</textarea>
+
+            {{ ordre_du_jour_cp2_formset.management_form }}
+            <div id="ordre_du_jour_cp2_container">
+                {% for form in ordre_du_jour_cp2_formset %}
+                <div class="card mb-3 dynamic-form">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                {{ form|crispy }}
+                                <input type="hidden" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" value="False">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteForm(this, '#ordre_du_jour_cp2_container', 'ordre_du_jour_cp2_formset')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-ordre-du-jour-cp2" class="btn btn-secondary">Add Ordre du jour CP2</button>
+
+            <!-- Hidden input to store new CP2 descriptions -->
+            <input type="hidden" name="new_cp2_descriptions" id="new_cp2_descriptions">
+
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save changes</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('form').addEventListener('submit', function(event) {
+        // Prepare data for submission
+        var newCP1Descriptions = [];
+        var newCP2Descriptions = [];
+
+        document.querySelectorAll('[data-cptype="cp1"]').forEach(function(form) {
+            var description = form.querySelector('input[name$="-description"]').value.trim();
+            if (description) {
+                newCP1Descriptions.push(description);
+            }
+        });
+
+        document.querySelectorAll('[data-cptype="cp2"]').forEach(function(form) {
+            var description = form.querySelector('input[name$="-description"]').value.trim();
+            if (description) {
+                newCP2Descriptions.push(description);
+            }
+        });
+
+        // Set hidden input values
+        document.getElementById('new_cp1_descriptions').value = newCP1Descriptions.join(';');
+        document.getElementById('new_cp2_descriptions').value = newCP2Descriptions.join(';');
+    });
+
+    document.getElementById('add-ordre-du-jour-cp1').addEventListener('click', function() {
+        addForm('#ordre_du_jour_cp1_container', 'ordre_du_jour_cp1_formset', 'cp1');
+    });
+
+    document.getElementById('add-ordre-du-jour-cp2').addEventListener('click', function() {
+        addForm('#ordre_du_jour_cp2_container', 'ordre_du_jour_cp2_formset', 'cp2');
+    });
+
+    function addForm(container, formsetPrefix, cpType) {
+        var formIdx = parseInt(document.getElementById(`id_${formsetPrefix}-TOTAL_FORMS`).value);
+        var firstNonDeletedForm = document.querySelector(`${container} .dynamic-form:not(.deleted)`);
+
+        if (!firstNonDeletedForm) {
+            console.error('No non-deleted form found to clone.');
+            return;
+        }
+
+        var form = firstNonDeletedForm.cloneNode(true);
+        form.setAttribute('data-isnew', 'true'); // Add isNew attribute
+        form.setAttribute('data-cptype', cpType); // Add cpType attribute
+
+        form.querySelectorAll(':input, select, textarea').forEach(function(input) {
+            if (input.name) {
+                var name = input.name.replace(new RegExp(`-${formIdx - 1}-`, 'g'), `-${formIdx}-`);
+                var id = `id_${name}`;
+                input.name = name;
+                input.id = id;
+                input.value = '';
+                input.checked = false;
+            }
+        });
+
+        form.querySelector('input[type="hidden"][name$="-DELETE"]').value = 'False'; // Set DELETE field to false
+
+        document.querySelector(container).appendChild(form);
+        document.getElementById(`id_${formsetPrefix}-TOTAL_FORMS`).value = formIdx + 1; // Increment total forms count
+    }
+
+    window.deleteForm = function(button, containerId, formsetPrefix) {
+        var form = button.closest('.dynamic-form');
+        var container = document.querySelector(containerId);
+        var forms = container.querySelectorAll('.dynamic-form');
+        var nonDeletedCount = Array.from(forms).filter(form => form.querySelector('input[id$="-DELETE"]').value === 'False').length;
+
+        if (nonDeletedCount > 1) {
+            form.querySelector('input[id$="-DELETE"]').value = 'True';
+            form.style.display = 'none';
+        } else {
+            form.querySelectorAll(':input, select, textarea').forEach(function(input) {
+                if (input.type !== 'hidden') {
+                    input.value = '';
+                }
+            });
+            form.querySelector('input[type="hidden"][name$="-DELETE"]').value = 'False';
+        }
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,216 @@
+{% extends 'scolar/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+    textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        resize: vertical;
+    }
+
+    .dynamic-form input[type="checkbox"] {
+        display: none;
+    }
+
+    .dynamic-form input[type="checkbox"]+label {
+        display: none;
+    }
+</style>
+
+<h2>Edit CP</h2>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#cp">CP</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#ordre_du_jour_cp1">Ordre du jour CP1</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#ordre_du_jour_cp2">Ordre du jour CP2</a>
+    </li>
+</ul>
+
+<!-- Tab panes -->
+<form method="post">
+    {% csrf_token %}
+    <div class="tab-content">
+        <div id="cp" class="container tab-pane active">
+            {{ cp_form|crispy }}
+        </div>
+
+        <div id="ordre_du_jour_cp1" class="container tab-pane fade">
+            <label for="description_cp1">Description for CP1:</label>
+            <textarea name="description_cp1" placeholder="Enter description for CP1">{{ description_cp1 }}</textarea>
+
+            {{ ordre_du_jour_cp1_formset.management_form }}
+            <div id="ordre_du_jour_cp1_container">
+                {% for form in ordre_du_jour_cp1_formset %}
+                <div class="card mb-3 dynamic-form">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                {{ form|crispy }}
+                                <input type="hidden" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" value="False">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteForm(this, '#ordre_du_jour_cp1_container', 'ordre_du_jour_cp1_formset')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-ordre-du-jour-cp1" class="btn btn-secondary">Add Ordre du jour CP1</button>
+            <button type="button" id="log-ordre-du-jour-cp1" class="btn btn-info">Log Ordre du jour CP1</button>
+            <button id="logButton" type="button">Log Data Without Submitting</button>
+
+        </div>
+
+        <div id="ordre_du_jour_cp2" class="container tab-pane fade">
+            <label for="description_cp2">Description for CP2:</label>
+            <textarea name="description_cp2" placeholder="Enter description for CP2">{{ description_cp2 }}</textarea>
+
+            {{ ordre_du_jour_cp2_formset.management_form }}
+            <div id="ordre_du_jour_cp2_container">
+                {% for form in ordre_du_jour_cp2_formset %}
+                <div class="card mb-3 dynamic-form">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                {{ form|crispy }}
+                                <input type="hidden" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" value="False">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="deleteForm(this, '#ordre_du_jour_cp2_container', 'ordre_du_jour_cp2_formset')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-ordre-du-jour-cp2" class="btn btn-secondary">Add Ordre du jour CP2</button>
+            <button type="button" id="log-ordre-du-jour-cp2" class="btn btn-info">Log Ordre du jour CP2</button>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save changes</button>
+</form><script>
+document.querySelector('form').addEventListener('submit', function(event) {
+    // Select all inputs for descriptions in the formsets
+    var descriptionInputs = document.querySelectorAll('input[name$="-description"]');
+
+    // Iterate over the inputs to check if any is empty
+    for (var i = 0; i < descriptionInputs.length; i++) {
+        if (descriptionInputs[i].value.trim() === '') {
+            alert('Please fill in all descriptions before saving changes.');
+            event.preventDefault(); // Prevent form submission
+            return; // Exit the function
+        }
+    }
+
+    // Remove id field from forms where isNew is True
+    var newForms = document.querySelectorAll('[data-isnew="true"]');
+    newForms.forEach(function(form) {
+        var idField = form.querySelector('input[name$="-id"]');
+        if (idField) {
+            idField.remove();
+        }
+    });
+
+});
+
+    
+        $(document).ready(function () {
+            $('#add-ordre-du-jour-cp1').click(function () {
+                addForm('#ordre_du_jour_cp1_container', 'ordre_du_jour_cp1_formset');
+            });
+        
+            $('#add-ordre-du-jour-cp2').click(function () {
+                addForm('#ordre_du_jour_cp2_container', 'ordre_du_jour_cp2_formset');
+            });
+        
+            $('#log-ordre-du-jour-cp1').click(function () {
+                logForms('#ordre_du_jour_cp1_container', 'ordre_du_jour_cp1_formset');
+            });
+        
+            $('#log-ordre-du-jour-cp2').click(function () {
+                logForms('#ordre_du_jour_cp2_container', 'ordre_du_jour_cp2_formset');
+            });
+        });
+        
+        function addForm(container, formsetPrefix) {
+            var formIdx = parseInt($(`#id_${formsetPrefix}-TOTAL_FORMS`).val());
+            var firstNonDeletedForm = $(`${container} .dynamic-form:not(.deleted)`).first();
+        
+            if (firstNonDeletedForm.length === 0) {
+                console.error('No non-deleted form found to clone.');
+                return; // Exit function if no non-deleted form is found
+            }
+        
+            console.log('Cloning form:', firstNonDeletedForm);
+        
+            var form = firstNonDeletedForm.clone(true);
+            form.attr('data-isnew', 'true'); // Add isNew attribute
+        
+            form.find(':input, select, textarea').each(function () {
+                if ($(this).attr('name')) {
+                    var name = $(this).attr('name').replace(new RegExp(`-${formIdx - 1}-`, 'g'), `-${formIdx}-`);
+                    var id = `id_${name}`;
+                    $(this).attr({ 'name': name, 'id': id }).val('').removeAttr('checked');
+                    if (name.endsWith('-id')) {
+                        var timestamp = new Date().getTime();
+                        $(this).val(timestamp); // Generate unique ID
+                    }
+                }
+            });
+        
+            form.find('input[type="hidden"][name$="-DELETE"]').val('False'); // Set DELETE field to false
+        
+            form.appendTo(container);
+            console.log('Form added. New TOTAL_FORMS:', formIdx + 1);
+        
+            // Ensure visibility
+            form.show(); // Ensure the form is visible
+        
+            $(`#id_${formsetPrefix}-TOTAL_FORMS`).val(formIdx + 1); // Increment total forms count
+        }
+        
+        function deleteForm(button, containerId, formsetPrefix) {
+            var form = $(button).closest('.dynamic-form');
+            var container = $(containerId);
+            var forms = container.find('.dynamic-form');
+            var nonDeletedCount = forms.find('input[id$="-DELETE"][value="False"]').length;
+        
+            if (nonDeletedCount > 1) {
+                form.find('input[id$="-DELETE"]').val('True');
+                form.hide();
+            } else {
+                form.find(':input, select, textarea').each(function () {
+                    if ($(this).attr('type') !== 'hidden') {
+                        $(this).val('');
+                    }
+                });
+                form.find('input[type="hidden"][name$="-DELETE"]').val('False');
+            }
+        
+            logForms(containerId, formsetPrefix);
+        }
+        
+        function logForms(container, formsetPrefix) {
+            var forms = $(container).find('.dynamic-form');
+            console.log(`Total forms in ${formsetPrefix}: ${forms.length}`);
+            forms.each(function (index, form) {
+                var formData = $(form).find(':input').serializeArray();
+                console.log(`Form ${index}:`, formData);
+            });
+        }
+    </script>
+    
+
+{% endblock %}
