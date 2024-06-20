@@ -3361,7 +3361,7 @@ class Candidature(models.Model):
         return f"{self.user} : {self.offre}"
 
 
-        
+    
 class CP(models.Model):
     formation=models.ForeignKey(Formation, on_delete=models.SET_NULL, null=True, blank=True)
     periode=models.ForeignKey(Periode, on_delete=models.SET_NULL, null=True, blank=True)
@@ -3380,8 +3380,9 @@ class CP(models.Model):
 class OrdreDuJour(models.Model):
     description = models.CharField(max_length=250, null=True, blank=True)
     cp = models.ForeignKey(CP, related_name='ordres_du_jour', on_delete=models.CASCADE, null=True, blank=True)
-    cp_type = models.CharField(max_length=3, choices=[('cp1', 'CP1'), ('cp2', 'CP2')], null=True, blank=True)
+    cp_type = models.CharField(maxength=3, choices_l=[('cp1', 'CP1'), ('cp2', 'CP2')], null=True, blank=True)
 
+    
 
 
 class Ressource(models.Model):

@@ -104,9 +104,9 @@
             </tr>
             {% for item in combined_list %}
             <tr>
-                <td style="border: 1px solid black; height: 50px; padding-left: 10px;">{{ item.enseignant|default:'' }} </td>
+                <td style="border: 1px solid black; height: 50px; padding-left: 10px;">{{ item.enseignant.nom|default:'' }} {{ item.enseignant.prenom|default:'' }}</td>
                 <td style="border: 1px solid black; height: 50px; padding-left: 10px;"></td>
-                <td style="border: 1px solid black; height: 50px; padding-left: 10px;">{{ item.delegue_etudiants|default:'' }}</td>
+                <td style="border: 1px solid black; height: 50px; padding-left: 10px;">{{ item.delegue.nom|default:'' }} {{ item.delegue.prenom|default:'' }}</td>
                 <td style="border: 1px solid black; height: 50px; padding-left: 10px;"></td>
             </tr>
             {% endfor %}

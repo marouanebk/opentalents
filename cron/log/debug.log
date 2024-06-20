@@ -1096,3 +1096,13 @@ WARNING:django.request:Not Found: /media/admin/banniere.png
 WARNING:django.request:Not Found: /static/js/bootstrap.min.js.map
 WARNING:django.request:Not Found: /static/js/popper.min.js.map
 WARNING:django.request:Not Found: /static/css/bootstrap.min.css.map
+INFO:root:Running cp_remainder function for the date: 2024-06-19 21:30:00.017860+00:00
+ERROR:apscheduler.executors.default:Job "cp_remainder (trigger: cron[hour='22', minute='30'], next run at: 2024-06-20 22:30:00 CET)" raised an exception
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.6/site-packages/apscheduler/executors/base.py", line 125, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "/opentalents/scolar/emails.py", line 37, in cp_remainder
+    enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
+  File "/opentalents/scolar/emails.py", line 37, in <listcomp>
+    enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
+AttributeError: 'Enseignant' object has no attribute 'email'

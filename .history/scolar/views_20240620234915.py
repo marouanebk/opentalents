@@ -23693,7 +23693,7 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
         self.cmd_options['footer-html'] = footer_url
 
         return super().get(request, *args, **kwargs)
-    
+        
     def test_func(self):
         return self.request.user.has_perm('scolar.fonctionnalite_comite_pedagogique_gestion')
 
@@ -23725,43 +23725,15 @@ class GeneratePDFView(LoginRequiredMixin, UserPassesTestMixin,PDFTemplateView):
         ues = UE.objects.filter(periode__in=periode_programmes)
         matieres = Matiere.objects.filter(matiere_ues__in=ues).distinct()
         enseignants = list(cp.enseignants.all())
-        # etudiants = Etudiant.objects.filter(delegue__formation=cp.formation)
-        # delegues = Delegue.objects.filter(formation=cp.formation)
-        # print("delegues", list(delegues))
-
-        # combined_list = []
-        # for i in range(max(len(enseignants), len(delegues))):
-        #     combined_list.append({
-        #         'enseignant': enseignants[i] if i < len(enseignants) else None,
-        #         # 'etudiant': etudiants[i] if i < len(etudiants) else None,
-        #         'delegue': delegues[i] if i < len(delegues) else None,  # Use delegues here
-
-        #     })
-        # for item in combined_list:
-        #     enseignant_info = f"{item['enseignant'].nom} {item['enseignant'].prenom}" if item['enseignant'] else "No enseignant"
-        #     delegue_info = f"{item['delegue'].nom} {item['delegue'].prenom}" if item['delegue'] else "No delegue"
-        #     print(f"Enseignant: {enseignant_info}, Delegue: {delegue_info}")
-
-        delegues = Delegue.objects.filter(formation=cp.formation).prefetch_related('etudiants')
-        print("delegues", list(delegues))
+        etudiants = Etudiant.objects.filter(delegue__formation=cp.formation)
 
         combined_list = []
-        for i in range(max(len(enseignants), len(delegues))):
-            delegue_etudiants_info = None
-            if i < len(delegues):
-                etudiants = delegues[i].etudiants.all()
-                etudiants_info = ", ".join([f"{etudiant.nom} {etudiant.prenom}" for etudiant in etudiants])
-                delegue_etudiants_info = etudiants_info if etudiants_info else "No etudiants"
-
+        for i in range(max(len(enseignants), len(etudiants))):
             combined_list.append({
-                'enseignant': enseignants[i].nom + " " + enseignants[i].prenom if i < len(enseignants) else None,
-                'delegue_etudiants': delegue_etudiants_info,
+                'enseignant': enseignants[i] if i < len(enseignants) else None,
+                'etudiant': etudiants[i] if i < len(etudiants) else None,
             })
 
-        for item in combined_list:
-            enseignant_info = item['enseignant'] if item['enseignant'] else "No enseignant"
-            delegue_etudiants_info = item['delegue_etudiants'] if item['delegue_etudiants'] else "No delegue etudiants"
-            print(f"Enseignant: {enseignant_info}, Delegue Etudiants: {delegue_etudiants_info}")
         context['cp'] = cp
         context['number'] = number
         context['matieres'] = matieres
