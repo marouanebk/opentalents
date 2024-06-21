@@ -1106,3 +1106,23 @@ Traceback (most recent call last):
   File "/opentalents/scolar/emails.py", line 37, in <listcomp>
     enseignants_emails = [enseignant.email for enseignant in cp.enseignants.all()]
 AttributeError: 'Enseignant' object has no attribute 'email'
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:06.820143+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:09.727008+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:12.233553+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:14.850017+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:17.785263+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:21.389834+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:26.776181+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:35.447044+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:29:50.372405+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:30:18.111076+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:31:11.444103+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:31:54.749750+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:31:57.307586+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:31:59.861078+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:32:02.416894+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:32:05.401389+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:32:09.168642+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:32:15.391288+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:32:26.035523+00:00
+INFO:root:Running cp_remainder function for the date: 2024-06-21 19:32:41.646777+00:00
